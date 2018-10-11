@@ -1,0 +1,7 @@
+.responsive {
+    padding: 0;
+    display: block; 
+    margin: 0 auto;   /*auto or left or right  */
+    max-height: 100%;
+    max-width: 100%;
+}
