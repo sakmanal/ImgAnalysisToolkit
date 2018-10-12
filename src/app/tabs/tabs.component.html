@@ -1,0 +1,18 @@
+<mat-tab-group>
+
+    <mat-tab label="Binarization"> 
+     <app-binarization></app-binarization>
+    </mat-tab>
+    
+    <mat-tab label="Text Selection"> 
+        <ng-template matTabContent> 
+           <app-cropper [imageUrl]="ImgUrl"></app-cropper>
+        </ng-template>   
+    </mat-tab>
+
+    <mat-tab label="Image Info">
+      Content 3 
+    </mat-tab>
+
+  </mat-tab-group>
+

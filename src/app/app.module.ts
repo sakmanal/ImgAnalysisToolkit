@@ -10,11 +10,19 @@ import { AppRoutingModule } from './/app-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { AngularCropperjsModule } from 'angular-cropperjs';
 import { CropperComponent } from './cropper/cropper.component';
+import { ToolbarSidenavComponent } from './toolbar-sidenav/toolbar-sidenav.component';
+import { TabsComponent } from './tabs/tabs.component';
+import { BinarizationComponent } from './binarization/binarization.component';
+import { AboutComponent } from './about/about.component';
 
 @NgModule({
   declarations: [
     AppComponent,
-    CropperComponent
+    CropperComponent,
+    ToolbarSidenavComponent,
+    TabsComponent,
+    BinarizationComponent,
+    AboutComponent
   ],
   imports: [
     BrowserModule,

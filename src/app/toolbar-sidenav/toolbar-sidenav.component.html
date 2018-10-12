@@ -1,0 +1,32 @@
+<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+
+  <mat-toolbar color="primary" class="example-toolbar"  style="z-index: 10" class="mat-elevation-z4">
+
+     <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+     <a routerLink="/" (click)="snav.close()"><h1 class="example-app-name">Digital Image Analysis Toolkit</h1></a>
+     <span class="example-spacer"></span>
+     <button mat-button routerLink="/about">About</button>
+     <a target="_blank" href="http://www.ee.duth.gr/el/"><button mat-button>Δ.Π.Θ</button></a>
+    
+  </mat-toolbar>
+
+  <mat-sidenav-container  class="example-sidenav-container"  [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+    
+    <mat-sidenav #snav  class="example-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
+                 <mat-nav-list>
+                  <p><a routerLink="/drawRect"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> edit</mat-icon> Draw Rect</button></a></p>
+                  <p><a routerLink="/cropper"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> crop</mat-icon> Text Cropper</button></a></p>
+                  <p><a routerLink="/textSelect"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> text_format</mat-icon> Select Text</button></a></p>
+                </mat-nav-list>
+                
+               
+    </mat-sidenav>
+
+    <mat-sidenav-content>
+         <router-outlet></router-outlet>
+    </mat-sidenav-content>
+
+  </mat-sidenav-container>
+</div>
+
+

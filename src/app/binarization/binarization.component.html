@@ -1,0 +1,52 @@
+<input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
+    <button mat-raised-button style="margin: 0 10px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
+    
+    
+    
+    <mat-slide-toggle style="margin: 0 10px; font-size: 13px;"  color="primary" [(ngModel)]="checked" (click)="view()" [disabled]="disableImageFilter">Binarization</mat-slide-toggle>
+    <mat-slide-toggle style="margin: 0 10px; font-size: 13px" color="primary" [(ngModel)]="checked2" (click)="view()" [disabled]="disableImageFilter">Invert Colours</mat-slide-toggle>
+    
+    <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>
+    <mat-slider 
+             [disabled]="disableImageFilter"
+             color="warn" 
+             
+             [step]="30"
+             [(ngModel)]="width"
+             [max]="maxwidth"
+             [min]="20" >
+         </mat-slider>
+         <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
+         
+         <button mat-raised-button style="margin: 0 7px;"  color="warn" [disabled]="disableImageFilter" (click)="fillscreen()">fill screen</button>
+         <button mat-raised-button  color="warn"  [disabled]="disableImageFilter" (click)="originalSize()">original size</button>
+         <button mat-raised-button style="margin: 0 7px;" color="warn" [disabled]="disableImageFilter" (click)="fitscreen()">fit screen</button>
+
+
+         <div *ngIf="x3">
+            <p> <button mat-raised-button color="primary" (click)="save()" style="margin: 0 10px;"  [disabled]="disableImageFilter"><mat-icon>save</mat-icon> Save Image</button>
+               
+               
+           
+           
+             Binarization Threshold:
+           <mat-slider 
+           [disabled]="disableImageFilter"
+           color="primary" 
+          
+           [step]="step"
+           [(ngModel)]="value"
+           [max]="max"
+           [min]="min" (click)="view()"></mat-slider>{{value}}
+           </p>
+         
+           
+          <p style="margin: 0 10px;">Image dimensions: {{x3}} x {{y3}}</p>
+         </div>
+       
+       
+         
+         
+       
+                     <p> <canvas class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas> </p>
+         

@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { AngularCropperjsComponent, ImageCropperResult } from 'angular-cropperjs';
 
 @Component({
@@ -21,10 +21,11 @@ export class CropperComponent  {
     wheelZoomRatio: 0.1, //Define zoom ratio when zoom the image by wheeling mouse.
     autoCropArea:0.1,    //A number between 0 and 1. Define the automatic cropping area size (percentage).
     guides:false,        //Show the dashed lines above the crop box.
-    dragMode:'crop'      //'crop': create a new crop box, 'move': move the canvas, 'none': do nothing
+    dragMode:'crop',      //'crop': create a new crop box, 'move': move the canvas, 'none': do nothing
     
   };
-  imageUrl = "https://thewindowsclub-thewindowsclubco.netdna-ssl.com/wp-content/uploads/2015/11/hide-text-in-Word-sample-document.png";
+  
+  @Input() imageUrl: any;
   resultImage: any;
   resultResult: any;
   flag=true;

@@ -1,0 +1,20 @@
+.center{
+    margin: auto;
+    border: 3px solid #73AD21;
+    width: 60%;
+    padding: 10px;
+    text-align: center;
+}
+
+
+   .imgbox {
+    display: grid;
+    height: 100%;
+    text-align: center;
+   }
+   .center-fit {
+    max-width: 50%;
+    max-height: 50vh;
+    margin: auto;
+   
+   }
