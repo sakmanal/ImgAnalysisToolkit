@@ -12,7 +12,7 @@ export class BinarizationComponent  {
 imageToCrop:any = '';
 checked:boolean = false;
 checked2:boolean = false;
-url:any;
+url:any = "/assets/document1.jpg";
 x3:number;
 y3:number;
 value = 138;
@@ -133,8 +133,7 @@ view():void{
           
           }
       ctx.putImageData(pixelData, 0, 0);
-      this.imageToCrop = canvas.toDataURL("image/png", 1);
-      this.imagedata = canvas.toDataURL("image/png", 1);
+      this.url = canvas.toDataURL("image/png", 1);
       
   };
   image.src = this.url;

@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input } from '@angular/core';
+import { Component, ViewChild, Input, OnChanges } from '@angular/core';
 import { AngularCropperjsComponent, ImageCropperResult } from 'angular-cropperjs';
 
 @Component({
@@ -6,7 +6,7 @@ import { AngularCropperjsComponent, ImageCropperResult } from 'angular-cropperjs
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.css']
 })
-export class CropperComponent  {
+export class CropperComponent   {
 
 
   @ViewChild('angularCropper') public angularCropper: AngularCropperjsComponent;
@@ -52,12 +52,13 @@ export class CropperComponent  {
 
   clear(){
     this.angularCropper.cropper.clear();
+    
   }
 
   CropMe() {
     this.flag = true;
     // this.resultResult = this.angularCropper.imageUrl;
-    console.log("Hello");
+    //console.log("Hello");
     // this.resultImage = this.angularCropper.cropper.getCroppedCanvas()
     // console.log(this.resultImage);
     this.angularCropper.exportCanvas();
@@ -69,7 +70,7 @@ export class CropperComponent  {
    
   this.resultResult = this.angularCropper.cropper.getCroppedCanvas({
   }).toDataURL('image/jpeg');
-  console.log("ok");
+  //console.log("ok");
   }
 
 
