@@ -1,4 +1,4 @@
-import { Component, ViewChild, Input, OnChanges } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { AngularCropperjsComponent, ImageCropperResult } from 'angular-cropperjs';
 
 @Component({
@@ -30,9 +30,9 @@ export class CropperComponent   {
   resultResult: any;
   flag=true;
  
+ 
 
-
- onFileAdded(event){
+ /*onFileAdded(event){
   this.flag = false;
   const angularCropper = this.angularCropper;
   
@@ -47,12 +47,16 @@ export class CropperComponent   {
       };
       reader.readAsDataURL(input.files[0]);
     }
-  }
+  }*/
  
 
   clear(){
     this.angularCropper.cropper.clear();
     
+  }
+
+  reset(){
+    this.angularCropper.cropper.reset();
   }
 
   CropMe() {

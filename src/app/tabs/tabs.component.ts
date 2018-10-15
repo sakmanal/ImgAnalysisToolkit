@@ -15,11 +15,11 @@ export class TabsComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild(BinarizationComponent) Binarization;
 
   ngAfterViewInit(){
-        this.ImgUrl = this.Binarization.url;
+        this.ImgUrl = this.Binarization.ImgUrl;
   }
 
   ngAfterViewChecked(){
-    this.ImgUrl = this.Binarization.url;
+    this.ImgUrl = this.Binarization.ImgUrl;
    
   }
 

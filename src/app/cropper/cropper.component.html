@@ -1,20 +1,20 @@
-<button (click)="CropMe()">Select Word</button>
-<button (click)="clear()">clear</button>
-<input  type='file' (change)="onFileAdded($event)" #fileInput accept="image/*">
+<div *ngIf="imageUrl">
+
+<button mat-raised-button style="margin: 10px; font-size: 17px" color="primary" (click)="CropMe()">Select Word</button>
+<button mat-raised-button style=" font-size: 17px" color="accent" (click)="clear()">clear</button>
+<button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="reset()">reset</button>
+<!--<input  type='file' (change)="onFileAdded($event)" #fileInput accept="image/*">-->
 <div *ngIf="resultResult" class="responsive">
 <br>
 
-
 <br>
-<div *ngIf="flag"><img width="200" height="80" [src]="resultResult" /></div>
+<div *ngIf="flag"><img  [src]="resultResult" /></div>
 </div>
     
 
 <angular-cropper #angularCropper
- [cropperOptions]="config" 
-(export)="resultImageFun()" 
-
-[imageUrl]="imageUrl">
+   [cropperOptions]="config" 
+   (export)="resultImageFun()" 
+   [imageUrl]="imageUrl">
 </angular-cropper>
-<br>
-<br>
+</div>
