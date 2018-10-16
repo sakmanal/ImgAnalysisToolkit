@@ -1,6 +1,6 @@
 <div *ngIf="imageUrl">
-
-<button mat-raised-button style="margin: 10px; font-size: 17px" color="primary" (click)="CropMe()">Select Word</button>
+<button (click)=" CropMe()">crop</button>
+<button mat-raised-button style="margin: 10px; font-size: 17px" color="primary" (click)="openDialog()">Select Word</button>
 <button mat-raised-button style=" font-size: 17px" color="accent" (click)="clear()">clear</button>
 <button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="reset()">reset</button>
 <!--<input  type='file' (change)="onFileAdded($event)" #fileInput accept="image/*">-->

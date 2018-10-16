@@ -14,6 +14,7 @@ import { ToolbarSidenavComponent } from './toolbar-sidenav/toolbar-sidenav.compo
 import { TabsComponent } from './tabs/tabs.component';
 import { BinarizationComponent } from './binarization/binarization.component';
 import { AboutComponent } from './about/about.component';
+import { TextSelectPopUpComponent } from './text-select-pop-up/text-select-pop-up.component';
 
 @NgModule({
   declarations: [
@@ -22,7 +23,8 @@ import { AboutComponent } from './about/about.component';
     ToolbarSidenavComponent,
     TabsComponent,
     BinarizationComponent,
-    AboutComponent
+    AboutComponent,
+    TextSelectPopUpComponent
   ],
   imports: [
     BrowserModule,
@@ -33,6 +35,9 @@ import { AboutComponent } from './about/about.component';
     AppRoutingModule,
     FontAwesomeModule,
     AngularCropperjsModule
+  ],
+  entryComponents: [
+    TextSelectPopUpComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

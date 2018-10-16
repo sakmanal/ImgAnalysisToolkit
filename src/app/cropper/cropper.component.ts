@@ -1,12 +1,14 @@
-import { Component, ViewChild, Input } from '@angular/core';
-import { AngularCropperjsComponent, ImageCropperResult } from 'angular-cropperjs';
+import { Component, ViewChild, Input, OnInit } from '@angular/core';
+import { AngularCropperjsComponent } from 'angular-cropperjs';
+import { MatDialog } from '@angular/material';
+import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 
 @Component({
   selector: 'app-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.css']
 })
-export class CropperComponent   {
+export class CropperComponent implements OnInit  {
 
 
   @ViewChild('angularCropper') public angularCropper: AngularCropperjsComponent;
@@ -29,6 +31,28 @@ export class CropperComponent   {
   resultImage: any;
   resultResult: any;
   flag=true;
+  word:string;
+
+  constructor(public dialog: MatDialog) {}
+
+  ngOnInit(){
+    this.CropMe;
+    console.log("ok")
+  }
+
+  openDialog(): void {
+    this.resultImageFun();
+    const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
+      width: '250px',
+      data: { word: this.word, CroppedImage: this.resultResult}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      console.log('The dialog was closed');
+      this.word = result;
+      console.log(this.word);
+    });
+  }
  
  
 
@@ -66,7 +90,7 @@ export class CropperComponent   {
     // this.resultImage = this.angularCropper.cropper.getCroppedCanvas()
     // console.log(this.resultImage);
     this.angularCropper.exportCanvas();
-
+    
   }
 
   resultImageFun() {
