@@ -1,9 +1,12 @@
 <h1 mat-dialog-title>selected Word:</h1>
 <div mat-dialog-content>
 
-    <img  [src]="data.CroppedImage" />
+    <P><img  [src]="data.CroppedImage" /></P>
   <mat-form-field>
-    <input matInput [(ngModel)]="data.word">
+    <input matInput type="text" placeholder="enter word" [(ngModel)]="data.word"/>
+    <button mat-button *ngIf="data.word" matSuffix mat-icon-button aria-label="Clear" (click)="data.word=''">
+      <mat-icon>close</mat-icon>
+    </button>  
   </mat-form-field>
 
 </div>

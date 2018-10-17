@@ -43,7 +43,7 @@ export class CropperComponent implements OnInit  {
   openDialog(): void {
     this.resultImageFun();
     const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
-      width: '250px',
+      width: '350px',
       data: { word: this.word, CroppedImage: this.resultResult}
     });
 
@@ -51,6 +51,7 @@ export class CropperComponent implements OnInit  {
       console.log('The dialog was closed');
       this.word = result;
       console.log(this.word);
+      this.word='';
     });
   }
  
