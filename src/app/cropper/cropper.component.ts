@@ -94,6 +94,11 @@ export class CropperComponent implements OnInit  {
     
   }
 
+  drag(){
+
+    this.angularCropper.cropper.setDragMode("move");
+  }
+
   resultImageFun() {
     
    
