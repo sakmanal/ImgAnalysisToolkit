@@ -14,10 +14,17 @@ export class TextSelectPopUpComponent  {
     public dialogRef: MatDialogRef<TextSelectPopUpComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {}
 
+    value;
+
   onNoClick(): void {
     this.dialogRef.close();
   }
-
+  
+  add(){
+     //this.data.word = this.value;
+     //console.log(this.value)
+    this.dialogRef.close(`${this.value}`);
+  }
  
  
 }

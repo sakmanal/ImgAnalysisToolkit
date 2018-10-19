@@ -3,14 +3,14 @@
 
     <P><img  [src]="data.CroppedImage" /></P>
   <mat-form-field>
-    <input matInput type="text" placeholder="enter word" [(ngModel)]="data.word"/>
-    <button mat-button *ngIf="data.word" matSuffix mat-icon-button aria-label="Clear" (click)="data.word=''">
+    <input matInput type="text" placeholder="enter word" [(ngModel)]="value" cdkFocusInitial (keyup.enter)=add()/>
+    <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
       <mat-icon>close</mat-icon>
     </button>  
   </mat-form-field>
 
 </div>
 <div mat-dialog-actions>
-  <button mat-button (click)="onNoClick()">cancel</button>
-  <button mat-button [mat-dialog-close]="data.word" cdkFocusInitial>add</button>
+  <button mat-button color="primary" (click)="onNoClick()">cancel</button>
+  <button mat-stroked-button color="primary" [mat-dialog-close]="value" >add</button>
 </div>

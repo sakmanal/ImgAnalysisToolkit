@@ -1,14 +1,15 @@
-import { Component, ViewChild, Input, OnInit } from '@angular/core';
+import { Component, ViewChild, Input } from '@angular/core';
 import { AngularCropperjsComponent } from 'angular-cropperjs';
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
+import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-cropper',
   templateUrl: './cropper.component.html',
   styleUrls: ['./cropper.component.css']
 })
-export class CropperComponent implements OnInit  {
+export class CropperComponent {
 
 
   @ViewChild('angularCropper') public angularCropper: AngularCropperjsComponent;
@@ -32,26 +33,25 @@ export class CropperComponent implements OnInit  {
   resultResult: any;
   flag=true;
   word:string;
+  faArrowsAlt = faArrowsAlt;
+  
+  
 
   constructor(public dialog: MatDialog) {}
 
-  ngOnInit(){
-    this.CropMe;
-    console.log("ok")
-  }
 
   openDialog(): void {
     this.resultImageFun();
     const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
       width: '350px',
-      data: { word: this.word, CroppedImage: this.resultResult}
+      data: { CroppedImage: this.resultResult}
     });
 
     dialogRef.afterClosed().subscribe(result => {
-      console.log('The dialog was closed');
+      //console.log('The dialog was closed');
       this.word = result;
-      console.log(this.word);
-      this.word='';
+      if (this.word) {console.log(this.word);}
+      //this.word='';
     });
   }
  
@@ -84,6 +84,15 @@ export class CropperComponent implements OnInit  {
     this.angularCropper.cropper.reset();
   }
 
+  move(){
+
+    this.angularCropper.cropper.setDragMode("move");
+  }
+
+  croptool(){
+    this.angularCropper.cropper.setDragMode("crop");
+  }
+
   CropMe() {
     this.flag = true;
     // this.resultResult = this.angularCropper.imageUrl;
@@ -94,10 +103,7 @@ export class CropperComponent implements OnInit  {
     
   }
 
-  drag(){
-
-    this.angularCropper.cropper.setDragMode("move");
-  }
+  
 
   resultImageFun() {
     

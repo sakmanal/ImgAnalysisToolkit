@@ -12,6 +12,7 @@ import { MatButtonModule, MatToolbarModule,
             MatCardModule, MatInputModule, MatIconModule, MatMenuModule, 
             MatSidenavModule, MatListModule, MatTooltipModule, MatTabsModule, 
             MatSlideToggleModule, MatSliderModule, MatCheckboxModule, MatDialogModule],
+
   exports: [MatButtonModule, MatToolbarModule, MatProgressSpinnerModule,
             MatCardModule, MatInputModule, MatIconModule, MatMenuModule, 
             MatSidenavModule, MatListModule, MatTooltipModule, MatTabsModule, 

@@ -1,9 +1,25 @@
 <div *ngIf="imageUrl">
 
 <button mat-raised-button style="margin: 10px; font-size: 17px" color="primary" (click)="openDialog()">Select Word</button>
-<button mat-raised-button style=" font-size: 17px" color="accent" (click)="clear()">clear</button>
+<!--<button mat-raised-button style=" font-size: 17px" color="accent" (click)="clear()">clear</button>
 <button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="reset()">reset</button>
-<button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="drag()">drag image</button>
+<button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="move()">move image</button>
+<button mat-raised-button style="margin-left: 10px; font-size: 17px" color="accent" (click)="croptool()">select tool</button>-->
+
+
+<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="clear Selection" (click)="clear()"> 
+    <mat-icon>clear</mat-icon>
+</button>
+<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="text Selection Tool" (click)="croptool()">
+    <mat-icon>crop</mat-icon>
+</button>
+<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="reset Image Position" (click)="reset()">
+    <mat-icon>loop</mat-icon>
+</button>
+<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="Move Image" (click)="move()">
+<fa-icon [icon]="faArrowsAlt" size="lg"></fa-icon>
+</button>
+
 <!--<input  type='file' (change)="onFileAdded($event)" #fileInput accept="image/*">-->
 <!--<div *ngIf="resultResult" class="responsive">
 <br>
