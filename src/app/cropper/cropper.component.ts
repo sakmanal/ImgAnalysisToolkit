@@ -29,6 +29,7 @@ export class CropperComponent {
   };
   
   @Input() imageUrl: any;
+  @Input() imageName:string;
   resultImage: any;
   resultResult: any;
   flag=true;

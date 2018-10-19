@@ -27,7 +27,7 @@ height:any;
 width:number;
 maxwidth:number = window.innerWidth;
 flag:boolean;
-
+ImageName:string;
 
 
 zoomIN(){
@@ -78,7 +78,8 @@ onSelectFile(event:any):void { // called each time file input changes
   };
   
   reader.readAsDataURL(event.target.files[0]);
-  console.log(event.target.files[0].name);
+  this.ImageName = event.target.files[0].name;
+  console.log(this.ImageName);
 }
 
 

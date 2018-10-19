@@ -6,12 +6,15 @@
     
     <mat-tab label="Text Selection"> 
         <ng-template matTabContent> 
-           <app-cropper [imageUrl]="ImgUrl"></app-cropper>
+           <app-cropper 
+             [imageUrl]="ImgUrl"
+             [imageName]="ImgName">
+          </app-cropper>
         </ng-template>   
     </mat-tab>
 
     <mat-tab label="Image Info">
-      Content 3 
+      <app-image-info></app-image-info>
     </mat-tab>
 
   </mat-tab-group>

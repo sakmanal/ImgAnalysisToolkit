@@ -11,16 +11,17 @@ import { BinarizationComponent } from '../binarization/binarization.component';
 export class TabsComponent implements AfterViewInit, AfterViewChecked {
 
   ImgUrl:any;
+  ImgName:string;
   
   @ViewChild(BinarizationComponent) Binarization;
 
   ngAfterViewInit(){
-        this.ImgUrl = this.Binarization.ImgUrl;
+        this.ImgUrl = this.Binarization.ImgUrl;   
   }
 
   ngAfterViewChecked(){
     this.ImgUrl = this.Binarization.ImgUrl;
-   
+    this.ImgName = this.Binarization.ImageName;
   }
 
 }
