@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 
+
 @Component({
   selector: 'app-image-info',
   templateUrl: './image-info.component.html',
@@ -17,17 +18,41 @@ export class ImageInfoComponent implements OnInit {
 
 
 
-    var obj = { "image name": "doc1.jpg", "words": ["Test", "iron man"] };
+    /*var obj = { "image name": "doc1.jpg", "words": ["Test", "iron man"] };
     obj.words.push("Hulk", "Batman");
     obj.words.push(this.word);
+
+    var image = { "image name": "doc2.jpg", "words": ["Sakis", "Nikos", "Stavros"] };
     
 
     localStorage.setItem('myStorage', JSON.stringify(obj));
 
+    var ImageName = "doc2";
+    var imageJson =  JSON.stringify(image);
+    localStorage.setItem(ImageName, imageJson);
+
+   
+
     //And to retrieve the object later
 
-     var test = JSON.parse(localStorage.getItem('myStorage'));
+     var test = JSON.parse(localStorage.getItem(ImageName));
      console.log(test.words);
+
+     for (let i = 0; i < localStorage.length; i++){
+      let key = localStorage.key(i);
+      let value = localStorage.getItem(key);
+      console.log(key, value);}
+      
+
+    for (let i = 0; i < localStorage.length; i++){
+      let key = localStorage.key(i);
+      if (key == ImageName)
+      {
+        console.log(key);}
+
+      
+       }*/
+  
 
   }
 

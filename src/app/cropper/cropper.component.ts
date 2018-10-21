@@ -3,6 +3,7 @@ import { AngularCropperjsComponent } from 'angular-cropperjs';
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 import { faArrowsAlt } from '@fortawesome/free-solid-svg-icons';
+import { SavejsonService } from '../savejson.service';
 
 @Component({
   selector: 'app-cropper',
@@ -38,7 +39,7 @@ export class CropperComponent {
   
   
 
-  constructor(public dialog: MatDialog) {}
+  constructor(public dialog: MatDialog, private savejsonService: SavejsonService) {}
 
 
   openDialog(): void {
@@ -51,8 +52,11 @@ export class CropperComponent {
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The dialog was closed');
       this.word = result;
-      if (this.word) {console.log(this.word);}
-      //this.word='';
+      if (this.word) {
+         //console.log(this.word);
+         //this.word='';
+         this.savejsonService.addword(this.imageName, this.word);
+      }
     });
   }
  
