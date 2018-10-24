@@ -1,9 +1,14 @@
-<div>
-  <p>Without JSON pipe:</p>
-  <pre>{{object}}</pre>
-  <p>With JSON pipe:</p>
-  <pre>{{object | json}}</pre>
+<mat-form-field style="margin: 10px">
+  <mat-select placeholder="ImageFile Name" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
+    <mat-option *ngFor="let imagename of ImageNames" [value]="imagename">
+      {{imagename}}
+    </mat-option>
+  </mat-select>
+</mat-form-field>
+
+<div *ngIf="ImageJson">
+<mat-list *ngFor="let word of ImageJson.words">
+  <mat-list-item>{{word}}</mat-list-item>
+  <mat-divider></mat-divider>
+</mat-list>
 </div>
-
-
-<button (click)="json()">xxx</button>

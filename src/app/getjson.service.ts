@@ -26,5 +26,15 @@ getJson(imageName:string):object{
   return ;
 }
 
+getImagekeys():object{
+  var imageNames = [];
+  for (let i = 0; i < localStorage.length; i++){
+    let key = localStorage.key(i);
+    imageNames.push(key);
+  }
+  return imageNames;
+
+
+}
 
 }
