@@ -33,11 +33,11 @@
            <mat-slider 
            [disabled]="disableImageFilter"
            color="primary" 
-          
+           [thumbLabel]= "true"
            [step]="step"
            [(ngModel)]="value"
            [max]="max"
-           [min]="min" (click)="view()"></mat-slider>{{value}}
+           [min]="min" (change)="view()"></mat-slider>{{value}}
            </p>
          
            

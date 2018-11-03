@@ -115,9 +115,9 @@ view():void{
               pixelData.data[i + 2] = bw; // b  
               
               
-             if (pixelData.data[i]>this.value){pixelData.data[i]=255;}else{pixelData.data[i]=0;}
-             if (pixelData.data[i+1]>this.value){pixelData.data[i+1]=255;}else{pixelData.data[i+1]=0;}
-             if (pixelData.data[i+2]>this.value){pixelData.data[i+2]=255;}else{pixelData.data[i+2]=0;}
+             if (pixelData.data[i]>=this.value){pixelData.data[i]=255;}else{pixelData.data[i]=0;}
+             if (pixelData.data[i+1]>=this.value){pixelData.data[i+1]=255;}else{pixelData.data[i+1]=0;}
+             if (pixelData.data[i+2]>=this.value){pixelData.data[i+2]=255;}else{pixelData.data[i+2]=0;}
           }
 
 
