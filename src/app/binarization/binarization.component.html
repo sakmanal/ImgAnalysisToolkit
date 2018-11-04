@@ -3,14 +3,17 @@
     
     
     
-    <mat-slide-toggle style="margin: 0 10px; font-size: 13px;"  color="primary" [(ngModel)]="checked" (click)="view()" [disabled]="disableImageFilter">Binarization</mat-slide-toggle>
-    <mat-slide-toggle style="margin: 0 10px; font-size: 13px" color="primary" [(ngModel)]="checked2" (click)="view()" [disabled]="disableImageFilter">Invert Colours</mat-slide-toggle>
+    <button mat-stroked-button style="margin: 0 5px" [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
+    <button mat-stroked-button  [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
+    <button mat-stroked-button style="margin: 0 5px" [color]="colornegative" (click)="InvertColoursFilter()">invert Colours</button>
+    <button mat-stroked-button   (click)="view()">restore Image</button>
+
+   
     
     <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>
     <mat-slider 
              [disabled]="disableImageFilter"
              color="warn" 
-             
              [step]="30"
              [(ngModel)]="width"
              [max]="maxwidth"
@@ -29,7 +32,7 @@
                
            
            
-             Binarization Threshold:
+             Threshold:
            <mat-slider 
            [disabled]="disableImageFilter"
            color="primary" 
@@ -37,15 +40,16 @@
            [step]="step"
            [(ngModel)]="value"
            [max]="max"
-           [min]="min" (change)="view()"></mat-slider>{{value}}
+           [min]="min" (change)="manualThresholdBinarization()"></mat-slider>{{value}}
            </p>
          
            
           <p style="margin: 0 10px;">Image dimensions: {{x3}} x {{y3}}</p>
          </div>
        
-       
          
+        <!-- <mat-spinner *ngIf="showSpinner" class="Spinner" [diameter]="100" ></mat-spinner>-->
+        <div *ngIf="showSpinner" class="spinner"></div>
          
        
                      <p> <canvas class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas> </p>
