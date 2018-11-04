@@ -202,7 +202,7 @@ sauvolaBinarization(){
         this.sauvola(ctx, w, h);
         this.showSpinner = false;
         this.ImgUrl = canvas.toDataURL("image/png", 1);
-      }, 5000);
+      }, 1000);
      
       
     };
@@ -344,7 +344,7 @@ greyscale(context, w, h) {
 
 sauvola(context, w, h){
 
-  var radius = 15;
+  var radius = 3;
   var k = 0.5;
   var r = 128;
 
