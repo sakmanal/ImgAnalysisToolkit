@@ -51,11 +51,11 @@ originalSize(){
 }
 
 fitscreen(){
-   var r = this.x3 / this.y3;
-   var w  = window.innerWidth / (window.innerHeight-300);
+   var r = this.img.width / this.img.height;
+   var w  = window.innerWidth / (window.innerHeight-250);
    if (w > r)
    {
-       this.width = this.x3 * (window.innerHeight-300)/this.y3;
+       this.width = this.img.width * (window.innerHeight-250)/this.img.height;
        
    }
    else
@@ -98,7 +98,7 @@ view():void{
          this.flag = false;
          this.width = this.img.width;
          this.height = this.img.height;
-         
+         this.fitscreen();
      } 
       this.x3 = this.img.width;
       this.y3 = this.img.height;

@@ -21,10 +21,19 @@
          </mat-slider>
          <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
          
-         <button mat-raised-button style="margin: 0 7px;"  color="warn" [disabled]="disableImageFilter" (click)="fillscreen()">fill screen</button>
+         <!--<button mat-raised-button style="margin: 0 7px;"  color="warn" [disabled]="disableImageFilter" (click)="fillscreen()">fill screen</button>
          <button mat-raised-button  color="warn"  [disabled]="disableImageFilter" (click)="originalSize()">original size</button>
-         <button mat-raised-button style="margin: 0 7px;" color="warn" [disabled]="disableImageFilter" (click)="fitscreen()">fit screen</button>
-
+         <button mat-raised-button style="margin: 0 7px;" color="warn" [disabled]="disableImageFilter" (click)="fitscreen()">fit screen</button>-->
+         
+         <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()"> 
+            <mat-icon>crop_free</mat-icon>
+        </button>
+        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="original size" [disabled]="disableImageFilter" (click)="originalSize()"> 
+            <mat-icon>center_focus_weak</mat-icon>
+        </button>
+        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
+            <mat-icon>fullscreen_exit</mat-icon>
+        </button>
 
          <div *ngIf="x3">
             <p> <button mat-raised-button color="primary" (click)="save()" style="margin: 0 10px;"  [disabled]="disableImageFilter"><mat-icon>save</mat-icon> Save Image</button>
@@ -41,10 +50,10 @@
            [(ngModel)]="value"
            [max]="max"
            [min]="min" (change)="manualThresholdBinarization()"></mat-slider>{{value}}
-           </p>
+           
          
            
-          <p style="margin: 0 10px;">Image dimensions: {{x3}} x {{y3}}</p>
+          <strong style="margin: 0 30px;"><span style="color:#F44336;font-size:15px"> Image dimensions:</span> {{x3}} x {{y3}}</strong></p>
          </div>
        
          
