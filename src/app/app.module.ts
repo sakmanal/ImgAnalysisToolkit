@@ -16,6 +16,8 @@ import { BinarizationComponent } from './binarization/binarization.component';
 import { AboutComponent } from './about/about.component';
 import { TextSelectPopUpComponent } from './text-select-pop-up/text-select-pop-up.component';
 import { ImageInfoComponent } from './image-info/image-info.component';
+import { TestComponent } from './test/test.component';
+import { Test2Component } from './test2/test2.component';
 
 @NgModule({
   declarations: [
@@ -26,7 +28,9 @@ import { ImageInfoComponent } from './image-info/image-info.component';
     BinarizationComponent,
     AboutComponent,
     TextSelectPopUpComponent,
-    ImageInfoComponent
+    ImageInfoComponent,
+    TestComponent,
+    Test2Component
   ],
   imports: [
     BrowserModule,
