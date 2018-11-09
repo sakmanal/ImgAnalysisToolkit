@@ -19,7 +19,10 @@
 
     <mat-tab label="test">
         <ng-template matTabContent> 
-      <app-test></app-test>
+      <app-test
+      [imageUrl]="ImgUrl"
+      [imageName]="ImgName">
+      </app-test>
     </ng-template>
     </mat-tab>
 

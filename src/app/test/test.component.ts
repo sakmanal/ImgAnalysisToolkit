@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, Input } from '@angular/core';
 import {hello} from 'src/jcrop.js';
 
 @Component({
@@ -10,11 +10,16 @@ export class TestComponent implements OnInit {
 
   constructor() { }
 
-  jcp;
-   Jcrop = hello();
+  
+  @Input() imageUrl: any;
+  @Input() imageName:string;
+  Jcrop:any = hello();
+  jcp:any;
+  //test:string = "./assets/document1.jpg";
+
   ngOnInit() {
     
-    
+    if (this.imageUrl)
       this.Jcrop.load('target').then(img => {
         this.jcp = this.Jcrop.attach(img,{multi:true});
         const rect = this.Jcrop.Rect.sizeOf(this.jcp.el);
