@@ -15,16 +15,19 @@ export class TestComponent implements OnInit {
   @Input() imageName:string;
   Jcrop:any = hello();
   jcp:any;
-  //test:string = "./assets/document1.jpg";
+  width:number;
+  maxwidth:number = window.innerWidth;
+  //minwidth:number;
   @ViewChild("canvasfilter") fcanvas;
+
 
   ngOnInit() {
     
     if (this.imageUrl){
       this.Jcrop.load('target').then(img => {
         this.jcp = this.Jcrop.attach(img,{multi:true});
-        const rect = this.Jcrop.Rect.sizeOf(this.jcp.el);
-        this.jcp.newWidget(rect.scale(.7,.5).center(rect.w,rect.h));
+        //const rect = this.Jcrop.Rect.sizeOf(this.jcp.el);
+        //this.jcp.newWidget(rect.scale(.7,.5).center(rect.w,rect.h));
         this.jcp.focus();
       });
 
@@ -34,7 +37,8 @@ export class TestComponent implements OnInit {
       let img = new Image;
       img.onload = () =>{
       
-         
+         this.width = img.width;
+         //this.minwidth  = img.width;
          var w = 50;
          var h = 50;
          canvas.width = w;
@@ -46,6 +50,7 @@ export class TestComponent implements OnInit {
          
      };
      img.src = this.imageUrl;
+     
     } 
   }
 
@@ -77,5 +82,8 @@ export class TestComponent implements OnInit {
      if (this.jcp){
         this.jcp.removeWidget(this.jcp.active);}
    }
+
+
+
 
 }

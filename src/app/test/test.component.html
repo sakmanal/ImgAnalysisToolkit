@@ -18,12 +18,31 @@
     </div>
 
     <br>
+ 
+   <!-- <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>
+    <mat-slider 
+             color="warn" 
+             [step]="30"
+             [(ngModel)]="width"
+             [max]="maxwidth"
+             [min]="20" >
+         </mat-slider>
+         <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
 
-</div>
+         <br>-->
+
+         
+         <div class="slidecontainer">
+            <input type="range" min="300" max="{{maxwidth}}" value="30" class="slider" id="myRange" [(ngModel)]="width"> 
+            <p>zoom: {{ (width/maxwidth)*100 | number:'1.0-0'}}%</p>
+          </div>
+          
+
+ </div>
 
   <div class="centerimg">
     <div class="responsive">
-            <img id="target"   src={{imageUrl}}>
+            <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}}>
     </div>
 </div>
   <canvas  #canvasfilter></canvas>
