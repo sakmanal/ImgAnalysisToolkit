@@ -10,7 +10,7 @@ import Jcrop from 'jcrop';
 })
 export class Test2Component implements OnInit {
 
-   //@ViewChild("target") target;
+   
 
   constructor() { }
  jcp;

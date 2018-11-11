@@ -1415,13 +1415,17 @@ export function hello() {
       value: function initStageDrag() {
         var _this3 = this;
   
-        var crop, pos, w, h, stick;
+        var crop, pos, w, h, stick, domRect ;
         (0, _dragger2.default)(this.el, function (x, y, e) {
           if (!_this3.canCreate()) return false;
           crop = (_this3.options.widgetConstructor || _widget2.default).create(_this3.options);
           pos = crop.pos;
-          pos.x = e.pageX - _this3.el.offsetParent.offsetLeft - _this3.el.offsetLeft;
-          pos.y = e.pageY - _this3.el.offsetParent.offsetTop - _this3.el.offsetTop-110;
+          //pos.x = e.pageX - _this3.el.offsetParent.offsetLeft - _this3.el.offsetLeft;
+          //pos.y = e.pageY - _this3.el.offsetParent.offsetTop - _this3.el.offsetTop - 110;
+          domRect = _this3.el.getBoundingClientRect();
+          pos.x = e.clientX - domRect.left;
+          pos.y = e.clientY - domRect.top;
+
           w = _this3.el.offsetWidth;
           h = _this3.el.offsetHeight;
           _this3.addWidget(crop);

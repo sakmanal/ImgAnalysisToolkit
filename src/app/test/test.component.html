@@ -1,7 +1,5 @@
-<div style="padding:0 5%;">
-  <h1 style="font-family:Helvetica,sans-serif;">
-    Jcrop Example <span style="color:lightgray;">- draw some crops!</span>
-  </h1>
+<div style="padding:0 5%;" class="responsive">
+  
  
   
   <br>
@@ -10,7 +8,7 @@
 
     <div style="margin-top:0.5em;">
     
-      <button (click)="xxx(0.2)">Low</button>
+      <button (click)="xxx(0.1)">Low</button>
       <button (click)="xxx(0.6)">medium</button>
       <button (click)="xxx(0.9)">Full</button>
       <button (click)="log()">log </button>
@@ -21,9 +19,13 @@
 
     <br>
 
+</div>
 
-
+  <div class="centerimg">
+    <div class="responsive">
+            <img id="target"   src={{imageUrl}}>
+    </div>
+</div>
+  <canvas  #canvasfilter></canvas>
  
-  <img id="target" style=" max-width: 100%; max-height: 100%;" src={{imageUrl}}>
-
-  </div>
+ 

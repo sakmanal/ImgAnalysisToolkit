@@ -49,7 +49,7 @@
   .jcrop-widget {
     position: absolute;
     box-sizing: border-box;
-    border: 1px white dashed;
+    border: 2px rgb(37, 171, 233) dashed;
     opacity: 0.7;
     background: transparent;
     transition: opacity 1s;
