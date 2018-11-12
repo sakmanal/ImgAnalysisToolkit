@@ -18,6 +18,7 @@ import { TextSelectPopUpComponent } from './text-select-pop-up/text-select-pop-u
 import { ImageInfoComponent } from './image-info/image-info.component';
 import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
+import { MouseWheelDirective } from './mousewheel.directive';
 
 @NgModule({
   declarations: [
@@ -30,7 +31,8 @@ import { Test2Component } from './test2/test2.component';
     TextSelectPopUpComponent,
     ImageInfoComponent,
     TestComponent,
-    Test2Component
+    Test2Component,
+    MouseWheelDirective
   ],
   imports: [
     BrowserModule,

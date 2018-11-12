@@ -1,5 +1,5 @@
-import { Component, OnInit } from '@angular/core';
-import Jcrop from 'jcrop';
+import { Component } from '@angular/core';
+//import Jcrop from 'jcrop';
 
 //declare var Jcrop:any;
 
@@ -8,57 +8,22 @@ import Jcrop from 'jcrop';
   templateUrl: './test2.component.html',
   styleUrls: ['./test2.component.css']
 })
-export class Test2Component implements OnInit {
+export class Test2Component  {
 
-   
+  mouseWheelDir: string = '';
+  imgWidth: number = 400;
 
-  constructor() { }
- jcp;
-  ngOnInit() {
-
-    Jcrop.load('target').then(img => {
-      this.jcp = Jcrop.attach(img,{multi:true}); 
-    }); 
-     
+  mouseWheelUpFunc() {
+    console.log('mouse wheel up');
+    if (this.imgWidth <= window.innerWidth) 
+        this.imgWidth = this.imgWidth+10;
   }
 
-
-  enable(){
-    if (!this.jcp){
-    Jcrop.load('target').then(img => {
-      this.jcp = Jcrop.attach(img,{multi:true}); 
-    }); 
-   }
+  mouseWheelDownFunc() {
+    console.log('mouse wheel down');
+     if (this.imgWidth >= 300) 
+         this.imgWidth = this.imgWidth-10;
   }
 
-  xxx(value){
-
-    
-         
-    if (!this.jcp){
-        console.log("error");
-        }else{
-    this.jcp.setOptions({shadeOpacity:value});}
-  }
-
- 
-  log(){
-    if (!this.jcp){
-        console.log("error");
-        }else{
-    console.log(this.jcp.active.pos);}
-  }
-    
-  rect(){
-    if (this.jcp){
-        const rect = Jcrop.Rect.create(0,0,50,50);
-         const options = {};
-         this.jcp.newWidget(rect,options);}
-   }
-
-   remove(){
-     if (this.jcp){
-        this.jcp.removeWidget(this.jcp.active);}
-   }
 
 }

@@ -19,6 +19,7 @@ export class TestComponent implements OnInit {
   maxwidth:number = window.innerWidth;
   //minwidth:number;
   @ViewChild("canvasfilter") fcanvas;
+  mouseWheelDir: string = '';
 
 
   ngOnInit() {
@@ -82,6 +83,19 @@ export class TestComponent implements OnInit {
      if (this.jcp){
         this.jcp.removeWidget(this.jcp.active);}
    }
+
+
+   mouseWheelUpFunc() {
+    //console.log('mouse wheel up');
+    if (this.width <= window.innerWidth) 
+        this.width = this.width + 30;
+  }
+
+  mouseWheelDownFunc() {
+    //console.log('mouse wheel down');
+     if (this.width >= 300) 
+         this.width = this.width - 30;
+  }
 
 
 

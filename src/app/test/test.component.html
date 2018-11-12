@@ -40,9 +40,9 @@
 
  </div>
 
-  <div class="centerimg">
+  <div class="centerimg" mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()">
     <div class="responsive">
-            <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}}>
+            <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}} >
     </div>
 </div>
   <canvas  #canvasfilter></canvas>
