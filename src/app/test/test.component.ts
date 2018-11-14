@@ -88,13 +88,13 @@ export class TestComponent implements OnInit {
    mouseWheelUpFunc() {
     //console.log('mouse wheel up');
     if (this.width <= window.innerWidth) 
-        this.width = this.width + 30;
+        this.width = this.width + 50;
   }
 
   mouseWheelDownFunc() {
     //console.log('mouse wheel down');
      if (this.width >= 300) 
-         this.width = this.width - 30;
+         this.width = this.width - 50;
   }
 
 

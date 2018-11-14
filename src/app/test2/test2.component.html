@@ -1,2 +1,14 @@
 <h2>Mouse wheel scroll on below image</h2>
-    <img mouseWheel [ngStyle]="{'width.px':imgWidth }" src="https://cdn.pixabay.com/photo/2016/10/27/22/53/heart-1776746__340.jpg" (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()"/>
+
+
+
+<div class="container" id="container" >
+    <div class="slide" id="slide" [ngStyle]="{ 'transform': 'translate(' + x + 'px, ' + y + 'px) scale(' + scale + ', ' + scale + ')'}">
+    <img id="g"  src={{img.src}} />
+    </div>
+</div>
+
+<!-- [ngStyle]="{'transform': 'translateX(' + $value + 'px)'}"  
+     [ngStyle]="{'transform': 'translate(' + $x + 'px, ' + $y + 'px)'}"  
+     'transform': 'scale(' + scale + ', ' + scale + ')'
+    -->
