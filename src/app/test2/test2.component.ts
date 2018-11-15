@@ -1,5 +1,5 @@
 import { Component, HostListener, OnInit } from '@angular/core';
-
+import {hello} from 'src/jcrop.js';
 
 @Component({
   selector: 'app-test2',
@@ -36,6 +36,9 @@ export class Test2Component implements OnInit {
    x;
    y;
 
+   Jcrop:any = hello();
+   jcp:any;
+
   ngOnInit(){
     this.img.onload = () =>{
       
@@ -54,6 +57,13 @@ export class Test2Component implements OnInit {
 
   this.scale = 2;
 
+
+  if (this.img.src){
+    this.Jcrop.load('g').then(img => {
+      this.jcp = this.Jcrop.attach(img,{multi:true});
+      this.jcp.focus();
+    });
+  }
 
   }
 

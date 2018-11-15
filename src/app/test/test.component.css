@@ -47,3 +47,10 @@
     background: #4CAF50;
     cursor: pointer;
 }
+
+
+.st{
+    position: fixed;
+    bottom: 30px;
+    right : 50px;
+}

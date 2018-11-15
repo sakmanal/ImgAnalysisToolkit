@@ -14,8 +14,11 @@
       <button (click)="log()">log </button>
       <button (click)="rect()">new rect </button>
       <button (click)="remove()">remove rect </button>
+      <button (click)="cropImage()">crop </button>
       
     </div>
+
+    
 
     <br>
  
@@ -40,11 +43,16 @@
 
  </div>
 
+ <!-- <canvas  #canvasfilter></canvas> -->       
+  <img src={{cropImg}}>
+ 
   <div class="centerimg" mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()">
     <div class="responsive">
             <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}} >
     </div>
 </div>
-  <canvas  #canvasfilter></canvas>
+
+
+  
  
  

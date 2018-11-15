@@ -17,10 +17,10 @@ export class TestComponent implements OnInit {
   jcp:any;
   width:number;
   maxwidth:number = window.innerWidth;
-  //minwidth:number;
-  @ViewChild("canvasfilter") fcanvas;
-  mouseWheelDir: string = '';
-
+  //@ViewChild("canvasfilter") fcanvas;     //no need when using offscreen canvas!!
+  originalWidth:number;
+  cropImg:any;
+ 
 
   ngOnInit() {
     
@@ -32,27 +32,49 @@ export class TestComponent implements OnInit {
         this.jcp.focus();
       });
 
-      let canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
-      let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-
       let img = new Image;
       img.onload = () =>{
-      
          this.width = img.width;
-         //this.minwidth  = img.width;
-         var w = 50;
-         var h = 50;
-         canvas.width = w;
-         canvas.height = h;
-         ctx.drawImage(img, 30, 30, 50, 50);
-         
-   
-        
-         
-     };
-     img.src = this.imageUrl;
+         this.originalWidth = img.width;
+      
+      };
+       img.src = this.imageUrl;
+      
      
     } 
+  }
+ 
+
+  cropImage(){
+    const displayedImage = document.getElementById('target');       
+    const ratio = this.originalWidth / displayedImage.offsetWidth;
+
+    var pos = this.jcp.active.pos;
+    const x = Math.round(pos.x * ratio);
+    const y = Math.round(pos.y * ratio);
+
+    const w = Math.round(pos.w * ratio);
+    const h = Math.round(pos.h * ratio);
+
+
+    //let canvas:HTMLCanvasElement = this.fcanvas.nativeElement;              //with canvas
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;     //with offscreen canvas
+
+    let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+
+    let img = new Image;           
+
+    img.onload = () =>{        //Also working without img.onload()!!
+    
+      
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(img, -x, -y); 
+      this.cropImg = canvas.toDataURL("image/png", 1);
+  };
+  img.src = this.imageUrl; 
+
+
   }
 
 
@@ -69,7 +91,11 @@ export class TestComponent implements OnInit {
     if (!this.jcp){
         console.log("error");
         }else{
-    console.log(this.jcp.active.pos);}
+    console.log(this.jcp.active.pos);
+    var tmp = this.jcp.active.pos;
+    console.log(tmp.x);
+
+   }
   }
     
   rect(){
@@ -88,14 +114,16 @@ export class TestComponent implements OnInit {
    mouseWheelUpFunc() {
     //console.log('mouse wheel up');
     if (this.width <= window.innerWidth) 
-        this.width = this.width + 50;
+        this.width = this.width + 100;
   }
 
   mouseWheelDownFunc() {
     //console.log('mouse wheel down');
      if (this.width >= 300) 
-         this.width = this.width - 50;
+         this.width = this.width - 100;
   }
+
+ 
 
 
 
