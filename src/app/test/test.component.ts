@@ -77,6 +77,10 @@ export class TestComponent implements OnInit {
 
   }
 
+  opacity(value:boolean){
+    
+    this.jcp.setOptions({shade: value});
+  }
 
   xxx(value){
          
