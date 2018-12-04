@@ -3,11 +3,11 @@
     
     
     
-    <button mat-stroked-button style="margin: 0 5px" [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
-    <button mat-stroked-button  [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
-    <button mat-stroked-button style="margin: 0 5px" [color]="colornegative" (click)="InvertColoursFilter()">invert Colours</button>
-    <button mat-stroked-button   (click)="view()">restore Image</button>
-
+    <button mat-raised-button style="margin: 0 5px" [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
+    <button mat-raised-button  [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
+    <button mat-raised-button style="margin: 0 5px" [color]="colornegative" (click)="InvertColoursFilter()">invert Colours</button>
+    <button mat-raised-button  [color]="colorgpp" (click)="gppdBinarization()">gpp</button>
+    <button mat-raised-button style="margin: 0 5px"  (click)="view()">restore Image</button>
    
     
     <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>

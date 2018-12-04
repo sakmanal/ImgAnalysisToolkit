@@ -16,9 +16,10 @@
    padding: 1 14px;
  }
  
- /* toolbar shadow above the other toolbar */
+ 
  .mat-toolbar {
-   position: relative;
+   position: relative;   /* toolbar shadow above the other toolbar */
+   height: 50px;
  }
  
  
