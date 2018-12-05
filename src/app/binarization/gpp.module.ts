@@ -44,8 +44,7 @@ function gpp(context, width, height){
     var imageData = context.getImageData(0, 0, width, height);
     var data = imageData.data;
   
-    //const imageSize = data.length;
-    //console.log(imageSize, w*h*4);
+
   
     //Previous Global Parameters
     let Ix = width;
@@ -63,9 +62,9 @@ function gpp(context, width, height){
     let upsampling = 1;
     let dW1 = Math.min(Ix - 1, Math.min(20, Iy - 1));
   
-    var RH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
-    var GH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
-    var BH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
+    //var RH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
+    //var GH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
+    //var BH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
     let I, I1;
     let pix, gray, gray2, TH, graygray, pix1 = 0, gray1 = 0;
     let ydWIx, ydW_1Ix, ydW1Ix, ydW1_1Ix;
@@ -77,13 +76,7 @@ function gpp(context, width, height){
     let b;
     let aa, bb, cc, dd;
   
-  /*  for (let i = 0; i < 256; i++)
-    {
-          RH[i] = 0;
-          GH[i] = 0;
-          BH[i] = 0;
-    } */
-  
+
   
     var IMAGE = make2Darray(width, height);
     var IMAGE11 = make2Darray(width, height);
@@ -229,9 +222,6 @@ function gpp(context, width, height){
             
             IMAGE2[y][x] = (IMAGE[y][x] >= TH) ? 255 : 0;
             
-            /* data[4 * x + y * 4 * width] = IMAGE2[y][x];
-            data[4 * x + y * 4 * width + 1] = IMAGE2[y][x];
-            data[4 * x + y * 4 * width + 2] = IMAGE2[y][x]; */
         }
     }
   

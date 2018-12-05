@@ -1,65 +1,94 @@
 <input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
-    <button mat-raised-button style="margin: 0 10px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
-    
-    
-    
-    <button mat-raised-button style="margin: 0 5px" [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
-    <button mat-raised-button  [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
-    <button mat-raised-button style="margin: 0 5px" [color]="colornegative" (click)="InvertColoursFilter()">invert Colours</button>
-    <button mat-raised-button  [color]="colorgpp" (click)="gppdBinarization()">gpp</button>
-    <button mat-raised-button style="margin: 0 5px"  (click)="view()">restore Image</button>
-   
-    
-    <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>
-    <mat-slider 
-             [disabled]="disableImageFilter"
-             color="warn" 
-             [step]="30"
-             [(ngModel)]="width"
-             [max]="maxwidth"
-             [min]="20" >
-         </mat-slider>
-         <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
-         
-         <!--<button mat-raised-button style="margin: 0 7px;"  color="warn" [disabled]="disableImageFilter" (click)="fillscreen()">fill screen</button>
-         <button mat-raised-button  color="warn"  [disabled]="disableImageFilter" (click)="originalSize()">original size</button>
-         <button mat-raised-button style="margin: 0 7px;" color="warn" [disabled]="disableImageFilter" (click)="fitscreen()">fit screen</button>-->
-         
-         <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()"> 
-            <mat-icon>crop_free</mat-icon>
-        </button>
-        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="original size" [disabled]="disableImageFilter" (click)="originalSize()"> 
-            <mat-icon>center_focus_weak</mat-icon>
-        </button>
-        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
-            <mat-icon>fullscreen_exit</mat-icon>
-        </button>
 
-         <div *ngIf="x3">
-            <p> <button mat-raised-button color="primary" (click)="save()" style="margin: 0 10px;"  [disabled]="disableImageFilter"><mat-icon>save</mat-icon> Save Image</button>
-               
-               
+
+
+<button mat-raised-button style="margin: 0 10px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
+
+<button mat-raised-button style="margin: 0 5px" [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
+<button mat-raised-button  [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
+<button mat-raised-button style="margin: 0 5px" [color]="colornegative" (click)="InvertColoursFilter()">invert Colours</button>
+<button mat-raised-button  [color]="colorgpp" (click)="gppdBinarization()">gpp</button>
+<button mat-raised-button style="margin: 0 5px"  (click)="view()">restore Image</button>
+
+
+    Threshold:
+<mat-slider 
+    [disabled]="disableImageFilter"
+    color="primary" 
+    [thumbLabel]= "true"
+    [step]="step"
+    [(ngModel)]="value"
+    [max]="max"
+    [min]="min" (change)="manualThresholdBinarization()">
+</mat-slider>{{value}}
+ 
+
+
+
+<div class="row">
+        <div class="side">
+                <div *ngIf="x3">
+                      <button mat-icon-button><mat-icon color="warn"  (click)="zoomOUT()">zoom_out</mat-icon></button>
+                      <mat-slider 
+                               [disabled]="disableImageFilter"
+                               color="warn" 
+                               [step]="30"
+                               [(ngModel)]="width"
+                               [max]="maxwidth"
+                               [min]="20" >
+                      </mat-slider>
+                      <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
+      
+                      <p> <button mat-raised-button color="primary" (click)="save()" style="margin: 0 10px;"  [disabled]="disableImageFilter">
+                              <mat-icon>save</mat-icon> Save Image
+                          </button>
+                          <strong style="margin: 0 30px;"><span style="color:#F44336;font-size:15px"> Image dimensions:</span> {{x3}} x {{y3}}</strong>
+                      </p>
+
+                      <button mat-raised-button style="margin: 0 7px;"  color="warn" [disabled]="disableImageFilter" (click)="fillscreen()">fill screen</button>
+                      <button mat-raised-button  color="warn"  [disabled]="disableImageFilter" (click)="originalSize()">original size</button>
+                      <button mat-raised-button style="margin: 0 7px;" color="warn" [disabled]="disableImageFilter" (click)="fitscreen()">fit screen</button>
+      
+                      <br>
+             
+                      <mat-expansion-panel>
+      
+                        <mat-expansion-panel-header>
+                          <mat-panel-title>
+                            sauvola parameters
+                          </mat-panel-title>
+                        </mat-expansion-panel-header>
+                       
+                        <mat-form-field>
+                          <input matInput placeholder="masksize">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input matInput placeholder="stathera">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input matInput placeholder="rstathera">
+                        </mat-form-field>
+                        <mat-form-field>
+                          <input matInput placeholder="n">
+                        </mat-form-field>
+                       
+                      </mat-expansion-panel>
+
+                      <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()"> 
+                            <mat-icon>crop_free</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="original size" [disabled]="disableImageFilter" (click)="originalSize()"> 
+                            <mat-icon>center_focus_weak</mat-icon>
+                        </button>
+                        <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
+                            <mat-icon>fullscreen_exit</mat-icon>
+                        </button>
+                </div>      
+        </div>
+        <div class="main">
+                <div *ngIf="showSpinner" class="spinner"></div>
+                 <!-- <mat-spinner *ngIf="showSpinner" class="Spinner" [diameter]="100" ></mat-spinner>-->
            
-           
-             Threshold:
-           <mat-slider 
-           [disabled]="disableImageFilter"
-           color="primary" 
-           [thumbLabel]= "true"
-           [step]="step"
-           [(ngModel)]="value"
-           [max]="max"
-           [min]="min" (change)="manualThresholdBinarization()"></mat-slider>{{value}}
-           
-         
-           
-          <strong style="margin: 0 30px;"><span style="color:#F44336;font-size:15px"> Image dimensions:</span> {{x3}} x {{y3}}</strong></p>
-         </div>
-       
-         
-        <!-- <mat-spinner *ngIf="showSpinner" class="Spinner" [diameter]="100" ></mat-spinner>-->
-        <div *ngIf="showSpinner" class="spinner"></div>
-         
-       
-                     <p> <canvas class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas> </p>
-         
+                <p> <canvas class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas> </p>
+        </div>
+      </div>

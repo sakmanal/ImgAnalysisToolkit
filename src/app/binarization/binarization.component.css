@@ -13,7 +13,65 @@
 
 .mat-slider-horizontal {
     width: 300px;
-    } 
+    }
+    
+    
+.mat-form-field{
+
+   margin-left: 7px;
+   margin-top: 7px;
+   width: 100px;
+
+} 
+
+.mat-expansion-panel{
+   width: 400px;
+}
+
+
+* {
+   box-sizing: border-box;
+}
+
+
+
+
+
+
+
+
+
+
+/* Column container */
+.row {  
+   display: flex;
+   flex-wrap: wrap;
+}
+
+/* Create two unequal columns that sits next to each other */
+/* Sidebar/left column */
+.side {
+   flex: 30%;
+   /* background-color: #f1f1f1; */
+   padding: 20px;
+}
+
+/* Main column */
+.main {
+   flex: 70%;
+   /* background-color: white; */
+   padding: 20px;
+}
+
+
+
+
+/* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
+@media screen and (max-width: 700px) {
+   .row, .navbar {   
+       flex-direction: column;
+   }
+}
     
 .Spinner{
     padding: 0; 

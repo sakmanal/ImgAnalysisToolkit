@@ -39,6 +39,9 @@ colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
 
+
+panelOpenState = false;
+
 zoomIN(){
   if (this.width < window.innerWidth) {this.width += 30};
 }
