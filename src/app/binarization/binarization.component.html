@@ -1,8 +1,11 @@
+
 <input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
 
 
-<div style="margin: 5px">
+
+<div class="top-buttons">
 <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;  font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
+
 
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  [color]="colorotsu" (click)="otsuBinarization()">otsu</button>
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()">sauvola</button>
@@ -13,14 +16,16 @@
 <button mat-raised-button color="accent" (click)="save()"   [disabled]="disableImageFilter">
   <mat-icon>save</mat-icon> Save Image
 </button>
-
+<span class="alternative">
 <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()"> 
     <mat-icon>crop_free</mat-icon>
 </button>
 
+
+
 <button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
     <mat-icon>fullscreen_exit</mat-icon>
-</button>
+</button></span>
 </div>
 
 
@@ -32,12 +37,12 @@
         <div class="side">
                 <div *ngIf="img.src">
 
-                    <strong><span style="color:#F44336;font-size:15px"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
+                    <strong><span style="color:#FFEB3B;font-size:15px"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
                     <p>
                     Threshold:
                     <mat-slider 
                         [disabled]="disableImageFilter"
-                        color="primary" 
+                        color="warn" 
                         [thumbLabel]= "true"
                         [step]="step"
                         [(ngModel)]="value"
@@ -55,16 +60,16 @@
                           </mat-panel-title>
                         </mat-expansion-panel-header>
                        
-                        <mat-form-field>
+                        <mat-form-field color="warn">
                           <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize">
                         </mat-form-field>
-                        <mat-form-field>
+                        <mat-form-field color="warn">
                           <input matInput type="number" [(ngModel)]="stathera" placeholder="stathera">
                         </mat-form-field>
-                        <mat-form-field>
+                        <mat-form-field color="warn">
                           <input matInput type="number" [(ngModel)]="rstathera" placeholder="rstathera">
                         </mat-form-field>
-                        <mat-form-field>
+                        <mat-form-field color="warn">
                           <input matInput type="number" [(ngModel)]="n" placeholder="n">
                         </mat-form-field>
                        
@@ -78,28 +83,28 @@
                             </mat-panel-title>
                           </mat-expansion-panel-header>
                          
-                          <mat-form-field>
+                          <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="dw" placeholder="dW">
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="k" placeholder="k">
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="R" placeholder="R">
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="q" placeholder="q">
                           </mat-form-field>
-                          <mat-form-field>
+                          <mat-form-field color="warn">
                               <input matInput type="number" [(ngModel)]="p1" placeholder="p1">
                             </mat-form-field>
-                            <mat-form-field>
+                            <mat-form-field color="warn">
                               <input matInput type="number" [(ngModel)]="p2" placeholder="p2">
                             </mat-form-field>
-                            <mat-form-field>
+                            <mat-form-field color="warn">
                               <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1">
                             </mat-form-field>
-                            <mat-checkbox style="margin-left: 5px" [(ngModel)]="upsampling">upsampling</mat-checkbox>
+                            <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">upsampling</mat-checkbox>
                          
                         </mat-expansion-panel>
                    

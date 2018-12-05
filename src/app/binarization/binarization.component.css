@@ -7,9 +7,6 @@
     max-height: 100%;
 }
 
-.example-form-field {
-    width: 200px;
-  }
 
 .mat-slider-horizontal {
     min-width: 200px;
@@ -24,24 +21,19 @@
 
 } 
 
-.mat-expansion-panel{
-   /* width: 300px; */
+/* .mat-expansion-panel{
+   width: 300px;
 }
-
-
-
+ */
+.top-buttons{
+   margin: 5px;
+   
+}
 
 
 * {
    box-sizing: border-box;
 }
-
-
-
-
-
-
-
 
 
 
