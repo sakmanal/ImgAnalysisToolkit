@@ -42,18 +42,20 @@ colorgpp:string = "primary";
 
 panelOpenState = false;
 
-zoomIN(){
+/* zoomIN(){
   if (this.width < window.innerWidth) {this.width += 30};
 }
 
 zoomOUT(){
    if (this.width>window.innerWidth){this.width = window.innerWidth; }
    this.width -= 30;
-}
+}*/
 
 fillscreen(){
-  this.width = window.innerWidth;
-}
+  var width = document.getElementById('main').offsetWidth;
+  this.width = width;
+  //this.width = window.innerWidth;
+} 
 
 originalSize(){
 
@@ -61,6 +63,7 @@ originalSize(){
 }
 
 fitscreen(){
+  var width = document.getElementById('main').offsetWidth;
    var r = this.img.width / this.img.height;
    var w  = window.innerWidth / (window.innerHeight-250);
    if (w > r)
@@ -70,8 +73,25 @@ fitscreen(){
    }
    else
    {
-       this.width = window.innerWidth;
+       //this.width = window.innerWidth;
+       
+       this.width = width;
    }
+}
+
+
+mouseWheelUpFunc() {
+  //console.log('mouse wheel up');
+  var width = document.getElementById('main').offsetWidth;
+  //console.log(width)
+  if (this.width <= width) 
+      this.width = this.width + 100;
+}
+
+mouseWheelDownFunc() {
+  //console.log('mouse wheel down');
+   if (this.width >= 300) 
+       this.width = this.width - 100;
 }
 
 onSelectFile(event:any):void { // called each time file input changes
