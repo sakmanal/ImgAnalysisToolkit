@@ -12,7 +12,7 @@
   }
 
 .mat-slider-horizontal {
-    width: 300px;
+    min-width: 200px;
     }
     
     
@@ -25,7 +25,7 @@
 } 
 
 .mat-expansion-panel{
-   width: 300px;
+   /* width: 300px; */
 }
 
 
@@ -54,14 +54,14 @@
 /* Create two unequal columns that sits next to each other */
 /* Sidebar/left column */
 .side {
-   flex: 25%;
+   flex: 30%;
    /* background-color: #289cd1; */
    padding: 20px;
 }
 
 /* Main column */
 .main {
-   flex: 75%;
+   flex: 70%;
    /* background-color: rgb(65, 156, 118); */
    /* padding: 20px; */
 }
@@ -70,8 +70,8 @@
 
 
 /* Responsive layout - when the screen is less than 700px wide, make the two columns stack on top of each other instead of next to each other */
-@media only screen and (max-width: 700px) {
-   .row, .navbar {   
+@media only screen and (max-width: 940px) { /* works only if content width-not-steady */
+   .row {   
        flex-direction: column;
    }
 }

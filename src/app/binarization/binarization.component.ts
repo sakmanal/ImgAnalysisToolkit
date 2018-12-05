@@ -65,10 +65,10 @@ originalSize(){
 fitscreen(){
   var width = document.getElementById('main').offsetWidth;
    var r = this.img.width / this.img.height;
-   var w  = window.innerWidth / (window.innerHeight-250);
+   var w  = window.innerWidth / (window.innerHeight-190);
    if (w > r)
    {
-       this.width = this.img.width * (window.innerHeight-250)/this.img.height;
+       this.width = this.img.width * (window.innerHeight-190)/this.img.height;
        
    }
    else
