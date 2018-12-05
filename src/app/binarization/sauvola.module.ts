@@ -1,7 +1,7 @@
-export default function sauvolaMethod(ctx, w, h){
+export default function sauvolaMethod(ctx, w, h, masksize, stathera, rstathera, n){
 
       greyscale(ctx, w, h);
-      sauvola(ctx, w, h);
+      sauvola(ctx, w, h, masksize, stathera, rstathera, n);
 
 }
 
@@ -43,15 +43,15 @@ function greyscale(context, w, h) {
 }
   
   
-function  sauvola(context, width, height){
+function  sauvola(context, width, height, _masksize, _stathera, _rstathera, _n){
   
     var imageData = context.getImageData(0, 0, width, height);
     var data = imageData.data;
   
-    let masksize = 8;
-    const stathera = 25;
-    const rstathera = 512;
-    const n = 1;
+    let masksize =  _masksize;
+    const stathera =  _stathera;
+    const rstathera = _rstathera;
+    const n = _n;
   
     const imageSize = data.length;
     //console.log(imageSize, w*h*4);

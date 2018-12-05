@@ -1,7 +1,7 @@
-export default function gppMethod(ctx, w, h){
+export default function gppMethod(ctx, w, h, dw, k, R, q, p1, p2, upsampling, dw1){
 
     greyscale(ctx, w, h);
-    gpp(ctx, w, h);
+    gpp(ctx, w, h, dw, k, R, q, p1, p2, upsampling, dw1);
 
 
 }
@@ -39,7 +39,7 @@ function make2Darray(w, h){
 }
   
   
-function gpp(context, width, height){
+function gpp(context, width, height, _dw, _k, _R, _q, _p1, _p2, _upsampling, _dw1){
   
     var imageData = context.getImageData(0, 0, width, height);
     var data = imageData.data;
@@ -51,16 +51,16 @@ function gpp(context, width, height){
     let Iy = height;
   
     //params
-    let dW = Math.min(Ix - 2, Math.min(10, Iy - 2));  //= 15;
+    let dW = Math.min(Ix - 2, Math.min(_dw, Iy - 2));  
   
-    let k = 2.0;  //= 1;
+    let k = _k;  
     k = k / 10;
-    let R = 128;
-    let q = 1 / 1.7;   
-    let p1 = 0.5;
-    let p2 = 0.7;  //0.8;
-    let upsampling = 1;
-    let dW1 = Math.min(Ix - 1, Math.min(20, Iy - 1));
+    let R = _R;
+    let q = 1 / _q;   
+    let p1 = _p1;
+    let p2 = _p2;  
+    let upsampling = _upsampling;
+    let dW1 = Math.min(Ix - 1, Math.min(_dw1, Iy - 1));
   
     //var RH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
     //var GH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
@@ -402,7 +402,7 @@ function gpp(context, width, height){
 
     TH = (D * 0.4);
 
-    if (upsampling == 1)
+    if (upsampling == true)
     {
         for (let y = 0; y < Iy; y++)
         {

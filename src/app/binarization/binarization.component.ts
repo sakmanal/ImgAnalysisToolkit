@@ -16,11 +16,8 @@ export class BinarizationComponent  {
 
 
 imageToCrop:any = '';
-otsuFilter:boolean = false;
 url:any;
 ImgUrl:any;
-x3:number;
-y3:number;
 value = 138;
 max = 255;
 min = 0;
@@ -38,9 +35,24 @@ colorotsu:string = "primary";
 colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
-
-
 panelOpenState = false;
+
+//sauvola parameters
+masksize:number = 8;
+stathera:number = 25;
+rstathera:number = 512;
+n:number = 1;
+
+//gpp parameters
+dw:number = 10;
+k:number = 2.0;
+R:number = 128;
+q:number = 1.7;
+p1:number = 0.5;
+p2:number = 0.7;
+upsampling:boolean = true;
+dw1:number = 20;
+
 
 /* zoomIN(){
   if (this.width < window.innerWidth) {this.width += 30};
@@ -57,10 +69,10 @@ fillscreen(){
   //this.width = window.innerWidth;
 } 
 
-originalSize(){
+/* originalSize(){
 
-   this.width = this.x3;
-}
+   this.width = this.img.width;
+} */
 
 fitscreen(){
   var width = document.getElementById('main').offsetWidth;
@@ -131,8 +143,7 @@ view():void{
          this.height = this.img.height;
          this.fitscreen();
      } 
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
@@ -162,8 +173,7 @@ InvertColoursFilter(){
   
   this.img.onload = () =>{
    
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
@@ -189,8 +199,7 @@ otsuBinarization(){
   
   this.img.onload = () =>{
      
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
@@ -215,8 +224,7 @@ sauvolaBinarization(){
   
   this.img.onload = () =>{
      
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
@@ -224,7 +232,7 @@ sauvolaBinarization(){
       ctx.drawImage(this.img, 0, 0);
 
       setTimeout(() => {
-        sauvolaMethod(ctx, w, h);
+        sauvolaMethod(ctx, w, h, this.masksize, this.stathera, this.rstathera, this.n);
         this.showSpinner = false;
         this.ImgUrl = canvas.toDataURL("image/png", 1);
       }, 1000);
@@ -246,8 +254,7 @@ manualThresholdBinarization(){
   
   this.img.onload = () =>{
      
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
@@ -272,15 +279,14 @@ gppdBinarization(){
   
   this.img.onload = () =>{
      
-      this.x3 = this.img.width;
-      this.y3 = this.img.height;
+
       var w = this.img.width;
       var h = this.img.height;
       canvas.width = w;
       canvas.height = h;
       ctx.drawImage(this.img, 0, 0);
 
-      gppMethod(ctx, w, h);
+      gppMethod(ctx, w, h, this.dw, this.k, this.R, this.q, this.p1, this.p2, this.upsampling, this.dw1);
       this.ImgUrl = canvas.toDataURL("image/png", 1);
     };
     this.img.src = this.url;
