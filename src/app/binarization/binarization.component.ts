@@ -4,6 +4,7 @@ import sauvolaMethod from './sauvola.module';
 import InvertColours from './invertColor.module';
 import binarize from './binarize.module';
 import gppMethod from './gpp.module';
+import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
 
 
 @Component({
@@ -13,8 +14,8 @@ import gppMethod from './gpp.module';
 })
 export class BinarizationComponent  {
 
-
-
+faExpand = faExpand;
+faCompress = faCompress;
 imageToCrop:any = '';
 url:any;
 ImgUrl:any;

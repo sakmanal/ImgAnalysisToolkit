@@ -2,7 +2,7 @@
 <div mat-dialog-content>
 
     <P><img  [src]="data.CroppedImage" /></P>
-  <mat-form-field>
+  <mat-form-field color="warn">
     <input matInput type="text" placeholder="enter word" [(ngModel)]="value" cdkFocusInitial (keyup.enter)=add()/>
     <button mat-button *ngIf="value" matSuffix mat-icon-button aria-label="Clear" (click)="value=''">
       <mat-icon>close</mat-icon>
@@ -11,6 +11,6 @@
 
 </div>
 <div mat-dialog-actions>
-  <button mat-button color="primary" (click)="onNoClick()">cancel</button>
-  <button mat-stroked-button color="primary" [mat-dialog-close]="value" >add</button>
+  <div class="alternative"><button mat-button color="primary" color="primary" (click)="onNoClick()">cancel</button></div>
+  <button mat-raised-button color="warn" [mat-dialog-close]="value" >add</button>
 </div>

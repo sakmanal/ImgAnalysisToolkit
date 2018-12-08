@@ -3,13 +3,23 @@
     <mat-tab label="Binarization"> 
      <app-binarization></app-binarization>
     </mat-tab>
+
+
+    <!-- <mat-tab label="test">
+      <ng-template matTabContent> 
+        <app-test
+           [imageUrl]="ImgUrl"
+           [imageName]="ImgName">
+        </app-test>
+     </ng-template>
+    </mat-tab> -->
     
     <mat-tab label="Text Selection"> 
         <ng-template matTabContent> 
-           <app-cropper 
+           <app-text-select 
              [imageUrl]="ImgUrl"
              [imageName]="ImgName">
-          </app-cropper>
+          </app-text-select>
         </ng-template>   
     </mat-tab>
 
@@ -17,20 +27,13 @@
       <app-image-info></app-image-info>
     </mat-tab>
 
-    <mat-tab label="test">
-        <ng-template matTabContent> 
-      <app-test
-      [imageUrl]="ImgUrl"
-      [imageName]="ImgName">
-      </app-test>
-    </ng-template>
-    </mat-tab>
+    
 
-    <mat-tab label="test2">
+    <!-- <mat-tab label="test2">
         <ng-template matTabContent> 
       <app-test2></app-test2>
     </ng-template>
-    </mat-tab>
+    </mat-tab> -->
 
   </mat-tab-group>
 

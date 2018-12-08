@@ -19,6 +19,7 @@ import { ImageInfoComponent } from './image-info/image-info.component';
 import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
 import { MouseWheelDirective } from './mousewheel.directive';
+import { TextSelectComponent } from './text-select/text-select.component';
 
 @NgModule({
   declarations: [
@@ -32,7 +33,8 @@ import { MouseWheelDirective } from './mousewheel.directive';
     ImageInfoComponent,
     TestComponent,
     Test2Component,
-    MouseWheelDirective
+    MouseWheelDirective,
+    TextSelectComponent
   ],
   imports: [
     BrowserModule,

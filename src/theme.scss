@@ -3,7 +3,7 @@
 
 $custom-primary: mat-palette($mat-indigo);
 $custom-accent:  mat-palette($mat-pink);
-$custom-warn:    mat-palette($mat-yellow);
+$custom-warn:    mat-palette($mat-yellow, 700);
 
 $custom-theme: mat-dark-theme($custom-primary, $custom-accent, $custom-warn);
 @include angular-material-theme($custom-theme);
@@ -11,9 +11,9 @@ $custom-theme: mat-dark-theme($custom-primary, $custom-accent, $custom-warn);
 
 // ALTERNATIVE THEME
 
-$alt-primary: mat-palette($mat-indigo, 400);
+$alt-primary: mat-palette($mat-grey, 50);
 $alt-accent:  mat-palette($mat-pink);
-$alt-warn:  mat-palette($mat-red);
+$alt-warn:  mat-palette($mat-blue);
 
 $alt-theme: mat-light-theme($alt-primary, $alt-accent, $alt-warn);
 

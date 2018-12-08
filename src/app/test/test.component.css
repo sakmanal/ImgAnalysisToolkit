@@ -1,6 +1,7 @@
 .centerimg{
     display: flex;
-    justify-content: center;  
+    justify-content: center; 
+    padding: 20px; 
 }
 
 .centerimg .responsive img {
@@ -54,3 +55,4 @@
     bottom: 30px;
     right : 50px;
 }
+

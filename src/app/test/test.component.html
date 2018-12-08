@@ -34,7 +34,7 @@
          </mat-slider>
          <button mat-icon-button><mat-icon color="warn"  (click)="zoomIN()">zoom_in </mat-icon></button>
 
-         <br>-->
+         <br> -->
 
          
          <div class="slidecontainer">
@@ -48,11 +48,12 @@
  <!-- <canvas  #canvasfilter></canvas> -->       
   <img src={{cropImg}}>
  
-  <div class="centerimg" mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()">
-    <div class="responsive">
+  <div class="centerimg">
+    <div  style="cursor: crosshair;" class="responsive" mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()">
             <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}} >
     </div>
 </div>
+
 
 
   

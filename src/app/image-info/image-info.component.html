@@ -1,5 +1,5 @@
-<mat-form-field style="margin: 10px">
-  <mat-select placeholder="ImageFile Name" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
+<mat-form-field color="warn" style="margin: 10px">
+  <mat-select  placeholder="ImageFile Name" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
     <mat-option *ngFor="let imagename of ImageNames" [value]="imagename">
       {{imagename}}
     </mat-option>
