@@ -58,53 +58,56 @@ export class TextSelectComponent implements OnInit {
  
 
   openDialog(): void {
-    this.cropImage();
-    const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
-      width: '500px',
-      data: { CroppedImage: this.cropImg}
-    });
 
-    dialogRef.afterClosed().subscribe(result => {
-      //console.log('The dialog was closed');
-      this.word = result;
-      if (this.word) {
-         //console.log(this.word);
-         //this.word='';
-         this.savejsonService.addword(this.imageName, this.word);
-      }
-    });
+    if (this.jcp.active){
+      this.cropImage();
+      const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
+        width: '500px',
+        data: { CroppedImage: this.cropImg}
+      });
+  
+      dialogRef.afterClosed().subscribe(result => {
+        //console.log('The dialog was closed');
+        this.word = result;
+        if (this.word) {
+           //console.log(this.word);
+           //this.word='';
+           this.savejsonService.addword(this.imageName, this.word);
+        }
+      });
+  }
   }
 
   cropImage(){
-    const displayedImage = document.getElementById('target');       
-    const ratio = this.originalWidth / displayedImage.offsetWidth;
-
-    var pos = this.jcp.active.pos;
-    const x = Math.round(pos.x * ratio);
-    const y = Math.round(pos.y * ratio);
-
-    const w = Math.round(pos.w * ratio);
-    const h = Math.round(pos.h * ratio);
-
-
-   
-    const canvas = document.createElement('canvas') as HTMLCanvasElement;     
-
-    let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-
-    let img = new Image;           
-    img.src = this.imageUrl;
-   
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(img, -x, -y); 
-      this.cropImg = canvas.toDataURL("image/png", 1);
- 
+         const displayedImage = document.getElementById('target');       
+         const ratio = this.originalWidth / displayedImage.offsetWidth;
+     
+         var pos = this.jcp.active.pos;
+         const x = Math.round(pos.x * ratio);
+         const y = Math.round(pos.y * ratio);
+     
+         const w = Math.round(pos.w * ratio);
+         const h = Math.round(pos.h * ratio);
+     
+     
+        
+         const canvas = document.createElement('canvas') as HTMLCanvasElement;     
+     
+         let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+     
+         let img = new Image;           
+         img.src = this.imageUrl;
+        
+           canvas.width = w;
+           canvas.height = h;
+           ctx.drawImage(img, -x, -y); 
+           this.cropImg = canvas.toDataURL("image/png", 1);
   }
 
    opacity(value:boolean){
-    
+    if (this.jcp){
     this.jcp.setOptions({shade: value});
+   }
   }
 
   
@@ -116,8 +119,10 @@ export class TextSelectComponent implements OnInit {
    }
 
    remove(){
-     if (this.jcp){
+     if (this.jcp.active){
         this.jcp.removeWidget(this.jcp.active);}
+
+      /*  if (this.jcp.active){console.log("ok")}else{console.log("error")}; */
    }
 
 
