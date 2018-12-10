@@ -4,6 +4,7 @@ import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 import { SavejsonService } from '../savejson.service';
 
+
 @Component({
   selector: 'app-text-select',
   templateUrl: './text-select.component.html',
@@ -22,19 +23,18 @@ export class TextSelectComponent implements OnInit {
   jcp:any;
   width:number;
   maxwidth:number = window.innerWidth;
-  //@ViewChild("canvasfilter") fcanvas;     //no need when using offscreen canvas!!
   originalWidth:number;
   cropImg:any;
   opc:boolean = false;
   word:string;
+  showScroll: boolean;
+  position = 'left';
 
   ngOnInit() {
     
     if (this.imageUrl){
       this.Jcrop.load('target').then(img => {
         this.jcp = this.Jcrop.attach(img,{multi:true});
-        //const rect = this.Jcrop.Rect.sizeOf(this.jcp.el);
-        //this.jcp.newWidget(rect.scale(.7,.5).center(rect.w,rect.h));
         this.jcp.focus();
         this.jcp.setOptions({shade: false});
         this.jcp.setOptions({shadeOpacity:0.2});
@@ -42,7 +42,6 @@ export class TextSelectComponent implements OnInit {
 
       let img = new Image;
       img.onload = () =>{
-         //this.width = img.width;
          this.originalWidth = img.width;
          if (img.width >= this.maxwidth){
            this.width = this.maxwidth;
@@ -88,8 +87,8 @@ export class TextSelectComponent implements OnInit {
     const h = Math.round(pos.h * ratio);
 
 
-    //let canvas:HTMLCanvasElement = this.fcanvas.nativeElement;              //with canvas
-    const canvas = document.createElement('canvas') as HTMLCanvasElement;     //with offscreen canvas
+   
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;     
 
     let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
 
@@ -108,29 +107,10 @@ export class TextSelectComponent implements OnInit {
     this.jcp.setOptions({shade: value});
   }
 
-  /*xxx(value){
-         
-    if (!this.jcp){
-        console.log("error");
-        }else{
-    this.jcp.setOptions({shadeOpacity:value});}
-  }
-
- 
-  log(){
-    if (!this.jcp){
-        console.log("error");
-        }else{
-    console.log(this.jcp.active.pos);
-    var tmp = this.jcp.active.pos;
-    console.log(tmp.x);
-
-   }
-  } */
-    
+  
   rect(){
     if (this.jcp){
-        const rect = this.Jcrop.Rect.create(0,0,50,50);
+        const rect = this.Jcrop.Rect.create(5,5,50,50);
          const options = {};
          this.jcp.newWidget(rect,options);}
    }
@@ -155,9 +135,6 @@ export class TextSelectComponent implements OnInit {
         
   }
 
-
-
-  
 
 
 }

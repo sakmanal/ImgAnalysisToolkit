@@ -1,16 +1,19 @@
-<div style="margin: 5px">
-<button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="openDialog()">Select word</button>
-<button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="rect()">new selection</button>
-<button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="remove()">remove selection</button>
-opacity:  <label class="switch" style="margin-left: 5px;">
-            <input type="checkbox" [(ngModel)]="opc" (click)="opacity(!opc)">
-            <span class="slider round"></span>
-          </label>
-
-</div>
- <!-- <canvas  #canvasfilter></canvas> -->       
+<div *ngIf=imageUrl>
+  <div style="margin: 5px">
+      <button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="openDialog()"><mat-icon>check_circle</mat-icon> Select word</button>
+      <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="rect()"><mat-icon>add_circle_outline</mat-icon> new selection</button>
+      <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="remove()"><mat-icon>remove_circle_outline</mat-icon> remove selection</button>
+      opacity:  <label class="switch" style="margin-left: 5px;">
+                  <input type="checkbox" [(ngModel)]="opc" (click)="opacity(!opc)">
+                  <span class="slider round"></span>
+                </label>
+  
+  </div>
+  <button  mat-mini-fab class="st" (click)="openDialog()" matTooltip="select word" [matTooltipPosition]="position" color="warn"><mat-icon>done</mat-icon></button>
+  <button  mat-mini-fab class="stb" (click)="remove()" matTooltip="remove selection" [matTooltipPosition]="position" color="warn"><mat-icon>remove</mat-icon></button>
+</div>     
  <!--  <img src={{cropImg}}> -->
- 
+
 <div class="centerimg">
     <div  style="cursor: crosshair;" class="responsive" mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()">
             <img id="target"  [ngStyle]="{'width.px': width }" src={{imageUrl}} >

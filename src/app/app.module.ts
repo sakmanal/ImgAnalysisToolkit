@@ -21,6 +21,7 @@ import { Test2Component } from './test2/test2.component';
 import { MouseWheelDirective } from './mousewheel.directive';
 import { TextSelectComponent } from './text-select/text-select.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -35,6 +36,7 @@ import { TextSelectComponent } from './text-select/text-select.component';
     Test2Component,
     MouseWheelDirective,
     TextSelectComponent
+ 
   ],
   imports: [
     BrowserModule,

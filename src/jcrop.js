@@ -263,7 +263,7 @@ export function hello() {
     animateFrames: 30,
     multi: false,
     multiMax: null,
-    multiMin: 1,
+    multiMin: 0,
     cropperClass: 'jcrop-widget',
     disabledClass: 'jcrop-disable',
     canDrag: true,
