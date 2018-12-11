@@ -1,23 +1,26 @@
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
+<div class="example-container">
 
   <mat-toolbar color="primary" class="example-toolbar"  style="z-index: 10" class="mat-elevation-z4">
 
-     <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
+    <div fxShow="true" fxHide.gt-sm="true"><button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button></div>
      <a routerLink="/" (click)="snav.close()"><h1 class="example-app-name">Digital Image Analysis Toolkit</h1></a>
      <span class="example-spacer"></span>
+     <div fxShow="true" fxHide.lt-md="true">
      <button mat-button routerLink="/about">About</button>
      <a target="_blank" href="http://www.ee.duth.gr/el/"><button mat-button>Δ.Π.Θ</button></a>
-    
+     </div>
   </mat-toolbar>
 
-  <mat-sidenav-container  class="example-sidenav-container"  [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
+  <mat-sidenav-container fxFlexFill  class="example-sidenav-container">
     
-    <mat-sidenav #snav  class="example-sidenav" [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches" fixedTopGap="56">
-                 <mat-nav-list>
-                  <p><a routerLink="/test"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> edit</mat-icon> Draw Rect</button></a></p>
-                  <p><a routerLink="/test2"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> crop</mat-icon> Text Cropper</button></a></p>
-                  <p><a routerLink="/textSelect"><button mat-button class="sidenav-buttons" (click)="snav.close()"><mat-icon class="white-icon"> text_format</mat-icon> Select Text</button></a></p>
-                </mat-nav-list>
+    <mat-sidenav #snav  fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
+              
+              
+                
+                  <button mat-button routerLink="/about" (click)="snav.close()">About</button>
+                  <a target="_blank" href="http://www.ee.duth.gr/el/"><button mat-button (click)="snav.close()">Δ.Π.Θ</button></a>
+  
+              
                 
                
     </mat-sidenav>

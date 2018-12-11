@@ -20,7 +20,7 @@ import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
 import { MouseWheelDirective } from './mousewheel.directive';
 import { TextSelectComponent } from './text-select/text-select.component';
-
+import { FlexLayoutModule } from '@angular/flex-layout';
 
 @NgModule({
   declarations: [
@@ -46,7 +46,8 @@ import { TextSelectComponent } from './text-select/text-select.component';
     LayoutModule,
     AppRoutingModule,
     FontAwesomeModule,
-    AngularCropperjsModule
+    AngularCropperjsModule,
+    FlexLayoutModule
   ],
   entryComponents: [
     TextSelectPopUpComponent

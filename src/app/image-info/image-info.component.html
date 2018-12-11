@@ -1,14 +1,42 @@
 <mat-form-field color="warn" style="margin: 10px">
-  <mat-select  placeholder="ImageFile Name" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
+  <mat-select  placeholder="Select Text Document" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
     <mat-option *ngFor="let imagename of ImageNames" [value]="imagename">
       {{imagename}}
     </mat-option>
   </mat-select>
 </mat-form-field>
 
-<div *ngIf="ImageJson">
+<!-- <div *ngIf="ImageJson">
 <mat-list *ngFor="let word of ImageJson.words">
   <mat-list-item>{{word}}</mat-list-item>
   <mat-divider></mat-divider>
 </mat-list>
+</div> -->
+
+<div *ngIf="ImageJson" style="margin: 10px">
+
+    <mat-form-field color="warn">
+        <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
+      </mat-form-field>
+      
+      <div class="mat-elevation-z8">
+        <table mat-table [dataSource]="dataSource" matSort color="warn">
+      
+       
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Words </th>
+            <td mat-cell *matCellDef="let row"> {{row.name}} </td>
+          </ng-container>
+      
+         
+      
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;">
+          </tr>
+        </table>
+      
+        <div class="alternative"><mat-paginator color="warn" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator></div>
+      </div>
+
+
 </div>
