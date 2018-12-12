@@ -1,4 +1,4 @@
-import { Component, OnInit, Input } from '@angular/core';
+import { Component, OnInit, Input, Output, EventEmitter } from '@angular/core';
 import {hello} from 'src/jcrop.js';
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
@@ -29,6 +29,7 @@ export class TextSelectComponent implements OnInit {
   word:string;
   showScroll: boolean;
   position = 'left';
+  @Output() updateEvent = new EventEmitter<boolean>();
 
   ngOnInit() {
     
@@ -73,6 +74,7 @@ export class TextSelectComponent implements OnInit {
            //console.log(this.word);
            //this.word='';
            this.savejsonService.addword(this.imageName, this.word);
+           this.updateEvent.emit(true);
         }
       });
   }

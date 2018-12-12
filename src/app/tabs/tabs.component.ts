@@ -1,6 +1,6 @@
 import { Component, ViewChild, AfterViewInit, AfterViewChecked} from '@angular/core';
 import { BinarizationComponent } from '../binarization/binarization.component';
-
+import { ImageInfoComponent } from "../image-info/image-info.component";
 
 
 @Component({
@@ -14,6 +14,7 @@ export class TabsComponent implements AfterViewInit, AfterViewChecked {
   ImgName:string;
   
   @ViewChild(BinarizationComponent) Binarization;
+  @ViewChild(ImageInfoComponent) ImageInfo;
 
   ngAfterViewInit(){
         this.ImgUrl = this.Binarization.ImgUrl;   
@@ -22,6 +23,12 @@ export class TabsComponent implements AfterViewInit, AfterViewChecked {
   ngAfterViewChecked(){
     this.ImgUrl = this.Binarization.ImgUrl;
     this.ImgName = this.Binarization.ImageName;
+  }
+
+
+  updateTable($event){
+    this.ImageInfo.showImageInfo();
+
   }
 
 }

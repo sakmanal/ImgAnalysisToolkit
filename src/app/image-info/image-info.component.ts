@@ -88,24 +88,15 @@ export class ImageInfoComponent implements OnInit {
     this.dataSource.sort = this.sort;
   }
 
-  showImageInfo(){
+  public showImageInfo(){
      //console.log(this.selectedImage);
-     this.getImageJson();
-     this.makeTableDataSourse();
-     
+     if (this.selectedImage){
+       this.getImageJson();
+       this.makeTableDataSourse();
+     }
   }
 
 
-
-
-
-
-   
-
-
-
-
-  
 
 
 

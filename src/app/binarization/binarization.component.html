@@ -17,16 +17,18 @@
   <mat-icon>save</mat-icon> Save Image
 </button>
 <!-- <span class="alternative"> -->
-<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()"> 
-   <!--  <mat-icon>crop_free</mat-icon> -->
-   <fa-icon [icon]="faExpand" size="lg"></fa-icon>
+<button mat-raised-button color="warn" style="margin-left: 5px; margin-right: 5px;  margin-bottom: 5px;" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()">
+    <mat-icon>fullscreen</mat-icon>
+   <!-- <fa-icon [icon]="faExpand" size="sm"></fa-icon>  -->
+   <strong> fill screen</strong>
 </button>
 
 
 
-<button mat-mini-fab color="warn" style="margin-left: 7px" matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
-    <!-- <mat-icon>fullscreen_exit</mat-icon> -->
-    <fa-icon [icon]="faCompress" size="lg"></fa-icon>
+<button mat-raised-button color="warn"  matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
+    <mat-icon>fullscreen_exit</mat-icon>
+    <!-- <fa-icon [icon]="faCompress" size="sm"></fa-icon>-->
+    <strong> fit screen</strong> 
 </button>   <!-- </span> -->
 
 </div>

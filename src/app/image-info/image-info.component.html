@@ -1,4 +1,4 @@
-<mat-form-field color="warn" style="margin: 10px">
+<mat-form-field color="primary" style="margin: 10px">
   <mat-select  placeholder="Select Text Document" [(ngModel)]="selectedImage" (selectionChange)="showImageInfo()" (click)="getImageNames()"> 
     <mat-option *ngFor="let imagename of ImageNames" [value]="imagename">
       {{imagename}}
@@ -15,7 +15,7 @@
 
 <div *ngIf="ImageJson" style="margin: 10px">
 
-    <mat-form-field color="warn">
+    <mat-form-field color="primary">
         <input matInput (keyup)="applyFilter($event.target.value)" placeholder="Search" autocomplete="off">
       </mat-form-field>
       
@@ -35,7 +35,7 @@
           </tr>
         </table>
       
-        <div class="alternative"><mat-paginator color="warn" [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator></div>
+        <div class="alternative"><mat-paginator [pageSizeOptions]="[5, 10, 25, 100]"></mat-paginator></div>
       </div>
 
 

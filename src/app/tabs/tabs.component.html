@@ -1,3 +1,5 @@
+
+
 <mat-tab-group>
 
     <mat-tab label="Binarization"> 
@@ -16,7 +18,8 @@
     
     <mat-tab label="Text Selection"> 
         <ng-template matTabContent> 
-           <app-text-select 
+           <app-text-select
+             (updateEvent)="updateTable($event)" 
              [imageUrl]="ImgUrl"
              [imageName]="ImgName">
           </app-text-select>
