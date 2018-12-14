@@ -4,8 +4,10 @@ import sauvolaMethod from './sauvola.module';
 import InvertColours from './invertColor.module';
 import binarize from './binarize.module';
 import gppMethod from './gpp.module';
-import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
+//import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
 
+
+const SauvolaWorker = new Worker('src/web-workers-scripts/Sauvola-worker.js');
 
 @Component({
   selector: 'app-binarization',
@@ -14,8 +16,8 @@ import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
 })
 export class BinarizationComponent  {
 
-faExpand = faExpand;
-faCompress = faCompress;
+//faExpand = faExpand;
+//faCompress = faCompress;
 imageToCrop:any = '';
 url:any;
 ImgUrl:any;
@@ -214,7 +216,7 @@ otsuBinarization(){
     this.img.src = this.url;
 }
 
-sauvolaBinarization(){
+/* sauvolaBinarization(){
   this.colorotsu = "primary";
   this.colorsauvola = "warn";
   this.colornegative = "primary";
@@ -242,7 +244,44 @@ sauvolaBinarization(){
     };
     this.img.src = this.url;
     
-}
+} */
+
+
+sauvolaBinarization(){
+  this.colorotsu = "primary";
+  this.colorsauvola = "warn";
+  this.colornegative = "primary";
+  this.colorgpp = "primary"; 
+  let canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  this.showSpinner = true;
+  
+  this.img.onload = () =>{
+     
+
+      var w = this.img.width;
+      var h = this.img.height;
+      canvas.width = w;
+      canvas.height = h;
+      ctx.drawImage(this.img, 0, 0);
+      
+      const imageData = ctx.getImageData(0, 0, w, h);
+      SauvolaWorker.postMessage({imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n}, [imageData.data.buffer]);
+     
+
+
+      SauvolaWorker.addEventListener('message', (d) => {
+        const imageData = d.data;
+        ctx.putImageData(imageData, 0, 0);
+        this.showSpinner = false;
+        this.ImgUrl = canvas.toDataURL("image/png", 1);
+      });
+
+      
+      
+    };
+    this.img.src = this.url;
+  }    
 
 manualThresholdBinarization(){
   this.colorotsu = "primary";
@@ -305,5 +344,7 @@ save(){
 
   a.click()
 }
-  
+
+
+ 
 }
