@@ -26,9 +26,12 @@
               {
                   "input": "src/theme.scss"
               },
-              "src/styles.css"
+              "src/styles.css",
+              "src/jcrop.css"
             ],
-            "scripts": []
+            "scripts": [
+              "src/jcrop.js"
+            ]
           },
           "configurations": {
             "production": {
