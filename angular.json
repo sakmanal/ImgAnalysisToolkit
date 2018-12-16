@@ -30,7 +30,8 @@
               "src/jcrop.css"
             ],
             "scripts": [
-              "src/jcrop.js"
+              "src/jcrop.js",
+              "src/web-workers-scripts/Sauvola-worker.js"
             ]
           },
           "configurations": {

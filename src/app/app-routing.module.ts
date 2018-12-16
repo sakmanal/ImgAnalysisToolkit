@@ -7,9 +7,9 @@ import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
 
 const routes: Routes = [
-  //{ path: '', redirectTo: '/TextSelection', pathMatch: 'full' },
+  { path: '', redirectTo: 'ImgAnalysisToolkit', pathMatch: 'full' },
   { path: 'TextSelection', component: CropperComponent},
-  { path: '', component: TabsComponent},
+  { path: 'ImgAnalysisToolkit', component: TabsComponent},
   { path: 'about', component: AboutComponent},
   { path: 'test', component: TestComponent},
   { path: 'test2', component: Test2Component}
