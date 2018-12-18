@@ -106,6 +106,8 @@ export class TextSelectComponent implements OnInit {
            this.cropImg = canvas.toDataURL("image/png", 1);
   }
 
+
+
    opacity(value:boolean){
     if (this.jcp){
     this.jcp.setOptions({shade: value});
@@ -137,7 +139,7 @@ export class TextSelectComponent implements OnInit {
   mouseWheelDownFunc() {
     //console.log('mouse wheel down');
     
-     if (this.width >= 300)
+     if (this.width >= 400)
          this.width = this.width - 100;
         
   }

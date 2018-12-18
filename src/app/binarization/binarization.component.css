@@ -68,20 +68,27 @@
    }
 }
     
-.Spinner{
+/* .Spinner{
     padding: 0; 
     margin: 0 auto;
     position: absolute;
-}   
+    left: 50%;
+    top: 50%;
+}   */ 
 
+
+.container {
+   position: relative;
+   
+ }
 
 .spinner {
-    position: block;
-    left: 50%;
+    position: absolute;
+    left: 53%;
     top: 50%;
     height:60px;
     width:60px;
-    margin:0px auto;
+    margin: -50px 0px 0px -50px;
     -webkit-animation: rotation .6s infinite linear;
     -moz-animation: rotation .6s infinite linear;
     -o-animation: rotation .6s infinite linear;

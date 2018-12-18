@@ -11,6 +11,7 @@
  .mat-toolbar {
    position: relative;   /* toolbar shadow above the other toolbar */
    height: 50px;
+   min-height: 40px;
  }
  
  

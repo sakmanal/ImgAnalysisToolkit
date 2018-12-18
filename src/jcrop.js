@@ -395,7 +395,7 @@ export function hello() {
   
       ox = obj.pageX;
       oy = obj.pageY;
-  
+    
       e.preventDefault();
       e.stopPropagation();
   
@@ -418,9 +418,9 @@ export function hello() {
   
     function done(e) {
       var obj = e.type === 'touchend' ? e.changedTouches[0] : e;
-  
+     
       if (obj.pageX && obj.pageY) movecb(obj.pageX - ox, obj.pageY - oy);
-  
+   
       document.removeEventListener('mouseup', done);
       window.removeEventListener('mousemove', move);
       document.removeEventListener('touchmove', move);
@@ -920,6 +920,7 @@ export function hello() {
       this.y = 0;
       this.w = 0;
       this.h = 0;
+      
     }
   
     _createClass(Rect, [{
@@ -952,6 +953,7 @@ export function hello() {
       key: 'scale',
       value: function scale(x, y) {
         y = y || x;
+        //console.log(this.w * x, this.h * y)
         return Rect.create(this.x * x, this.y * y, this.w * x, this.h * y);
       }
     }, {
@@ -1004,7 +1006,7 @@ export function hello() {
         return this.w / this.h;
       }
     }]);
-  
+     
     return Rect;
   }();
   
@@ -1015,20 +1017,30 @@ export function hello() {
         x2 = _ref2[2],
         y2 = _ref2[3];
   
+        
     return Rect.create(x1, y1, x2 - x1, y2 - y1);
   };
-  
+
+ 
   Rect.create = function () {
     var x = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : 0;
     var y = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 0;
     var w = arguments.length > 2 && arguments[2] !== undefined ? arguments[2] : 0;
     var h = arguments.length > 3 && arguments[3] !== undefined ? arguments[3] : 0;
-  
+    
+        if (w < 1)
+           w = 80;
+        if (h < 1)
+           h = 40;  
+   
+
     var c = new Rect();
     c.x = x;
     c.y = y;
     c.w = w;
     c.h = h;
+    
+    //console.log(w, h)
     return c;
   };
   
@@ -1420,14 +1432,16 @@ export function hello() {
           if (!_this3.canCreate()) return false;
           crop = (_this3.options.widgetConstructor || _widget2.default).create(_this3.options);
           pos = crop.pos;
+          
           //pos.x = e.pageX - _this3.el.offsetParent.offsetLeft - _this3.el.offsetLeft;
           //pos.y = e.pageY - _this3.el.offsetParent.offsetTop - _this3.el.offsetTop - 110;
           domRect = _this3.el.getBoundingClientRect();
           pos.x = e.clientX - domRect.left;
           pos.y = e.clientY - domRect.top;
-
+ 
           w = _this3.el.offsetWidth;
           h = _this3.el.offsetHeight;
+          
           _this3.addWidget(crop);
           stick = _sticker2.default.create(pos, w, h, 'se');
           if (_this3.options.aspectRatio) stick.aspect = _this3.options.aspectRatio;
@@ -1619,7 +1633,7 @@ export function hello() {
             _getImageDimensions2 = _slicedToArray(_getImageDimensions, 2),
             w = _getImageDimensions2[0],
             h = _getImageDimensions2[1];
-  
+            
         var _getNaturalDimensions = this.getNaturalDimensions(),
             _getNaturalDimensions2 = _slicedToArray(_getNaturalDimensions, 2),
             nw = _getNaturalDimensions2[0],
@@ -1927,6 +1941,7 @@ export function hello() {
     _createClass(Widget, [{
       key: 'init',
       value: function init() {
+       
         this.createHandles();
         this.createMover();
         this.attachFocus();
@@ -1946,7 +1961,7 @@ export function hello() {
                 _Rect$getMax2 = _slicedToArray(_Rect$getMax, 2),
                 w = _Rect$getMax2[0],
                 h = _Rect$getMax2[1];
-  
+     
             _this2.render(_rect2.default.fromPoint([p.x, p.y], w, h));
           }
         };
@@ -2028,7 +2043,6 @@ export function hello() {
       key: 'createHandles',
       value: function createHandles() {
         var _this6 = this;
-  
         this.options.handles.forEach(function (c) {
           var handle = _handle2.default.create('jcrop-handle ' + c);
           handle.appendTo(_this6.el);
@@ -2065,6 +2079,16 @@ export function hello() {
         this.el.style.left = Math.round(r.x) + 'px';
         this.el.style.width = Math.round(r.w) + 'px';
         this.el.style.height = Math.round(r.h) + 'px';
+        
+         if (Math.round(r.w) <= 20 ){
+            this.el.style.width = 20 + 'px';
+            //r.w = 20;
+         }
+         if (Math.round(r.h) <= 20 ){
+          this.el.style.height = 20 + 'px';
+          //r.h = 20;
+       }
+        //console.log(this.el.style.width, this.el.style.height)
         this.pos = r;
         this.emit('crop.update');
         return this;

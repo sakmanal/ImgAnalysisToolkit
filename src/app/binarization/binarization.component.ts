@@ -4,7 +4,7 @@ import sauvolaMethod from './sauvola.module';
 import InvertColours from './invertColor.module';
 import binarize from './binarize.module';
 import gppMethod from './gpp.module';
-//import { faCompress, faExpand } from '@fortawesome/free-solid-svg-icons';
+import { faCompress, faExpand, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 
 const SauvolaWorker = new Worker('src/web-workers-scripts/Sauvola-worker.js');
@@ -18,6 +18,7 @@ export class BinarizationComponent  {
 
 //faExpand = faExpand;
 //faCompress = faCompress;
+faSpinner = faSpinner;
 imageToCrop:any = '';
 url:any;
 ImgUrl:any;

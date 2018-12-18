@@ -8,7 +8,7 @@
 
 
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  [color]="colorotsu" (click)="otsuBinarization()" [disabled]="disableImageFilter">otsu</button>
-<button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter">sauvola</button>
+<button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="showSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colornegative" (click)="InvertColoursFilter()" [disabled]="disableImageFilter">invert Colours</button>
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter">gpp</button>
 <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="view()" [disabled]="disableImageFilter">restore Image</button>
@@ -141,9 +141,14 @@
                 </div>      
         </div>
         <div class="main" id="main">
+            <div class="container">
+                <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas>
                 <div *ngIf="showSpinner" class="spinner"></div>
-                 <!-- <mat-spinner *ngIf="showSpinner" class="Spinner" [diameter]="100" ></mat-spinner>-->
+            </div>
+               
+                <!--  <mat-spinner *ngIf="showSpinner" class="Spinner" [diameter]="50" ></mat-spinner> -->
            
-                <p> <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas> </p>
+               
+        
         </div>
-      </div>
+</div>
