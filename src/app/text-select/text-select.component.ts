@@ -172,8 +172,8 @@ export class TextSelectComponent implements OnInit {
           const ratio = this.originalWidth / displayedImage.offsetWidth;
           const x = Math.round(pos.x * ratio) + xLeft;
           const y = Math.round(pos.y * ratio) + yTop;
-          const w = Math.round(pos.w * ratio) - xLeft - xRight;
-          const h = Math.round(pos.h * ratio) - yTop - yBottom;
+          const w = Math.round(pos.w * ratio) - xLeft - xRight + 1;
+          const h = Math.round(pos.h * ratio) - yTop - yBottom + 1;
   
   
           this.jcp.removeWidget(this.jcp.active);
