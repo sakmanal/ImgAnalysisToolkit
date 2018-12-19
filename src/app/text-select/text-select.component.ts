@@ -106,6 +106,91 @@ export class TextSelectComponent implements OnInit {
            this.cropImg = canvas.toDataURL("image/png", 1);
   }
 
+  mergeSelection(){
+
+    if (this.jcp.active){
+      this.cropImage();
+      if (this.cropImg){
+
+        const img = new Image;
+        const canvas = document.createElement('canvas') as HTMLCanvasElement;
+        let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+        let yTop:number = 0;
+        let yBottom:number = 0;
+        let flag_yTop:boolean = true;
+        let xRight:number = 0;
+        let xLeft:number = 0;
+        let flag_xLeft:boolean = true;
+
+        img.onload = () =>{
+
+          const width = img.width;
+          const height = img.height;
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, width, height);
+          const data = imageData.data;
+
+
+          for (let i = 0; i < height; i++)
+          {
+            for (let k = 0; k < width; k++)
+            {
+                
+              if ( data[4 * k + i * 4 * width] == 0 ){
+                    if ( flag_yTop == true){
+                      yTop= i;
+                      flag_yTop = false;
+                    } 
+                    yBottom = height - i; 
+              }
+              
+                
+            }
+          }
+
+          for (let k = 0; k < width; k++)
+          {
+            for (let i = 0; i < height; i++)
+            {
+                
+              if ( data[4 * k + i * 4 * width] == 0 ){
+                    if ( flag_xLeft == true){
+                      xLeft= k;
+                      flag_xLeft = false;
+                    } 
+                    xRight = width - k; 
+              }
+              
+                
+            }
+          }
+
+          let pos = this.jcp.active.pos;
+          const displayedImage = document.getElementById('target');       
+          const ratio = this.originalWidth / displayedImage.offsetWidth;
+          const x = Math.round(pos.x * ratio) + xLeft;
+          const y = Math.round(pos.y * ratio) + yTop;
+          const w = Math.round(pos.w * ratio) - xLeft - xRight;
+          const h = Math.round(pos.h * ratio) - yTop - yBottom;
+  
+  
+          this.jcp.removeWidget(this.jcp.active);
+          const rect = this.Jcrop.Rect.create(x, y, w, h);
+          console.log(x, y, w, h )
+          const options = {};
+          this.jcp.newWidget(rect,options);
+
+        }
+        img.src = this.cropImg;
+
+       
+      }
+    }
+    
+  }
+
 
 
    opacity(value:boolean){

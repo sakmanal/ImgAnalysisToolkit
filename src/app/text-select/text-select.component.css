@@ -19,12 +19,7 @@
     z-index: 99 !important;
 }
 
-.stb{
-    position: fixed;
-    bottom: 10%;
-    right: 2%;
-    z-index: 99 !important;
-}
+
 
 .switch {
     position: relative;
