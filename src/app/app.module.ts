@@ -22,6 +22,7 @@ import { MouseWheelDirective } from './mousewheel.directive';
 import { TextSelectComponent } from './text-select/text-select.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { WindowScrollDirective } from './window-scroll.directive';
+import { Test3Component } from './test3/test3.component';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,8 @@ import { WindowScrollDirective } from './window-scroll.directive';
     Test2Component,
     MouseWheelDirective,
     TextSelectComponent,
-    WindowScrollDirective
+    WindowScrollDirective,
+    Test3Component
  
   ],
   imports: [
