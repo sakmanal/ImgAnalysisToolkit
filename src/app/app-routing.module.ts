@@ -5,6 +5,7 @@ import { TabsComponent } from './tabs/tabs.component';
 import { AboutComponent } from './about/about.component';
 import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
+import { Test3Component } from './test3/test3.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'ImgAnalysisToolkit', pathMatch: 'full' },
@@ -13,7 +14,8 @@ const routes: Routes = [
   //{ path: '', component: TabsComponent},
   { path: 'about', component: AboutComponent},
   { path: 'test', component: TestComponent},
-  { path: 'test2', component: Test2Component}
+  { path: 'test2', component: Test2Component},
+  { path: 'test3', component: Test3Component}
   
 
 ];

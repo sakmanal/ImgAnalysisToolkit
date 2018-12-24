@@ -1,6 +1,6 @@
 
 
-<mat-tab-group>
+<mat-tab-group [dynamicHeight]="true"> 
 
     <mat-tab label="Binarization"> 
      <app-binarization></app-binarization>
@@ -32,7 +32,10 @@
 
     <mat-tab label="app-test3">
         <ng-template matTabContent> 
-      <app-test3></app-test3>
+      <app-test3
+         [imageUrl]="ImgUrl"
+         [imageName]="ImgName">
+    </app-test3>
     </ng-template>  
     </mat-tab>
 

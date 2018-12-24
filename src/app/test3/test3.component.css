@@ -1,4 +1,14 @@
-.canvas{
-    margin: 10px;
-    border:1px solid #c45d5d;
+/* canvas {
+    border: 3px solid #0091ea;
+} */
+
+
+.centerimg{
+    display: flex;
+    justify-content: center; 
+    padding-bottom: 50px;
+}
+
+.centerimg .responsive canvas {
+    max-width: 100%;
 }

@@ -2,11 +2,14 @@
 <div style="margin:10px">
 <button (click)="rect()">rect</button>
 <button (click)="Line()">line</button>
-<button (click)="removeRect()">remove rect</button>
+<button (click)="removeRect()">remove</button>
 <button (click)="info()">info</button>
+<button (click)="ResetImageToCanvas()">reset Possition</button>
 </div>
 
-
-    <canvas class="canvas" id="canvas" width="600" height="400"></canvas>
-
+<div class="centerimg">
+    <div  style="cursor: crosshair;" class="responsive">
+       <canvas class="canvas"  id="canvas"></canvas>
+    </div>
+</div>
  

@@ -9,9 +9,9 @@
  
  
  .mat-toolbar {
-   position: relative;   /* toolbar shadow above the other toolbar */
+   position: relative;  
    height: 50px;
-   min-height: 40px;
+  min-height: 50px; 
  }
  
  
@@ -25,6 +25,11 @@
    bottom: 0;
    left: 0;
    right: 0;
+
+   height: 100%;
+   width: 100%;
+   overflow: hidden;
+   
    
    }
  
