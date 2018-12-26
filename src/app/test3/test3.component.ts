@@ -18,7 +18,10 @@ export class Test3Component implements AfterViewInit {
   canvasHeight:number = 0;
   @Input() imageUrl: any;
   @Input() imageName:string;
-
+  oldCanvasWidth:number;
+  oldCanvasHeight:number;
+  //imgWidth;
+  //imgHeight;
 
 
 ngAfterViewInit() {
@@ -40,8 +43,16 @@ ngAfterViewInit() {
      this.canvas.targetFindTolerance = 20;
 
 
-     this.canvas.on("object:scaling", (e:any) => {
+     this.canvas.on("object:scaling", (e:any) => {   //or modified
       const target = e.target;
+      /* if (target && target.type == 'line'){
+        const sX = target.scaleX;
+        const sY = target.scaleY;
+        target.width *= sX;
+          target.height *= sY;
+          target.scaleX = 1;
+          target.scaleY = 1;
+      } */
       if (!target || target.type !== 'rect') {
           return;
       }
@@ -135,6 +146,9 @@ ngAfterViewInit() {
         const imgWidth = img.width;
         const imgHeight = img.height;
 
+        //this.imgWidth = imgWidth;
+        //this.imgHeight = imgHeight;
+
         aspectRatio = imgHeight/imgWidth;
         
 
@@ -146,6 +160,7 @@ ngAfterViewInit() {
 
         this.canvasHeight = this.canvasWidth * aspectRatio;
         const scaleFactor = this.canvasWidth / imgWidth;
+
 
             img.set({
                 width: imgWidth, 
@@ -164,20 +179,32 @@ ngAfterViewInit() {
   }
 
   enableZoom(){
-    this.canvas.on('mouse:wheel', (opt) => {
-      let delta = -opt.e.deltaY;
+    this.canvas.on('mouse:wheel', (opt:any) => {
+      const delta = -opt.e.deltaY;
       //var pointer = this.canvas.getPointer(opt.e);
       let zoom = this.canvas.getZoom();
       zoom = zoom + delta/300;
       if (zoom > 3) zoom = 3;
-      if (zoom < 0.7) zoom = 0.7;
+      if (zoom < 1) zoom = 1;
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
+  
+        if (this.canvas.viewportTransform[4] >= 0) {
+          this.canvas.viewportTransform[4] = 0;
+        } else if (this.canvas.viewportTransform[4] < this.canvas.getWidth() - 1000 * zoom) {
+          this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
+        }
+        if (this.canvas.viewportTransform[5] >= 0) {
+          this.canvas.viewportTransform[5] = 0;
+        } else if (this.canvas.viewportTransform[5] < this.canvas.getHeight() - 1000 * zoom) {
+          this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
+        }
+      
     });
   
-    this.canvas.on('mouse:down', (opt) => {
-      let evt = opt.e;
+    this.canvas.on('mouse:down', (opt:any) => {
+      const evt = opt.e;
       if (evt.altKey === true) {
         this.canvas.isDragging = true;
         //this.canvas.selection = false;
@@ -185,9 +212,9 @@ ngAfterViewInit() {
         this.canvas.lastPosY = evt.clientY;
       }
     });
-    this.canvas.on('mouse:move', (opt) => {
+    this.canvas.on('mouse:move', (opt:any) => {
       if (this.canvas.isDragging) {
-        let e = opt.e;
+        const e = opt.e;
         this.canvas.viewportTransform[4] += e.clientX - this.canvas.lastPosX;
         this.canvas.viewportTransform[5] += e.clientY - this.canvas.lastPosY;
         this.canvas.requestRenderAll();
@@ -214,15 +241,47 @@ ngAfterViewInit() {
  }
 
  @HostListener('window:resize', ['$event'])
- onResize(event) {
+ onResize(event:any) {
    //console.log(event.target.innerWidth);
-   if (event.target.innerWidth > this.canvasWidth){
+  /*  if (event.target.innerWidth > this.canvasWidth){
        this.canvas.setWidth(this.canvasWidth);
    }else{
        this.canvas.setWidth(event.target.innerWidth - 40);
+   } */
+
+   this.loadImage();
+   if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
+    this.oldCanvasWidth = this.canvasWidth;
+    this.oldCanvasHeight = this.canvasHeight;
    }
-   
-   
+   const factorX = this.canvasWidth / this.oldCanvasWidth;
+   const factorY = this.canvasHeight / this.oldCanvasHeight; 
+
+    this.oldCanvasWidth = this.canvasWidth;
+    this.oldCanvasHeight = this.canvasHeight; 
+
+   const objects = this.canvas.getObjects();
+   for (var i in objects) {
+     
+    var scaleX = objects[i].scaleX;
+    var scaleY = objects[i].scaleY;
+    var left = objects[i].left;
+    var top = objects[i].top;
+
+    var tempScaleX = scaleX * factorX;
+    var tempScaleY = scaleY * factorY;
+    var tempLeft = left * factorX;
+    var tempTop = top * factorY;
+
+    objects[i].scaleX = tempScaleX;
+    objects[i].scaleY = tempScaleY;
+    objects[i].left = tempLeft;
+    objects[i].top = tempTop;
+
+    objects[i].setCoords();
+  } 
+
+
    this.canvas.calcOffset();
    
  }
@@ -244,7 +303,8 @@ ngAfterViewInit() {
                   left: origX,
                   top: origY,
                   fill: 'transparent',
-                  //strokeDashArray: [2, 2],
+                  strokeDashArray: [10, 5],
+                  strokeLineCap: 'square',
                   opacity: 1,
                   width: 1,
                   height: 1,
@@ -253,7 +313,7 @@ ngAfterViewInit() {
                   hasRotatingPoint:false,
                   objectCaching: false,
                   stroke: '#33ccff',
-                  strokeWidth: 3,
+                  strokeWidth: 2,
                   transparentCorners: false,
                   cornerSize: 6,
           });
@@ -288,19 +348,6 @@ this.canvas.on('mouse:up',  () =>{
   }
 }); 
 
-/* this.canvas.on("object:scaling", (e:any) => {
-  const target = e.target;
-  if (!target || target.type !== 'rect') {
-      return;
-  }
-  const sX = target.scaleX;
-  const sY = target.scaleY;
-  target.width *= sX;
-  target.height *= sY;
-  target.scaleX = 1;
-  target.scaleY = 1;
-}); */
-  
 
 }
 
@@ -329,7 +376,7 @@ removeEvents(){
             stroke: 'red',
             cornerSize: 6,
             transparentCorners: false,
-            hasRotatingPoint:false,
+            hasRotatingPoint:false
           });
           this.canvas.add(line);
     }
@@ -341,7 +388,7 @@ removeEvents(){
         const pointer = this.canvas.getPointer(o.e);
         line.set({
           x2: pointer.x,
-          y2: pointer.y,
+          y2: pointer.y
         });
         
         this.canvas.renderAll();
@@ -352,16 +399,16 @@ removeEvents(){
     if (!this.canvas.getActiveObject()){
           isDown = false;
           line.setCoords();
-          const x1 = Math.round(line.aCoords.tl.x);
-          const y1 = Math.round(line.aCoords.tl.y);
-          const x2 = Math.round(line.aCoords.tr.x);
-          const y2 = Math.round(line.aCoords.tr.y);
-          const length = Math.sqrt( Math.pow((x2-x1), 2) + Math.pow((y1-y2), 2) );
-          console.log(length)
-          if (length < 10){
+          const width = Math.round(line.width);
+          const height = Math.round(line.height);
+          const length = Math.sqrt( Math.pow(width, 2) + Math.pow(height, 2) );
+          //console.log(length)
+          if (length < 15){
             line.set({
-              x2: x2 + 20
+              x2: line.x2 + 20,
+              y2: line.y1 
             });
+          
             this.canvas.renderAll();  
           }
           line.setControlsVisibility({
@@ -373,7 +420,7 @@ removeEvents(){
             br: false, 
             tl: false, 
             tr: false,
-            mtr: false,
+            mtr: false
           });
           line.setCoords();
           //this.canvas.selection = true;
@@ -391,7 +438,7 @@ info(){
   const activeObject = this.canvas.getActiveObject();
 
   if (activeObject){
-    console.log(Math.round(activeObject.left), Math.round(activeObject.top), activeObject.width );
+    console.log(Math.round(activeObject.left), Math.round(activeObject.top), Math.round(activeObject.width), Math.round(activeObject.height) );
   }else{
     const ob = this.canvas.getObjects();
     console.log(ob[ob.length-1]);
