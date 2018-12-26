@@ -35,8 +35,25 @@ ngAfterViewInit() {
    
 
     this.canvas.uniScaleTransform = true;
+
     
-    const rectangle = new fabric.Rect({ 
+     this.canvas.targetFindTolerance = 20;
+
+
+     this.canvas.on("object:scaling", (e:any) => {
+      const target = e.target;
+      if (!target || target.type !== 'rect') {
+          return;
+      }
+      const sX = target.scaleX;
+      const sY = target.scaleY;
+      target.width *= sX;
+      target.height *= sY;
+      target.scaleX = 1;
+      target.scaleY = 1;
+    });
+    
+    /* const rectangle = new fabric.Rect({ 
             left: 50,
             top: 50,
             fill: 'transparent',
@@ -55,22 +72,22 @@ ngAfterViewInit() {
            
             
     });
-    this.canvas.add(rectangle);
+    this.canvas.add(rectangle); */
 
-    this.canvas.on('object:scaling', (e) => {
+   /*  this.canvas.on('object:scaling', (e) => {
       const o = e.target;
       if (!o.strokeWidthUnscaled && o.strokeWidth) {
         o.strokeWidthUnscaled = o.strokeWidth;
       }
       if (o.strokeWidthUnscaled) {
         o.strokeWidth = o.strokeWidthUnscaled / o.scaleX;
-        line.strokeWidth = 4;
+        //o.strokeWidth = 3;
       }
-    })
+    }) */
     
-    let points = [200, 50, 150, 50];
+    /* let points = [200, 50, 150, 50];
     const line = new fabric.Line(points, {
-      strokeWidth: 5,
+      strokeWidth: 3,
       stroke: 'red',
       cornerSize: 6,
       transparentCorners: false,
@@ -92,7 +109,7 @@ ngAfterViewInit() {
          tr: false,
          mtr: false,
     
-  });
+  }); */
  
   //this.canvas.calcOffset();
 
@@ -123,7 +140,6 @@ ngAfterViewInit() {
 
          if (imgWidth > window.innerWidth-50){
           this.canvasWidth = window.innerWidth - 50;
-          console.log(window.innerWidth)
         }else{
           this.canvasWidth = imgWidth;
         } 
@@ -211,63 +227,82 @@ ngAfterViewInit() {
    
  }
 
-  /* rect() {
+  rect() {
 
-    let rectangle, isDown, origX, origY;
+    let rectangle:any, isDown:boolean, origX:number, origY:number;
     this.removeEvents();
     this.canvas.on('mouse:down',  (o:any) => {
-     //console.log(o.e)
-     let pointer = this.canvas.getPointer(o.e);
-     console.log(pointer)
+      if (!this.canvas.getActiveObject()){
+          const pointer = this.canvas.getPointer(o.e);
+        
 
-     isDown = true;
-     origX = pointer.x;
-     origY = pointer.y;
+          isDown = true;
+          origX = pointer.x;
+          origY = pointer.y;
 
-     rectangle = new fabric.Rect({ 
-      left: origX,
-      top: origY,
-      fill: 'transparent',
-     stroke: '#ccc',
-            strokeDashArray: [2, 2],
-            opacity: 1,
-            width: 1,
-            height: 1,
-            borderColor: '#36fd00',
-            cornerColor: 'green',
-            hasRotatingPoint:false,
-            objectCaching: false
-    });
-    this.canvas.add(rectangle);
+          rectangle = new fabric.Rect({ 
+                  left: origX,
+                  top: origY,
+                  fill: 'transparent',
+                  //strokeDashArray: [2, 2],
+                  opacity: 1,
+                  width: 1,
+                  height: 1,
+                  borderColor: '#80dfff',
+                  cornerColor: '33ccff',
+                  hasRotatingPoint:false,
+                  objectCaching: false,
+                  stroke: '#33ccff',
+                  strokeWidth: 3,
+                  transparentCorners: false,
+                  cornerSize: 6,
+          });
+          this.canvas.add(rectangle);
+     }
   });
 
   this.canvas.on('mouse:move',  (o:any) =>{
-    if (!isDown) return;
-    var pointer = this.canvas.getPointer(o.e);
-    if(origX>pointer.x){
-        rectangle.set({ left: Math.abs(pointer.x) });
+    if (!this.canvas.getActiveObject()){
+            if (!isDown) return;
+            var pointer = this.canvas.getPointer(o.e);
+            if(origX>pointer.x){
+                rectangle.set({ left: Math.abs(pointer.x) });
+            }
+            if(origY>pointer.y){
+                rectangle.set({ top: Math.abs(pointer.y) });
+            }
+            
+            rectangle.set({ width: Math.abs(origX - pointer.x) });
+            rectangle.set({ height: Math.abs(origY - pointer.y) });
+            this.canvas.renderAll();
     }
-    if(origY>pointer.y){
-        rectangle.set({ top: Math.abs(pointer.y) });
-    }
-    
-    rectangle.set({ width: Math.abs(origX - pointer.x) });
-    rectangle.set({ height: Math.abs(origY - pointer.y) });
-    this.canvas.renderAll();
 });
 
-this.canvas.on('mouse:up',  (o:any) =>{
+this.canvas.on('mouse:up',  () =>{
+  if (!this.canvas.getActiveObject()){
     isDown = false;
-   // this.canvas.setActiveObject(rectangle);
-
-    //this.canvas.selection = true;
-    //this.canvas.isDrawingMode = false;
-    //rectangle.selectable = true;
-    this.removeEvents();
+    //rectangle.setCoords();
+    if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
+    if (rectangle.height<10) {rectangle.height = 20; this.canvas.renderAll();}
+    rectangle.setCoords();
+  }
 }); 
+
+/* this.canvas.on("object:scaling", (e:any) => {
+  const target = e.target;
+  if (!target || target.type !== 'rect') {
+      return;
+  }
+  const sX = target.scaleX;
+  const sY = target.scaleY;
+  target.width *= sX;
+  target.height *= sY;
+  target.scaleX = 1;
+  target.scaleY = 1;
+}); */
   
 
-}*/
+}
 
 removeEvents(){
   this.canvas.off('mouse:down');
@@ -282,13 +317,15 @@ removeEvents(){
   this.removeEvents();
   this.canvas.on('mouse:down', (o:any) => {
     if (!this.canvas.getActiveObject()){
+          //console.log(o.e.altKey)
+          //this.canvas.selection = false;
           isDown = true;
           const pointer = this.canvas.getPointer(o.e);
           const points = [pointer.x, pointer.y, pointer.x, pointer.y];
           line = new fabric.Line(points, {
             originX: 'center',
             originY: 'center',
-            strokeWidth: 4,
+            strokeWidth: 3,
             stroke: 'red',
             cornerSize: 6,
             transparentCorners: false,
@@ -299,36 +336,66 @@ removeEvents(){
   });
 
   this.canvas.on('mouse:move', (o:any) => {
-    if (!isDown) return;
-    const pointer = this.canvas.getPointer(o.e);
-    line.set({
-      x2: pointer.x,
-      y2: pointer.y,
-    });
-    line.setControlsVisibility({
-      mt: false, 
-      mb: false, 
-      ml: true, 
-      mr: true, 
-      bl: false,
-      br: false, 
-      tl: false, 
-      tr: false,
-      mtr: false,
-    });
-    this.canvas.renderAll();
+    if (!this.canvas.getActiveObject()){
+        if (!isDown) return;
+        const pointer = this.canvas.getPointer(o.e);
+        line.set({
+          x2: pointer.x,
+          y2: pointer.y,
+        });
+        
+        this.canvas.renderAll();
+    }
   });
 
   this.canvas.on('mouse:up', () => {
-    line.setCoords();
-    isDown = false;
+    if (!this.canvas.getActiveObject()){
+          isDown = false;
+          line.setCoords();
+          const x1 = Math.round(line.aCoords.tl.x);
+          const y1 = Math.round(line.aCoords.tl.y);
+          const x2 = Math.round(line.aCoords.tr.x);
+          const y2 = Math.round(line.aCoords.tr.y);
+          const length = Math.sqrt( Math.pow((x2-x1), 2) + Math.pow((y1-y2), 2) );
+          console.log(length)
+          if (length < 10){
+            line.set({
+              x2: x2 + 20
+            });
+            this.canvas.renderAll();  
+          }
+          line.setControlsVisibility({
+            mt: false, 
+            mb: false, 
+            ml: true, 
+            mr: true, 
+            bl: false,
+            br: false, 
+            tl: false, 
+            tr: false,
+            mtr: false,
+          });
+          line.setCoords();
+          //this.canvas.selection = true;
+     }
   });
+
+/*   this.canvas.on('object:scaling', (e:any) => {
+    const o = e.target;
+    o.strokeWidth = 3;
+  }); */
 }
 
 
 info(){
-  let activeObject = this.canvas.getActiveObject();
-  console.log(activeObject)
+  const activeObject = this.canvas.getActiveObject();
+
+  if (activeObject){
+    console.log(Math.round(activeObject.left), Math.round(activeObject.top), activeObject.width );
+  }else{
+    const ob = this.canvas.getObjects();
+    console.log(ob[ob.length-1]);
+  }
 }
 
 removeRect(){
@@ -338,7 +405,7 @@ removeRect(){
     this.canvas.remove(activeObject);
   }else{
     const ob = this.canvas.getObjects();
-    this.canvas.remove(ob[0]);
+    this.canvas.remove(ob[ob.length-1]);
   }
 }
 
