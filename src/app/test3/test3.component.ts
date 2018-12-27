@@ -33,7 +33,7 @@ ngAfterViewInit() {
   this.loadImage();
   this.enableZoom();
   
-    
+  
 
    
 
@@ -170,10 +170,16 @@ ngAfterViewInit() {
                 scaleX: scaleFactor,
                 scaleY:scaleFactor
             });
+            console.log(this.canvasWidth, this.canvasHeight);
+            if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
+              this.oldCanvasWidth = this.canvasWidth;
+              this.oldCanvasHeight = this.canvasHeight;
+              console.log("only 1s time:", this.oldCanvasWidth, this.oldCanvasHeight)
+             }
             this.canvas.setWidth(this.canvasWidth);
             this.canvas.setHeight(this.canvasHeight);
             this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
-
+           //this.canvas.calcOffset();
       });
    }
   }
@@ -190,7 +196,7 @@ ngAfterViewInit() {
       opt.e.preventDefault();
       opt.e.stopPropagation();
   
-        if (this.canvas.viewportTransform[4] >= 0) {
+     /*    if (this.canvas.viewportTransform[4] >= 0) {
           this.canvas.viewportTransform[4] = 0;
         } else if (this.canvas.viewportTransform[4] < this.canvas.getWidth() - 1000 * zoom) {
           this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
@@ -199,7 +205,7 @@ ngAfterViewInit() {
           this.canvas.viewportTransform[5] = 0;
         } else if (this.canvas.viewportTransform[5] < this.canvas.getHeight() - 1000 * zoom) {
           this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
-        }
+        } */
       
     });
   
@@ -243,20 +249,22 @@ ngAfterViewInit() {
  @HostListener('window:resize', ['$event'])
  onResize(event:any) {
    //console.log(event.target.innerWidth);
+   /* setTimeout( () => {
+                }, 100); */ 
   /*  if (event.target.innerWidth > this.canvasWidth){
        this.canvas.setWidth(this.canvasWidth);
    }else{
        this.canvas.setWidth(event.target.innerWidth - 40);
    } */
-
+  
    this.loadImage();
-   if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
-    this.oldCanvasWidth = this.canvasWidth;
-    this.oldCanvasHeight = this.canvasHeight;
-   }
+   
+    setTimeout( () => {
+               
    const factorX = this.canvasWidth / this.oldCanvasWidth;
    const factorY = this.canvasHeight / this.oldCanvasHeight; 
-
+         if (factorX == 1){console.log("error:", factorX, this.canvasWidth, this.oldCanvasWidth)}
+        //window.alert(factorX)
     this.oldCanvasWidth = this.canvasWidth;
     this.oldCanvasHeight = this.canvasHeight; 
 
@@ -281,9 +289,9 @@ ngAfterViewInit() {
     objects[i].setCoords();
   } 
 
-
+  this.canvas.renderAll();
    this.canvas.calcOffset();
-   
+  }, 500); 
  }
 
   rect() {
