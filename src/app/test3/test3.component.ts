@@ -20,9 +20,9 @@ export class Test3Component implements AfterViewInit {
   @Input() imageName:string;
   oldCanvasWidth:number;
   oldCanvasHeight:number;
-  //imgWidth;
-  //imgHeight;
-
+  imgWidth:number;
+  imgHeight:number;
+  image = new Image;
 
 ngAfterViewInit() {
 
@@ -30,20 +30,23 @@ ngAfterViewInit() {
     selection: false,
     controlsAboveOverlay: false
   });
-  this.loadImage();
+
+  
+  this.image.src = this.imageUrl;
+  this.image.onload = () =>{
+       this.imgWidth = this.image.width;
+       this.imgHeight = this.image.height;
+       this.initCanvas();
+  }
+  
   this.enableZoom();
   
-  
-
-   
-
     this.canvas.uniScaleTransform = true;
 
-    
-     this.canvas.targetFindTolerance = 20;
+    this.canvas.targetFindTolerance = 20;
 
 
-     this.canvas.on("object:scaling", (e:any) => {   //or modified
+     this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
       const target = e.target;
       /* if (target && target.type == 'line'){
         const sX = target.scaleX;
@@ -130,82 +133,63 @@ ngAfterViewInit() {
 } 
 
 
-  loadImage(){
-    let image = new Image;
-    image.src = this.imageUrl;
-    //img.src = './assets/document1.jpg';
-   
+  initCanvas(){
     
-    let aspectRatio = 0;
-    
-
-    image.onload = () =>{
-
-      fabric.Image.fromURL(image.src, (img:any) => {
-
-        const imgWidth = img.width;
-        const imgHeight = img.height;
-
-        //this.imgWidth = imgWidth;
-        //this.imgHeight = imgHeight;
-
-        aspectRatio = imgHeight/imgWidth;
+       this.calcCanvasDimensions();
         
-
-         if (imgWidth > window.innerWidth-50){
-          this.canvasWidth = window.innerWidth - 50;
-        }else{
-          this.canvasWidth = imgWidth;
-        } 
-
-        this.canvasHeight = this.canvasWidth * aspectRatio;
-        const scaleFactor = this.canvasWidth / imgWidth;
-
-
-            img.set({
-                width: imgWidth, 
-                height: imgHeight, 
-                originX: 'left', 
-                originY: 'top',
-                scaleX: scaleFactor,
-                scaleY:scaleFactor
-            });
-            console.log(this.canvasWidth, this.canvasHeight);
-            if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
-              this.oldCanvasWidth = this.canvasWidth;
-              this.oldCanvasHeight = this.canvasHeight;
-              console.log("only 1s time:", this.oldCanvasWidth, this.oldCanvasHeight)
-             }
-            this.canvas.setWidth(this.canvasWidth);
-            this.canvas.setHeight(this.canvasHeight);
-            this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
-           //this.canvas.calcOffset();
-      });
-   }
+        if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
+          this.oldCanvasWidth = this.canvasWidth;
+          this.oldCanvasHeight = this.canvasHeight;
+        }
+        this.setBgImg();     
   }
+  
+  calcCanvasDimensions(){
+    const aspectRatio = this.imgHeight/this.imgWidth;
+
+    if (this.imgWidth > window.innerWidth-50){
+     this.canvasWidth = window.innerWidth - 50;
+    }else{
+     this.canvasWidth = this.imgWidth;
+    } 
+
+    this.canvasHeight = this.canvasWidth * aspectRatio;
+  }
+
+  setBgImg(){
+    const scaleFactor = this.canvasWidth / this.imgWidth;
+    fabric.Image.fromURL(this.image.src, (img:any) => {
+      img.set({
+          width: this.imgWidth, 
+          height: this.imgHeight, 
+          originX: 'left', 
+          originY: 'top',
+          scaleX: scaleFactor,
+          scaleY:scaleFactor
+      });
+       
+      this.canvas.setWidth(this.canvasWidth);
+      this.canvas.setHeight(this.canvasHeight);
+      this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
+    
+     });
+  }
+
 
   enableZoom(){
     this.canvas.on('mouse:wheel', (opt:any) => {
       const delta = -opt.e.deltaY;
-      //var pointer = this.canvas.getPointer(opt.e);
+      //const pointer = this.canvas.getPointer(opt.e);
       let zoom = this.canvas.getZoom();
       zoom = zoom + delta/300;
       if (zoom > 3) zoom = 3;
-      if (zoom < 1) zoom = 1;
+      if (zoom < 1){
+        zoom = 1;
+        this.ResetImageToCanvas();
+      } 
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
-  
-     /*    if (this.canvas.viewportTransform[4] >= 0) {
-          this.canvas.viewportTransform[4] = 0;
-        } else if (this.canvas.viewportTransform[4] < this.canvas.getWidth() - 1000 * zoom) {
-          this.canvas.viewportTransform[4] = this.canvas.getWidth() - 1000 * zoom;
-        }
-        if (this.canvas.viewportTransform[5] >= 0) {
-          this.canvas.viewportTransform[5] = 0;
-        } else if (this.canvas.viewportTransform[5] < this.canvas.getHeight() - 1000 * zoom) {
-          this.canvas.viewportTransform[5] = this.canvas.getHeight() - 1000 * zoom;
-        } */
       
     });
   
@@ -248,38 +232,27 @@ ngAfterViewInit() {
 
  @HostListener('window:resize', ['$event'])
  onResize(event:any) {
-   //console.log(event.target.innerWidth);
-   /* setTimeout( () => {
-                }, 100); */ 
-  /*  if (event.target.innerWidth > this.canvasWidth){
-       this.canvas.setWidth(this.canvasWidth);
-   }else{
-       this.canvas.setWidth(event.target.innerWidth - 40);
-   } */
-  
-   this.loadImage();
    
-    setTimeout( () => {
+    this.calcCanvasDimensions(); 
                
-   const factorX = this.canvasWidth / this.oldCanvasWidth;
-   const factorY = this.canvasHeight / this.oldCanvasHeight; 
-         if (factorX == 1){console.log("error:", factorX, this.canvasWidth, this.oldCanvasWidth)}
-        //window.alert(factorX)
+    const factorX = this.canvasWidth / this.oldCanvasWidth;
+    const factorY = this.canvasHeight / this.oldCanvasHeight; 
+       
     this.oldCanvasWidth = this.canvasWidth;
     this.oldCanvasHeight = this.canvasHeight; 
 
    const objects = this.canvas.getObjects();
    for (var i in objects) {
      
-    var scaleX = objects[i].scaleX;
-    var scaleY = objects[i].scaleY;
-    var left = objects[i].left;
-    var top = objects[i].top;
+    const scaleX = objects[i].scaleX;
+    const scaleY = objects[i].scaleY;
+    const left = objects[i].left;
+    const top = objects[i].top;
 
-    var tempScaleX = scaleX * factorX;
-    var tempScaleY = scaleY * factorY;
-    var tempLeft = left * factorX;
-    var tempTop = top * factorY;
+    const tempScaleX = scaleX * factorX;
+    const tempScaleY = scaleY * factorY;
+    const tempLeft = left * factorX;
+    const tempTop = top * factorY;
 
     objects[i].scaleX = tempScaleX;
     objects[i].scaleY = tempScaleY;
@@ -290,8 +263,9 @@ ngAfterViewInit() {
   } 
 
   this.canvas.renderAll();
-   this.canvas.calcOffset();
-  }, 500); 
+  this.canvas.calcOffset();
+  this.setBgImg();
+                                                      
  }
 
   rect() {
