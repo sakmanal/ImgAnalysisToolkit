@@ -43,17 +43,17 @@ ngAfterViewInit() {
   
     this.canvas.uniScaleTransform = true;
 
-    //this.canvas.targetFindTolerance = 20;
+    this.canvas.targetFindTolerance = 20;
 
 
      this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
       const target = e.target;
      if (target && target.type == 'line'){
-         console.log("line");
+         //console.log("line scale");
           return
          
       }else if (target && target.type == 'rect'){
-        console.log("rect")
+        //console.log("rect scale")
         const sX = target.scaleX;
         const sY = target.scaleY;
         target.width *= sX;
@@ -61,14 +61,7 @@ ngAfterViewInit() {
         target.scaleX = 1;
         target.scaleY = 1;
       }
-    /*   if (!target || target.type == !'rect') {console.log("line"); return;}
-          console.log("rect")
-          const sX = target.scaleX;
-          const sY = target.scaleY;
-          target.width *= sX;
-          target.height *= sY;
-          target.scaleX = 1;
-          target.scaleY = 1;*/
+   
       
     }); 
     
@@ -188,33 +181,59 @@ ngAfterViewInit() {
   enableBoundaryLimit(){
     this.canvas.observe("object:moving", (e:any) =>{
         const obj = e.target;
-        let bounds;
-        //console.log(this.canvasWidth, /* obj.canvas.width, */ obj.width, obj.left )
-        if (obj && obj.type == 'line'){
-            bounds = { w: this.canvasWidth + obj.width/2 , h: this.canvasHeight + obj.height/2,  x: obj.width/2 , y: obj.height/2};
+        //let bounds;
+      
+        /* if (obj && obj.type == 'line'){
+            bounds = { w: this.canvasWidth + obj.width/2 , h: this.canvasHeight + obj.height/2,  x: obj.width/2 , y: obj.height/2};  //if originX,Y:center
         }else{
             bounds = { w: this.canvasWidth , h: this.canvasHeight,  x: 0 , y: 0};
+        } */
+
+        const bounds = { w: this.canvasWidth , h: this.canvasHeight,  x: 0 , y: 0};
+
+        if (obj && obj.type == 'line'){
+                  // left  bound
+                  if (obj.left <= bounds.x){
+                    obj.left = bounds.x;
+                  }
+              
+                  // right bound
+                  if( obj.left+obj.width*obj.scaleX >= bounds.w ){ 
+                      obj.left = bounds.w - obj.width*obj.scaleX;
+                  }
+              
+                  // top bound
+                  if( obj.top <= bounds.y ){ 
+                    obj.top = bounds.y;
+                  }
+              
+                  // bottom bound
+                  if( obj.top+obj.height*obj.scaleY >= bounds.h ){ 
+                    obj.top = bounds.h - obj.height*obj.scaleY;
+                  }
+        }else{
+                  // left  bound
+                if (obj.left <= bounds.x){
+                  obj.left = bounds.x;
+                }
+            
+                // right bound
+                if( obj.left+obj.width >= bounds.w ){ 
+                    obj.left = bounds.w - obj.width;
+                }
+            
+                // top bound
+                if( obj.top <= bounds.y ){ 
+                  obj.top = bounds.y;
+                }
+            
+                // bottom bound
+                if( obj.top+obj.height >= bounds.h ){ 
+                  obj.top = bounds.h - obj.height;
+                }
         }
 
-        // left  bound
-        if (obj.left <= bounds.x){
-          obj.left = bounds.x;
-        }
-    
-        // right bound
-        if( obj.left+obj.width >= bounds.w ){ 
-            obj.left = bounds.w - obj.width;
-        }
-    
-        // top bound
-        if( obj.top <= bounds.y ){ 
-          obj.top = bounds.y;
-        }
-    
-        // bottom bound
-        if( obj.top+obj.height >= bounds.h ){ 
-          obj.top = bounds.h - obj.height;
-        }
+        
         obj.setCoords();
     });
   }
@@ -302,7 +321,7 @@ ngAfterViewInit() {
     const tempHeight = height * factorY;
 
     if ( objects[i].type == 'line'){
-      console.log("line")
+      //console.log("line")
       objects[i].scaleX = tempScaleX;
       objects[i].scaleY = tempScaleY;
       objects[i].left = tempLeft;
@@ -312,7 +331,7 @@ ngAfterViewInit() {
       //objects[i].scaleX = 1;
       //objects[i].scaleY = 1;
     }else{
-      console.log("rect")
+      //console.log("rect")
       objects[i].left = tempLeft;
       objects[i].top = tempTop;
       objects[i].width = tempWidth;
@@ -334,6 +353,7 @@ ngAfterViewInit() {
 
     let rectangle:any, isDown:boolean, origX:number, origY:number;
     this.removeEvents();
+    this.canvas.defaultCursor = "crosshair";
     this.canvas.on('mouse:down',  (o:any) => {
       if (!this.canvas.getActiveObject()){
           const pointer = this.canvas.getPointer(o.e);
@@ -414,8 +434,8 @@ removeEvents(){
           const pointer = this.canvas.getPointer(o.e);
           const points = [pointer.x, pointer.y, pointer.x, pointer.y];
           line = new fabric.Line(points, {
-            originX: 'center',
-            originY: 'center',
+            originX: 'left',
+            originY: 'top',
             strokeWidth: 3,
             stroke: 'red',
             cornerSize: 6,
