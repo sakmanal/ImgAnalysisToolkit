@@ -43,29 +43,39 @@ ngAfterViewInit() {
   
     this.canvas.uniScaleTransform = true;
 
-    this.canvas.targetFindTolerance = 20;
+    //this.canvas.targetFindTolerance = 20;
 
 
      this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
       const target = e.target;
-      /* if (target && target.type == 'line'){
+     if (target && target.type == 'line'){
+         console.log("line");
+          return
+         
+      }else if (target && target.type == 'rect'){
+        console.log("rect")
         const sX = target.scaleX;
         const sY = target.scaleY;
         target.width *= sX;
+        target.height *= sY;
+        target.scaleX = 1;
+        target.scaleY = 1;
+      }
+    /*   if (!target || target.type == !'rect') {console.log("line"); return;}
+          console.log("rect")
+          const sX = target.scaleX;
+          const sY = target.scaleY;
+          target.width *= sX;
           target.height *= sY;
           target.scaleX = 1;
-          target.scaleY = 1;
-      } */
-      if (!target || target.type !== 'rect') {
-          return;
-      }
-      const sX = target.scaleX;
-      const sY = target.scaleY;
-      target.width *= sX;
-      target.height *= sY;
-      target.scaleX = 1;
-      target.scaleY = 1;
-    });
+          target.scaleY = 1;*/
+      
+    }); 
+    
+    this.enableBoundaryLimit();
+
+
+
     
     /* const rectangle = new fabric.Rect({ 
             left: 50,
@@ -175,6 +185,39 @@ ngAfterViewInit() {
      });
   }
 
+  enableBoundaryLimit(){
+    this.canvas.observe("object:moving", (e:any) =>{
+        const obj = e.target;
+        let bounds;
+        //console.log(this.canvasWidth, /* obj.canvas.width, */ obj.width, obj.left )
+        if (obj && obj.type == 'line'){
+            bounds = { w: this.canvasWidth + obj.width/2 , h: this.canvasHeight + obj.height/2,  x: obj.width/2 , y: obj.height/2};
+        }else{
+            bounds = { w: this.canvasWidth , h: this.canvasHeight,  x: 0 , y: 0};
+        }
+
+        // left  bound
+        if (obj.left <= bounds.x){
+          obj.left = bounds.x;
+        }
+    
+        // right bound
+        if( obj.left+obj.width >= bounds.w ){ 
+            obj.left = bounds.w - obj.width;
+        }
+    
+        // top bound
+        if( obj.top <= bounds.y ){ 
+          obj.top = bounds.y;
+        }
+    
+        // bottom bound
+        if( obj.top+obj.height >= bounds.h ){ 
+          obj.top = bounds.h - obj.height;
+        }
+        obj.setCoords();
+    });
+  }
 
   enableZoom(){
     this.canvas.on('mouse:wheel', (opt:any) => {
@@ -248,18 +291,37 @@ ngAfterViewInit() {
     const scaleY = objects[i].scaleY;
     const left = objects[i].left;
     const top = objects[i].top;
+    const width = objects[i].width;
+    const height = objects[i].height;
 
     const tempScaleX = scaleX * factorX;
     const tempScaleY = scaleY * factorY;
     const tempLeft = left * factorX;
     const tempTop = top * factorY;
+    const tempWidth = width * factorX;
+    const tempHeight = height * factorY;
 
-    objects[i].scaleX = tempScaleX;
-    objects[i].scaleY = tempScaleY;
-    objects[i].left = tempLeft;
-    objects[i].top = tempTop;
-
-    objects[i].setCoords();
+    if ( objects[i].type == 'line'){
+      console.log("line")
+      objects[i].scaleX = tempScaleX;
+      objects[i].scaleY = tempScaleY;
+      objects[i].left = tempLeft;
+      objects[i].top = tempTop;
+      //objects[i].width = tempWidth;
+      //objects[i].height = tempHeight;
+      //objects[i].scaleX = 1;
+      //objects[i].scaleY = 1;
+    }else{
+      console.log("rect")
+      objects[i].left = tempLeft;
+      objects[i].top = tempTop;
+      objects[i].width = tempWidth;
+      objects[i].height = tempHeight;
+      objects[i].scaleX = 1;
+      objects[i].scaleY = 1;
+    }
+    
+    objects[i].setCoords(); 
   } 
 
   this.canvas.renderAll();
@@ -409,10 +471,6 @@ removeEvents(){
      }
   });
 
-/*   this.canvas.on('object:scaling', (e:any) => {
-    const o = e.target;
-    o.strokeWidth = 3;
-  }); */
 }
 
 
