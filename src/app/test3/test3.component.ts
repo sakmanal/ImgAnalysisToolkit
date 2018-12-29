@@ -247,7 +247,8 @@ ngAfterViewInit() {
       if (zoom > 3) zoom = 3;
       if (zoom < 1){
         zoom = 1;
-        this.ResetImageToCanvas();
+        this.canvas.viewportTransform[4] = 0;
+        this.canvas.viewportTransform[5] = 0;
       } 
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       opt.e.preventDefault();
@@ -255,36 +256,44 @@ ngAfterViewInit() {
       
     });
   
-    this.canvas.on('mouse:down', (opt:any) => {
-      const evt = opt.e;
-      if (evt.altKey === true) {
-        this.canvas.isDragging = true;
-        //this.canvas.selection = false;
-        this.canvas.lastPosX = evt.clientX;
-        this.canvas.lastPosY = evt.clientY;
-      }
-    });
-    this.canvas.on('mouse:move', (opt:any) => {
-      if (this.canvas.isDragging) {
-        const e = opt.e;
-        this.canvas.viewportTransform[4] += e.clientX - this.canvas.lastPosX;
-        this.canvas.viewportTransform[5] += e.clientY - this.canvas.lastPosY;
-        this.canvas.requestRenderAll();
-        this.canvas.lastPosX = e.clientX;
-        this.canvas.lastPosY = e.clientY;
-      }
-    });
-    this.canvas.on('mouse:up', () => {
-      this.canvas.isDragging = false;
-      //this.canvas.selection = true;
-      const objects = this.canvas.getObjects();
-      for(let i=0; i<objects.length; i++){
-        objects[i].setCoords();
-      }
-      
-    });
+    this.enableDrag();
   }
 
+
+ enableDrag(){
+      this.canvas.on('mouse:down', (opt:any) => {
+        const evt = opt.e;
+        if (evt.altKey === true) {
+          //console.log("down drag")
+          this.canvas.isDragging = true;
+          //this.canvas.selection = false;
+          this.canvas.lastPosX = evt.clientX;
+          this.canvas.lastPosY = evt.clientY;
+        }
+      });
+      this.canvas.on('mouse:move', (opt:any) => {
+        if (this.canvas.isDragging) {
+          //console.log("move drag")
+          const e = opt.e;
+          this.canvas.viewportTransform[4] += e.clientX - this.canvas.lastPosX;
+          this.canvas.viewportTransform[5] += e.clientY - this.canvas.lastPosY;
+          this.canvas.requestRenderAll();
+          this.canvas.lastPosX = e.clientX;
+          this.canvas.lastPosY = e.clientY;
+        }
+      });
+      this.canvas.on('mouse:up', () => {
+        if (this.canvas.isDragging) {
+            //console.log("up drag")
+            this.canvas.isDragging = false;
+            //this.canvas.selection = true;
+            const objects = this.canvas.getObjects();
+            for(let i=0; i<objects.length; i++){
+              objects[i].setCoords();
+            }
+       }
+      });
+  }
  ResetImageToCanvas(){
         this.canvas.viewportTransform[4] = 0;
         this.canvas.viewportTransform[5] = 0;
@@ -353,9 +362,11 @@ ngAfterViewInit() {
 
     let rectangle:any, isDown:boolean, origX:number, origY:number;
     this.removeEvents();
+    this.enableDrag();
     this.canvas.defaultCursor = "crosshair";
     this.canvas.on('mouse:down',  (o:any) => {
-      if (!this.canvas.getActiveObject()){
+      if (!this.canvas.getActiveObject()  && !this.canvas.isDragging){
+          //console.log("down rect")
           const pointer = this.canvas.getPointer(o.e);
         
 
@@ -386,8 +397,9 @@ ngAfterViewInit() {
   });
 
   this.canvas.on('mouse:move',  (o:any) =>{
-    if (!this.canvas.getActiveObject()){
-            if (!isDown) return;
+    if (!this.canvas.getActiveObject() && isDown){
+            //console.log("move rect")
+            //if (!isDown) return;
             var pointer = this.canvas.getPointer(o.e);
             if(origX>pointer.x){
                 rectangle.set({ left: Math.abs(pointer.x) });
@@ -403,7 +415,8 @@ ngAfterViewInit() {
 });
 
 this.canvas.on('mouse:up',  () =>{
-  if (!this.canvas.getActiveObject()){
+  if (!this.canvas.getActiveObject() && isDown){
+    //console.log("up rect")
     isDown = false;
     //rectangle.setCoords();
     if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
@@ -426,9 +439,10 @@ removeEvents(){
    let line:any;
   
   this.removeEvents();
+  this.enableDrag();
   this.canvas.on('mouse:down', (o:any) => {
-    if (!this.canvas.getActiveObject()){
-          //console.log(o.e.altKey)
+    if (!this.canvas.getActiveObject() && !this.canvas.isDragging){
+          //console.log("down line")
           //this.canvas.selection = false;
           isDown = true;
           const pointer = this.canvas.getPointer(o.e);
@@ -447,8 +461,9 @@ removeEvents(){
   });
 
   this.canvas.on('mouse:move', (o:any) => {
-    if (!this.canvas.getActiveObject()){
-        if (!isDown) return;
+    if (!this.canvas.getActiveObject()  && isDown){
+        //console.log("move line")
+        //if (!isDown) return;
         const pointer = this.canvas.getPointer(o.e);
         line.set({
           x2: pointer.x,
@@ -460,7 +475,8 @@ removeEvents(){
   });
 
   this.canvas.on('mouse:up', () => {
-    if (!this.canvas.getActiveObject()){
+    if (!this.canvas.getActiveObject() && isDown){
+          //console.log("up line")
           isDown = false;
           line.setCoords();
           const width = Math.round(line.width);
