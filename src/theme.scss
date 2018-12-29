@@ -12,12 +12,13 @@ $custom-theme: mat-dark-theme($custom-primary, $custom-accent, $custom-warn);
 // ALTERNATIVE THEME
 
 $alt-primary: mat-palette($mat-grey, 50);
-$alt-accent:  mat-palette($mat-yellow, 700);
+$alt-accent:  mat-palette($mat-blue, 700);
 $alt-warn:  mat-palette($mat-yellow, 700);
 
 $alt-theme: mat-dark-theme($alt-primary, $alt-accent, $alt-warn);
 
 .alternative {
+    @include mat-slide-toggle-theme($alt-theme);
     @include mat-button-theme($alt-theme);
 }
 

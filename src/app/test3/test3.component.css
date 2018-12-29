@@ -1,7 +1,3 @@
-/* canvas {
-    border: 3px solid #0091ea;
-} */
-
 
 .centerimg{
     display: flex;
@@ -11,4 +7,11 @@
 
 .centerimg .responsive canvas {
     max-width: 100%;
+}
+
+.st{
+    position: fixed;
+    bottom: 2%;
+    right: 2%;
+    z-index: 99 !important;
 }

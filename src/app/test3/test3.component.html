@@ -1,5 +1,5 @@
 
-<div style="margin:10px">
+<!-- <div style="margin:10px">
 <button (click)="rect()">rect</button>
 <button (click)="Line()">line</button>
 <button (click)="removeRect()">remove</button>
@@ -8,13 +8,41 @@
 <button (click)="cropImage()">crop</button>
 <button (click)="mergeSelection()">merge</button>
 
-</div>
+</div> -->
 
-<img src={{cropImg}}>
+<div *ngIf=imageUrl>
+    <div style="margin: 5px">
 
-<div class="centerimg">
-    <div  style="cursor: crosshair;" class="responsive">
-       <canvas class="canvas"  id="canvas"></canvas>
+        <button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="openDialog()">
+            <mat-icon>check_circle</mat-icon> Select word
+        </button>
+        
+        <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="remove()">
+            <mat-icon>remove_circle_outline</mat-icon> remove selection
+        </button>
+
+        <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="mergeSelection()">
+            <mat-icon>crop_16_9</mat-icon> fit in selection
+        </button>
+
+
+
+        <span class="alternative">
+                <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin-left: 5px; margin-bottom: 5px;">Rect selection tool</mat-slide-toggle>
+                <mat-slide-toggle color="accent" [(ngModel)]="LineTool" (change)="selectLine()" style="margin-left: 5px; margin-bottom: 5px;">Line selection tool</mat-slide-toggle>
+        </span>
     </div>
-</div>
- 
+
+    <div class="st">
+            <button  mat-mini-fab  (click)="openDialog()" matTooltip="select word" [matTooltipPosition]="position" color="warn"><mat-icon>done</mat-icon></button>
+            <p><button  mat-mini-fab  (click)="remove()" matTooltip="remove selection" [matTooltipPosition]="position" color="warn"><mat-icon>remove</mat-icon></button></p>
+    </div>
+
+    <!-- <img src={{cropImg}}> -->
+
+    <div class="centerimg">
+        <div  style="cursor: crosshair;" class="responsive">
+        <canvas class="canvas"  id="canvas"></canvas>
+        </div>
+    </div>
+</div> 

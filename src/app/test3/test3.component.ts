@@ -1,4 +1,7 @@
-import { Component, AfterViewInit, Input, HostListener } from '@angular/core';
+import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { MatDialog } from '@angular/material';
+import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
+import { SavejsonService } from '../savejson.service';
 import 'fabric';
 
 declare const fabric: any;
@@ -10,7 +13,7 @@ declare const fabric: any;
 })
 export class Test3Component implements AfterViewInit {
 
-  constructor() { }
+  constructor(public dialog: MatDialog, private savejsonService: SavejsonService) {}
 
   
   canvas:any;
@@ -24,143 +27,96 @@ export class Test3Component implements AfterViewInit {
   imgHeight:number;
   image = new Image;
   cropImg:any;
+  position = 'left';
+  RectTool:boolean = false;
+  LineTool:boolean = false;
+  word:string;
+  @Output() updateEvent = new EventEmitter<boolean>();
 
 ngAfterViewInit() {
+  if (this.imageUrl){
 
-  this.canvas = new fabric.Canvas('canvas', {
-    selection: false,
-    controlsAboveOverlay: false
-  });
+    this.canvas = new fabric.Canvas('canvas', {
+      selection: false,
+      controlsAboveOverlay: false
+    });
 
-  
-  this.image.src = this.imageUrl;
-  this.image.onload = () =>{
-       this.imgWidth = this.image.width;
-       this.imgHeight = this.image.height;
-       this.initCanvas();
-  }
-  
-  this.enableZoom();
-  
-    this.canvas.uniScaleTransform = true;
+    
+    this.image.src = this.imageUrl;
+    this.image.onload = () =>{
+        this.imgWidth = this.image.width;
+        this.imgHeight = this.image.height;
+        this.initCanvas();
+    }
+    
+    this.enableZoom();
+    
+      this.canvas.uniScaleTransform = true;
 
-    this.canvas.targetFindTolerance = 20;
+      this.canvas.targetFindTolerance = 20;
 
 
-     this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
-      const target = e.target;
-     if (target && target.type == 'line'){
-         //console.log("line scale");
-          return
-         
-      }else if (target && target.type == 'rect'){
-        //console.log("rect scale")
-        const sX = target.scaleX;
-        const sY = target.scaleY;
-        target.width *= sX;
-        target.height *= sY;
-        target.scaleX = 1;
-        target.scaleY = 1;
-      }
-   
+      this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
+        const target = e.target;
+      if (target && target.type == 'line'){
+          //console.log("line scale");
+            return
+          
+        }else if (target && target.type == 'rect'){
+          //console.log("rect scale")
+          const sX = target.scaleX;
+          const sY = target.scaleY;
+          target.width *= sX;
+          target.height *= sY;
+          target.scaleX = 1;
+          target.scaleY = 1;
+        }
+    
+        
+      }); 
       
-    }); 
-    
-    this.enableBoundaryLimit();
+      this.enableBoundaryLimit();
 
-
-
-    
-    /* const rectangle = new fabric.Rect({ 
-            left: 50,
-            top: 50,
-            fill: 'transparent',
-            stroke: '#33ccff',
-            strokeWidth: 3,
-            strokeDashArray: [2, 2],
-            opacity: 1,
-            width: 50,
-            height: 50,
-            borderColor: '#80dfff',
-            cornerColor: '#33ccff',
-            hasRotatingPoint:false,
-            objectCaching: true,
-            cornerSize: 6,
-            transparentCorners: false,
-           
-            
-    });
-    this.canvas.add(rectangle); */
-
-   /*  this.canvas.on('object:scaling', (e) => {
-      const o = e.target;
-      if (!o.strokeWidthUnscaled && o.strokeWidth) {
-        o.strokeWidthUnscaled = o.strokeWidth;
-      }
-      if (o.strokeWidthUnscaled) {
-        o.strokeWidth = o.strokeWidthUnscaled / o.scaleX;
-        //o.strokeWidth = 3;
-      }
-    }) */
-    
-    /* let points = [200, 50, 150, 50];
-    const line = new fabric.Line(points, {
-      strokeWidth: 3,
-      stroke: 'red',
-      cornerSize: 6,
-      transparentCorners: false,
-      hasRotatingPoint:false,
-      //lockSkewingY:false
-    });
-    this.canvas.add(line);
-
-    //line.lockUniScaling = true
-
-    line.setControlsVisibility({
-         mt: false, 
-         mb: false, 
-         ml: true, 
-         mr: true, 
-         bl: false,
-         br: false, 
-         tl: false, 
-         tr: false,
-         mtr: false,
-    
-  }); */
- 
-  //this.canvas.calcOffset();
-
-  
-
- 
+    /*  this.canvas.on('object:scaling', (e) => {
+        const o = e.target;
+        if (!o.strokeWidthUnscaled && o.strokeWidth) {
+          o.strokeWidthUnscaled = o.strokeWidth;
+        }
+        if (o.strokeWidthUnscaled) {
+          o.strokeWidth = o.strokeWidthUnscaled / o.scaleX;
+          //o.strokeWidth = 3;
+        }
+      }) */
+      
+      
+  }
 } 
 
 
-  initCanvas(){
-    
-       this.calcCanvasDimensions();
-        
-        if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
-          this.oldCanvasWidth = this.canvasWidth;
-          this.oldCanvasHeight = this.canvasHeight;
-        }
-        this.setBgImg();     
-  }
+initCanvas(){
   
-  calcCanvasDimensions(){
-    const aspectRatio = this.imgHeight/this.imgWidth;
+      this.calcCanvasDimensions();
+      
+      if (!this.oldCanvasWidth || !this.oldCanvasHeight ){
+        this.oldCanvasWidth = this.canvasWidth;
+        this.oldCanvasHeight = this.canvasHeight;
+      }
+      this.setBgImg();     
+}
+  
+calcCanvasDimensions(){
+  const aspectRatio = this.imgHeight/this.imgWidth;
 
-    if (this.imgWidth > window.innerWidth-50){
-     this.canvasWidth = window.innerWidth - 50;
-    }else{
-     this.canvasWidth = this.imgWidth;
-    } 
+  if (this.imgWidth > window.innerWidth-50){
+    this.canvasWidth = window.innerWidth - 50;
+  }else{
+    this.canvasWidth = this.imgWidth;
+  } 
 
-    this.canvasHeight = this.canvasWidth * aspectRatio;
-  }
+  this.canvasHeight = this.canvasWidth * aspectRatio;
+}
 
-  setBgImg(){
+setBgImg(){
     const scaleFactor = this.canvasWidth / this.imgWidth;
     fabric.Image.fromURL(this.image.src, (img:any) => {
       img.set({
@@ -177,9 +133,9 @@ ngAfterViewInit() {
       this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
     
      });
-  }
+}
 
-  enableBoundaryLimit(){
+enableBoundaryLimit(){
     this.canvas.observe("object:moving", (e:any) =>{
         const obj = e.target;
         //let bounds;
@@ -237,9 +193,9 @@ ngAfterViewInit() {
         
         obj.setCoords();
     });
-  }
+}
 
-  enableZoom(){
+enableZoom(){
     this.canvas.on('mouse:wheel', (opt:any) => {
       const delta = -opt.e.deltaY;
       //const pointer = this.canvas.getPointer(opt.e);
@@ -258,10 +214,10 @@ ngAfterViewInit() {
     });
   
     this.enableDrag();
-  }
+}
 
 
- enableDrag(){
+enableDrag(){
       this.canvas.on('mouse:down', (opt:any) => {
         const evt = opt.e;
         if (evt.altKey === true) {
@@ -294,15 +250,16 @@ ngAfterViewInit() {
             }
        }
       });
-  }
- ResetImageToCanvas(){
+}
+
+ResetImageToCanvas(){
         this.canvas.viewportTransform[4] = 0;
         this.canvas.viewportTransform[5] = 0;
         this.canvas.setZoom(1);
         this.canvas.requestRenderAll();
- }
+}
 
- @HostListener('window:resize', ['$event'])
+@HostListener('window:resize', ['$event'])
  onResize(event:any) {
    
     this.calcCanvasDimensions(); 
@@ -359,12 +316,11 @@ ngAfterViewInit() {
                                                       
  }
 
-  rect() {
+rect() {
 
     let rectangle:any, isDown:boolean, origX:number, origY:number;
     this.removeEvents();
     this.enableDrag();
-    this.canvas.defaultCursor = "crosshair";
     this.canvas.on('mouse:down',  (o:any) => {
       if (!this.canvas.getActiveObject()  && !this.canvas.isDragging){
           //console.log("down rect")
@@ -379,7 +335,7 @@ ngAfterViewInit() {
                   left: origX,
                   top: origY,
                   fill: 'transparent',
-                  strokeDashArray: [10, 5],
+                  strokeDashArray: [5, 5],
                   strokeLineCap: 'square',
                   opacity: 1,
                   width: 1,
@@ -397,34 +353,34 @@ ngAfterViewInit() {
      }
   });
 
-  this.canvas.on('mouse:move',  (o:any) =>{
-    if (!this.canvas.getActiveObject() && isDown){
-            //console.log("move rect")
-            //if (!isDown) return;
-            var pointer = this.canvas.getPointer(o.e);
-            if(origX>pointer.x){
-                rectangle.set({ left: Math.abs(pointer.x) });
-            }
-            if(origY>pointer.y){
-                rectangle.set({ top: Math.abs(pointer.y) });
-            }
-            
-            rectangle.set({ width: Math.abs(origX - pointer.x) });
-            rectangle.set({ height: Math.abs(origY - pointer.y) });
-            this.canvas.renderAll();
-    }
-});
+    this.canvas.on('mouse:move',  (o:any) =>{
+      if (!this.canvas.getActiveObject() && isDown){
+              //console.log("move rect")
+              //if (!isDown) return;
+              var pointer = this.canvas.getPointer(o.e);
+              if(origX>pointer.x){
+                  rectangle.set({ left: Math.abs(pointer.x) });
+              }
+              if(origY>pointer.y){
+                  rectangle.set({ top: Math.abs(pointer.y) });
+              }
+              
+              rectangle.set({ width: Math.abs(origX - pointer.x) });
+              rectangle.set({ height: Math.abs(origY - pointer.y) });
+              this.canvas.renderAll();
+      }
+  });
 
-this.canvas.on('mouse:up',  () =>{
-  if (!this.canvas.getActiveObject() && isDown){
-    //console.log("up rect")
-    isDown = false;
-    //rectangle.setCoords();
-    if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
-    if (rectangle.height<10) {rectangle.height = 20; this.canvas.renderAll();}
-    rectangle.setCoords();
-  }
-}); 
+    this.canvas.on('mouse:up',  () =>{
+      if (!this.canvas.getActiveObject() && isDown){
+        //console.log("up rect")
+        isDown = false;
+        //rectangle.setCoords();
+        if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
+        if (rectangle.height<10) {rectangle.height = 20; this.canvas.renderAll();}
+        rectangle.setCoords();
+      }
+    }); 
 
 
 }
@@ -435,7 +391,7 @@ removeEvents(){
   this.canvas.off('mouse:move');
  }
 
- Line() {
+Line() {
    let isDown:boolean;
    let line:any;
   
@@ -522,7 +478,7 @@ info(){
   }
 }
 
-removeRect(){
+remove(){
   const activeObject = this.canvas.getActiveObject();
 
   if (activeObject){
@@ -660,5 +616,55 @@ mergeSelection(){
 }
 
 
+selectRect(){
+  if (this.RectTool){
+    this.LineTool = false;
+    this.canvas.defaultCursor = "crosshair";
+    this.rect();
+  }else{
+    this.removeEvents();
+    this.enableDrag();
+    this.canvas.defaultCursor = "default";
+  }
+}
+
+selectLine(){
+  if (this.LineTool){
+    this.RectTool = false;
+    this.canvas.defaultCursor = "crosshair";
+    this.Line();
+  }else{
+    this.removeEvents();
+    this.enableDrag();
+    this.canvas.defaultCursor = "default";
+  }
+}
+
+openDialog(): void {
+
+  let activeObject = this.canvas.getActiveObject();
+  if (!activeObject){
+    const ob = this.canvas.getObjects();
+    activeObject = ob[ob.length-1];
+  }
+  if (activeObject && activeObject.type == 'rect'){
+    this.cropImage();
+    const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
+      width: '500px',
+      data: { CroppedImage: this.cropImg}
+    });
+
+    dialogRef.afterClosed().subscribe(result => {
+      //console.log('The dialog was closed');
+      this.word = result;
+      if (this.word) {
+         //console.log(this.word);
+         //this.word='';
+         this.savejsonService.addword(this.imageName, this.word);
+         this.updateEvent.emit(true);
+      }
+    });
+}
+}
 
 }

@@ -33,6 +33,7 @@
     <mat-tab label="app-test3">
         <ng-template matTabContent> 
       <app-test3
+         (updateEvent)="updateTable($event)" 
          [imageUrl]="ImgUrl"
          [imageName]="ImgName">
     </app-test3>
