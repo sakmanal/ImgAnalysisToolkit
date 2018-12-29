@@ -23,6 +23,7 @@ export class Test3Component implements AfterViewInit {
   imgWidth:number;
   imgHeight:number;
   image = new Image;
+  cropImg:any;
 
 ngAfterViewInit() {
 
@@ -532,5 +533,34 @@ removeRect(){
   }
 }
 
+
+cropImage(){
+
+  let activeObject = this.canvas.getActiveObject();
+  if (!activeObject){
+    const ob = this.canvas.getObjects();
+    activeObject = ob[ob.length-1];
+  }
+  if (activeObject && activeObject.type == 'rect'){
+    const ratio = this.image.width / this.canvasWidth;
+
+    const x = Math.round(activeObject.left * ratio);
+    const y = Math.round(activeObject.top * ratio);
+
+    const w = Math.round(activeObject.width * ratio);
+    const h = Math.round(activeObject.height * ratio);
+  
+ 
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;     
+
+    let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  
+    canvas.width = w;
+    canvas.height = h;
+    
+    ctx.drawImage(this.image, -x, -y); 
+    this.cropImg = canvas.toDataURL("image/png", 1);
+  }
+}
 
 }
