@@ -557,10 +557,108 @@ cropImage(){
   
     canvas.width = w;
     canvas.height = h;
-    
+
     ctx.drawImage(this.image, -x, -y); 
     this.cropImg = canvas.toDataURL("image/png", 1);
   }
 }
+
+
+mergeSelection(){
+  let activeObject = this.canvas.getActiveObject();
+  if (!activeObject){
+    const ob = this.canvas.getObjects();
+    activeObject = ob[ob.length-1];
+  }
+
+  if (activeObject && activeObject.type == 'rect'){
+  
+    this.cropImage();
+    if (this.cropImg){
+
+      const img = new Image;
+      const canvas = document.createElement('canvas') as HTMLCanvasElement;
+      let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+      let yTop:number = 0;
+      let yBottom:number = 0;
+      let flag_yTop:boolean = true;
+      let xRight:number = 0;
+      let xLeft:number = 0;
+      let flag_xLeft:boolean = true;
+
+      img.onload = () =>{
+
+        const width = img.width;
+        const height = img.height;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, width, height);
+        const data = imageData.data;
+
+
+        for (let i = 0; i < height; i++)
+        {
+          for (let k = 0; k < width; k++)
+          {
+              
+            if ( data[4 * k + i * 4 * width] == 0 ){
+                  if ( flag_yTop == true){
+                    yTop= i;
+                    flag_yTop = false;
+                  } 
+                  yBottom = height - i; 
+            }
+            
+              
+          }
+        }
+
+        for (let k = 0; k < width; k++)
+        {
+          for (let i = 0; i < height; i++)
+          {
+              
+            if ( data[4 * k + i * 4 * width] == 0 ){
+                  if ( flag_xLeft == true){
+                    xLeft= k;
+                    flag_xLeft = false;
+                  } 
+                  xRight = width - k; 
+            }
+            
+              
+          }
+        }
+      
+      
+        const ratioX = this.canvasWidth / this.image.width;
+        const ratioY = this.canvasHeight / this.image.height;
+
+        const x = Math.round(activeObject.left) + xLeft*ratioX;
+        const y = Math.round(activeObject.top) + yTop*ratioY;
+        const w = Math.round(activeObject.width) - xLeft*ratioX - xRight*ratioX ;
+        const h = Math.round(activeObject.height) - yTop*ratioY - yBottom*ratioY ;  
+
+        activeObject.left = x;
+        activeObject.top = y;
+        activeObject.width = w;
+        activeObject.height = h;
+        activeObject.scaleX = 1;
+        activeObject.scaleY = 1;
+
+        activeObject.setCoords();
+        this.canvas.renderAll();
+        this.canvas.calcOffset();
+      }
+      img.src = this.cropImg;
+
+     
+    }
+  }
+ 
+}
+
+
 
 }
