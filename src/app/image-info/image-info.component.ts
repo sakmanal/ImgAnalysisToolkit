@@ -34,7 +34,7 @@ export class ImageInfoComponent implements OnInit {
  
   
   ngOnInit() {
-    /*var imagename = "document1.jpg";
+    /* var imagename = "document1.jpg";
     //var imagename = "sasa";
     this.ImageJson = this.getjsonService.getJson(imagename);
     //this.getjsonService.getJson(imagename).subscribe(ImageJson => this.ImageJson = ImageJson);
@@ -76,16 +76,17 @@ export class ImageInfoComponent implements OnInit {
   }
 
   makeTableDataSourse(){
-    var ELEMENT_DATA: PeriodicElement[] = [];
+    let ELEMENT_DATA: PeriodicElement[] = [];
      for (let i=0; i<this.ImageJson.words.length; i++){
-      var v =  { name: this.ImageJson.words[i]  }
+      const v =  { name: this.ImageJson.words[i]  }
        ELEMENT_DATA.push(v)
      }
      
      //console.log(ELEMENT_DATA)
      this.dataSource = new MatTableDataSource(ELEMENT_DATA);
-      this.dataSource.paginator = this.paginator;
-    this.dataSource.sort = this.sort;
+     //this.dataSource.paginator = this.paginator;
+     setTimeout(() => this.dataSource.paginator = this.paginator);
+     this.dataSource.sort = this.sort;
   }
 
   public showImageInfo(){

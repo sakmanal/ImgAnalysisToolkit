@@ -31,6 +31,7 @@ export class Test3Component implements AfterViewInit {
   RectTool:boolean = false;
   LineTool:boolean = false;
   word:string;
+  dialogOff:boolean = true;
   @Output() updateEvent = new EventEmitter<boolean>();
 
 ngAfterViewInit() {
@@ -649,6 +650,7 @@ openDialog(): void {
   }
   if (activeObject && activeObject.type == 'rect'){
     this.cropImage();
+    this.dialogOff = false;
     const dialogRef = this.dialog.open(TextSelectPopUpComponent, {
       width: '500px',
       data: { CroppedImage: this.cropImg}
@@ -656,15 +658,33 @@ openDialog(): void {
 
     dialogRef.afterClosed().subscribe(result => {
       //console.log('The dialog was closed');
+      this.dialogOff = true;
       this.word = result;
-      if (this.word) {
-         //console.log(this.word);
+      if (this.word && this.word != "undefined") {
+         console.log(this.word);
          //this.word='';
          this.savejsonService.addword(this.imageName, this.word);
          this.updateEvent.emit(true);
       }
     });
+  }
 }
-}
+
+
+@HostListener('document:keyup.enter', ['$event']) 
+  onKeydownEnter(event: KeyboardEvent) {
+    if (this.dialogOff){
+       //console.log(event);
+       this.openDialog();
+    }
+  }
+
+@HostListener('document:keyup.backspace', ['$event']) 
+  onKeydownBackspace(event: KeyboardEvent) {
+    if (this.dialogOff){
+      //console.log(event);
+      this.remove();
+   }
+  }
 
 }
