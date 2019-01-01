@@ -8,8 +8,6 @@ import { FormsModule } from '@angular/forms';
 import { LayoutModule } from '@angular/cdk/layout';
 import { AppRoutingModule } from './/app-routing.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { AngularCropperjsModule } from 'angular-cropperjs';
-import { CropperComponent } from './cropper/cropper.component';
 import { ToolbarSidenavComponent } from './toolbar-sidenav/toolbar-sidenav.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { BinarizationComponent } from './binarization/binarization.component';
@@ -27,7 +25,6 @@ import { Test3Component } from './test3/test3.component';
 @NgModule({
   declarations: [
     AppComponent,
-    CropperComponent,
     ToolbarSidenavComponent,
     TabsComponent,
     BinarizationComponent,
@@ -50,7 +47,6 @@ import { Test3Component } from './test3/test3.component';
     LayoutModule,
     AppRoutingModule,
     FontAwesomeModule,
-    AngularCropperjsModule,
     FlexLayoutModule
   ],
   entryComponents: [

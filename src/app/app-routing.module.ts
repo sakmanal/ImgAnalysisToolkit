@@ -1,6 +1,5 @@
 import { NgModule }             from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { CropperComponent } from './cropper/cropper.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { AboutComponent } from './about/about.component';
 import { TestComponent } from './test/test.component';
@@ -9,7 +8,6 @@ import { Test3Component } from './test3/test3.component';
 
 const routes: Routes = [
   { path: '', redirectTo: 'ImgAnalysisToolkit', pathMatch: 'full' },
-  { path: 'TextSelection', component: CropperComponent},
   { path: 'ImgAnalysisToolkit', component: TabsComponent},
   //{ path: '', component: TabsComponent},
   { path: 'about', component: AboutComponent},
