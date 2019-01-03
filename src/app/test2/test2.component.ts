@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { WebworkerService } from '../worker/webworker.service';
-import { test } from './worker.script';
+//import BackgroundWorker from './background-worker';
 
 @Component({
   selector: 'app-test2',
@@ -9,14 +8,33 @@ import { test } from './worker.script';
 })
 export class Test2Component implements OnInit {
 
-  constructor(private workerService: WebworkerService){}
+ 
+  url:any;
+  //sauvola parameters
+    masksize:number = 8;
+    stathera:number = 25;
+    rstathera:number = 512;
+    n:number = 1;
 
   ngOnInit(){
-    this.workerService.run(test, 1).then(
-      (result) => {
-        console.log(result);
-      }
-    ).catch(console.error);
+
+  }
+
+  onSelectFile(event:any):void {
+    var reader = new FileReader();
+    
+    reader.onload = (event:any) =>{
+      this.url = event.target.result;
+      this.sauvola();
+      
+      
+    };
+    
+    reader.readAsDataURL(event.target.files[0]);
+  }
+
+  sauvola(){
+     //new BackgroundWorker(this.url, this.masksize, this.stathera, this.rstathera, this.n);
   }
 
 }

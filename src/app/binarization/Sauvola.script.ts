@@ -9,7 +9,7 @@ export const Sauvola = (d:any) => {
     data = imageData.data;
     greyscale();
     sauvola(w, h, d.masksize, d.stathera, d.rstathera, d.n);
-    postMessage( imageData);
+    postMessage(imageData);
 
 
 
@@ -32,8 +32,8 @@ export const Sauvola = (d:any) => {
     
         
         
-        for(var i = 0; i < data.length; i += 4) {
-            var brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
+        for(let i = 0; i < data.length; i += 4) {
+            const brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
             
             data[i] = brightness;
             data[i + 1] = brightness;

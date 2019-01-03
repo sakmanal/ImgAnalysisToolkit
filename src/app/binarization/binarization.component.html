@@ -142,7 +142,7 @@
         </div>
         <div class="main" id="main">
             <div class="container">
-                <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter></canvas>
+                <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter id="myCanvas"></canvas>
                 <div *ngIf="showSpinner" class="spinner"></div>
             </div>
                
