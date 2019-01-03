@@ -1,5 +1,6 @@
-import { Component, OnInit } from '@angular/core';
-//import BackgroundWorker from './background-worker';
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
 
 @Component({
   selector: 'app-test2',
@@ -8,8 +9,12 @@ import { Component, OnInit } from '@angular/core';
 })
 export class Test2Component implements OnInit {
 
- 
+  img = new Image;
   url:any;
+  @ViewChild("canvasfilter") fcanvas;
+  faSpinner = faSpinner;
+  public SauvolaImage: SauvolaMethod =  new SauvolaMethod();
+
   //sauvola parameters
     masksize:number = 8;
     stathera:number = 25;
@@ -25,7 +30,7 @@ export class Test2Component implements OnInit {
     
     reader.onload = (event:any) =>{
       this.url = event.target.result;
-      this.sauvola();
+      this.view();
       
       
     };
@@ -33,8 +38,33 @@ export class Test2Component implements OnInit {
     reader.readAsDataURL(event.target.files[0]);
   }
 
-  sauvola(){
-     //new BackgroundWorker(this.url, this.masksize, this.stathera, this.rstathera, this.n);
-  }
+  view():void{
+    
+    const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    
+    
+    this.img.onload = () =>{
+     
+  
+        const w = this.img.width;
+        const h = this.img.height;
+        canvas.width = w;
+        canvas.height = h;
+        ctx.drawImage(this.img, 0, 0);
+        
+  
+        
+        
+    };
+    this.img.src = this.url;
+
+}
+
+
+sauvolaBinarization(){
+  this.SauvolaImage.binarize(this.url, this.masksize, this.stathera, this.rstathera, this.n);
+}
+
 
 }

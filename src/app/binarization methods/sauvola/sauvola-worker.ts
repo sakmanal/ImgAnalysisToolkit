@@ -1,8 +1,10 @@
+import { Data } from "@angular/router";
+
 //self is a keyword: Reference to this Worker 
-//self.onmessage = sauvolaFilter;   ---not really needed
+//self.onmessage = sauvolaFilter;   --- self not really needed
 
 onmessage = sauvolaFilter;
-var data;
+var data:Data;
 
 function sauvolaFilter( d: MessageEvent ) {
    const imageData = d.data.imageData;

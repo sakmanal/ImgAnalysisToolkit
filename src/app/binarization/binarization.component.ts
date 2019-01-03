@@ -1,19 +1,18 @@
 import { Component, ViewChild } from '@angular/core';
+import {  faSpinner } from '@fortawesome/free-solid-svg-icons';
+//import { faCompress, faExpand} from '@fortawesome/free-solid-svg-icons';
+
 //import otsuMethod from './otsu.module';
 //import sauvolaMethod from './sauvola.module';
+//import gppMethod from './gpp.module';
 import InvertColours from './invertColor.module';
 import binarize from './binarize.module';
-//import gppMethod from './gpp.module';
-import { faCompress, faExpand, faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import { WebworkerService } from '../worker/webworker.service';
 import { Sauvola } from './Sauvola.script';
 import { GPP } from './gpp.script';
 import { otsu } from './otsu.script';
-//import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
 
-
-//const SauvolaWorker = new Worker('src/web-workers-scripts/Sauvola-worker.js');
 
 @Component({
   selector: 'app-binarization',
@@ -22,10 +21,10 @@ import { otsu } from './otsu.script';
 })
 export class BinarizationComponent  {
 
+
 //faExpand = faExpand;
 //faCompress = faCompress;
 faSpinner = faSpinner;
-imageToCrop:any = '';
 url:any;
 ImgUrl:any;
 value = 138;
@@ -70,7 +69,6 @@ constructor(private workerService: WebworkerService){}
 fillscreen(){
   const width = document.getElementById('main').offsetWidth;
   this.width = width;
-  //this.width = window.innerWidth;
 } 
 
 
@@ -81,13 +79,10 @@ fitscreen(){
    const w  = window.innerWidth / (window.innerHeight-190);
    if (w > r)
    {
-       this.width = this.img.width * (window.innerHeight-190)/this.img.height;
-       
+       this.width = this.img.width * (window.innerHeight-190)/this.img.height;      
    }
    else
-   {
-       //this.width = window.innerWidth;
-       
+   {   
        this.width = width;
    }
 }
@@ -96,7 +91,6 @@ fitscreen(){
 mouseWheelUpFunc() {
   //console.log('mouse wheel up');
   const width = document.getElementById('main').offsetWidth;
-  //console.log(width)
   if (this.width <= width) 
       this.width = this.width + 100;
 }
@@ -115,7 +109,6 @@ onSelectFile(event:any):void { // called each time file input changes
     
     this.flag = true;
     this.url = event.target.result;
-    //this.imagedata =  event.target.result;
     this.disableImageFilter = false;
     this.view();
     
@@ -124,9 +117,8 @@ onSelectFile(event:any):void { // called each time file input changes
   
   reader.readAsDataURL(event.target.files[0]);
   this.ImageName = event.target.files[0].name;
-  console.log(this.ImageName);
+  //console.log(this.ImageName);
 }
-
 
 view():void{
   this.colorotsu = "primary";
@@ -171,22 +163,8 @@ InvertColoursFilter(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   
-  
-  this.img.onload = () =>{
-   
-
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(this.img, 0, 0);
-
-       InvertColours(ctx, w, h);
-       
-      this.ImgUrl = canvas.toDataURL("image/png", 1);
-      
-  };
-  this.img.src = this.ImgUrl;
+  InvertColours(ctx, this.img.width, this.img.height);
+  this.ImgUrl = canvas.toDataURL("image/png", 1);
 }
 
 otsuBinarization(){
@@ -226,6 +204,7 @@ otsuBinarization(){
 
 
 
+
 sauvolaBinarization(){
   this.colorotsu = "primary";
   this.colorsauvola = "warn";
@@ -245,14 +224,6 @@ sauvolaBinarization(){
       ctx.drawImage(this.img, 0, 0);
       
       const imageData = ctx.getImageData(0, 0, w, h);
-     /*  SauvolaWorker.postMessage({imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n}, [imageData.data.buffer]);
- 
-      SauvolaWorker.addEventListener('message', (d) => {
-        const imageData = d.data;
-        ctx.putImageData(imageData, 0, 0);
-        this.showSpinner = false;
-        this.ImgUrl = canvas.toDataURL("image/png", 1);
-      }); */
 
       this.workerService.run(Sauvola, {imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
       .then( (result:any) => {
@@ -265,13 +236,7 @@ sauvolaBinarization(){
       
       
     };
-    this.img.src = this.url;
-    
-
-  
-    //const SauvolaImage = new SauvolaMethod(this.url, this.masksize, this.stathera, this.rstathera, this.n);
-   
-   
+    this.img.src = this.url; 
    
   }    
 
@@ -319,7 +284,6 @@ gppdBinarization(){
       ctx.drawImage(this.img, 0, 0);
 
       //gppMethod(ctx, w, h, this.dw, this.k, this.R, this.q, this.p1, this.p2, this.upsampling, this.dw1);
-      //this.ImgUrl = canvas.toDataURL("image/png", 1);
 
       const imageData = ctx.getImageData(0, 0, w, h);
       this.workerService.run(GPP, {imageData,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
@@ -340,7 +304,7 @@ save(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const data = canvas.toDataURL('image/png');
   
-  var a  = document.createElement('a');
+  const a  = document.createElement('a');
   a.href = data;
   a.download = 'image.png';
 

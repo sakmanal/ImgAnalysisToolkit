@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewInit, AfterViewChecked} from '@angular/core';
+import { Component, ViewChild, AfterViewChecked} from '@angular/core';
 import { BinarizationComponent } from '../binarization/binarization.component';
 import { ImageInfoComponent } from "../image-info/image-info.component";
 
@@ -8,7 +8,7 @@ import { ImageInfoComponent } from "../image-info/image-info.component";
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.css']
 })
-export class TabsComponent implements AfterViewInit, AfterViewChecked {
+export class TabsComponent implements AfterViewChecked {
 
   ImgUrl:any;
   ImgName:string;
@@ -16,9 +16,7 @@ export class TabsComponent implements AfterViewInit, AfterViewChecked {
   @ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
 
-  ngAfterViewInit(){
-        this.ImgUrl = this.Binarization.ImgUrl;   
-  }
+  
 
   ngAfterViewChecked(){
     this.ImgUrl = this.Binarization.ImgUrl;
@@ -26,7 +24,7 @@ export class TabsComponent implements AfterViewInit, AfterViewChecked {
   }
 
 
-  updateTable($event){
+  updateTable(event:MessageEvent){
     this.ImageInfo.showImageInfo();
 
   }
