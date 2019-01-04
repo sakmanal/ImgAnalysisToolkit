@@ -12,10 +12,10 @@ export class GetjsonService {
 //getJson(imageName:string):Observable<object>{
 getJson(imageName:string):object{     
   for (let i = 0; i < localStorage.length; i++){
-    let key = localStorage.key(i);
+    const key = localStorage.key(i);
     if (key == imageName)
     {  
-      var JsonImageObject = JSON.parse(localStorage.getItem(imageName));
+      const JsonImageObject = JSON.parse(localStorage.getItem(imageName));
       //return of(JsonImageObject);
       return JsonImageObject;
       
@@ -27,9 +27,9 @@ getJson(imageName:string):object{
 }
 
 getImagekeys():object{
-  var imageNames = [];
+  const imageNames = [];
   for (let i = 0; i < localStorage.length; i++){
-    let key = localStorage.key(i);
+    const key = localStorage.key(i);
     imageNames.push(key);
   }
   return imageNames;

@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import {  MatDialogRef, MAT_DIALOG_DATA} from '@angular/material';
+import {  MatDialogRef, MAT_DIALOG_DATA } from '@angular/material';
 
 @Component({
   selector: 'app-text-select-pop-up',
@@ -14,7 +14,7 @@ export class TextSelectPopUpComponent  {
     public dialogRef: MatDialogRef<TextSelectPopUpComponent>,
     @Inject(MAT_DIALOG_DATA) public data) {}
 
-    value;
+    value:string;
 
   onNoClick(): void {
     this.dialogRef.close();
@@ -23,7 +23,9 @@ export class TextSelectPopUpComponent  {
   add(){
      //this.data.word = this.value;
      //console.log(this.value)
-    this.dialogRef.close(`${this.value}`);
+     if (this.value){
+         this.dialogRef.close(`${this.value}`);
+      }
   }
  
  

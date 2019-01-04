@@ -12,5 +12,5 @@
 </div>
 <div mat-dialog-actions>
   <div class="alternative"><button mat-button color="primary" color="primary" (click)="onNoClick()">cancel</button></div>
-  <button mat-raised-button color="warn" [mat-dialog-close]="value" >add</button>
+  <button mat-raised-button color="warn" (click)="add()" >add</button>  <!-- [mat-dialog-close]="value"  -->
 </div>

@@ -7,7 +7,7 @@ export class SavejsonService {
 
   constructor() { }
 
-  //imageJson:boolean = false;
+  
 
   addword(imageName:string, word:string):void{
     console.log(imageName, word);
@@ -29,14 +29,14 @@ export class SavejsonService {
   }
 
   saveWord(imagename:string, word:string):void{
-    var JsonImageObject = JSON.parse(localStorage.getItem(imagename));
+    const JsonImageObject = JSON.parse(localStorage.getItem(imagename));
     JsonImageObject.words.push(word);
     localStorage.setItem(imagename, JSON.stringify(JsonImageObject));
      
   }
 
   makeImageJson(imagename: string):void{
-    var JsonImageObject = { "words": [] };
+    const JsonImageObject = { "words": [] };
     localStorage.setItem(imagename, JSON.stringify(JsonImageObject));
 
 

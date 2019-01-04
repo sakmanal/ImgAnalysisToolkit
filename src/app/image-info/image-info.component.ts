@@ -1,6 +1,6 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import {  GetjsonService } from '../getjson.service';
-import {MatPaginator, MatSort, MatTableDataSource} from '@angular/material';
+import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 export interface PeriodicElement {
   name: string;
@@ -34,21 +34,7 @@ export class ImageInfoComponent implements OnInit {
  
   
   ngOnInit() {
-    /* var imagename = "document1.jpg";
-    //var imagename = "sasa";
-    this.ImageJson = this.getjsonService.getJson(imagename);
-    //this.getjsonService.getJson(imagename).subscribe(ImageJson => this.ImageJson = ImageJson);
-     if (this.ImageJson != undefined){ 
-       console.log(this.ImageJson.words);
-      }else{
-        console.log("Error: no such ImageFile in local storage");
-      }*/
-
-    //this.ImageNames = this.getjsonService.getImagekeys();
-    //console.log(this.ImageNames);  
-
-    //this.dataSource.paginator = this.paginator;
-    //this.dataSource.sort = this.sort;
+  
 
   }
 

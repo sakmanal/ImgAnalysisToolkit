@@ -69,6 +69,9 @@
  }
 
 
+ .mat-sidenav{
+   min-width: 200px;
+ }
 .mat-sidenav-container{
 
   min-height: 93vh !important;

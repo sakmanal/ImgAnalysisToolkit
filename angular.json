@@ -26,11 +26,10 @@
               {
                   "input": "src/theme.scss"
               },
-              "src/styles.css",
-              "src/jcrop.css"
+              "src/styles.css"          
             ],
             "scripts": [
-              "src/jcrop.js"
+           
             ]
           },
           "configurations": {

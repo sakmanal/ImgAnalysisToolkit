@@ -77,18 +77,6 @@ ngAfterViewInit() {
       }); 
       
       this.enableBoundaryLimit();
-
-    /*  this.canvas.on('object:scaling', (e) => {
-        const o = e.target;
-        if (!o.strokeWidthUnscaled && o.strokeWidth) {
-          o.strokeWidthUnscaled = o.strokeWidth;
-        }
-        if (o.strokeWidthUnscaled) {
-          o.strokeWidth = o.strokeWidthUnscaled / o.scaleX;
-          //o.strokeWidth = 3;
-        }
-      }) */
-      
       
   }
 } 
@@ -139,14 +127,7 @@ setBgImg(){
 enableBoundaryLimit(){
     this.canvas.observe("object:moving", (e:any) =>{
         const obj = e.target;
-        //let bounds;
-      
-        /* if (obj && obj.type == 'line'){
-            bounds = { w: this.canvasWidth + obj.width/2 , h: this.canvasHeight + obj.height/2,  x: obj.width/2 , y: obj.height/2};  //if originX,Y:center
-        }else{
-            bounds = { w: this.canvasWidth , h: this.canvasHeight,  x: 0 , y: 0};
-        } */
-
+ 
         const bounds = { w: this.canvasWidth , h: this.canvasHeight,  x: 0 , y: 0};
 
         if (obj && obj.type == 'line'){
@@ -199,7 +180,6 @@ enableBoundaryLimit(){
 enableZoom(){
     this.canvas.on('mouse:wheel', (opt:any) => {
       const delta = -opt.e.deltaY;
-      //const pointer = this.canvas.getPointer(opt.e);
       let zoom = this.canvas.getZoom();
       zoom = zoom + delta/300;
       if (zoom > 3) zoom = 3;
@@ -289,17 +269,11 @@ ResetImageToCanvas(){
     const tempHeight = height * factorY;
 
     if ( objects[i].type == 'line'){
-      //console.log("line")
       objects[i].scaleX = tempScaleX;
       objects[i].scaleY = tempScaleY;
       objects[i].left = tempLeft;
       objects[i].top = tempTop;
-      //objects[i].width = tempWidth;
-      //objects[i].height = tempHeight;
-      //objects[i].scaleX = 1;
-      //objects[i].scaleY = 1;
     }else{
-      //console.log("rect")
       objects[i].left = tempLeft;
       objects[i].top = tempTop;
       objects[i].width = tempWidth;
@@ -376,7 +350,6 @@ rect() {
       if (!this.canvas.getActiveObject() && isDown){
         //console.log("up rect")
         isDown = false;
-        //rectangle.setCoords();
         if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
         if (rectangle.height<10) {rectangle.height = 20; this.canvas.renderAll();}
         rectangle.setCoords();
@@ -662,7 +635,6 @@ openDialog(): void {
       this.word = result;
       if (this.word && this.word != "undefined") {
          console.log(this.word);
-         //this.word='';
          this.savejsonService.addword(this.imageName, this.word);
          this.updateEvent.emit(true);
       }
