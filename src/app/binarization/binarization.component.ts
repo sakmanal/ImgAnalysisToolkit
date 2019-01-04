@@ -1,10 +1,6 @@
 import { Component, ViewChild } from '@angular/core';
-import {  faSpinner } from '@fortawesome/free-solid-svg-icons';
-//import { faCompress, faExpand} from '@fortawesome/free-solid-svg-icons';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-//import otsuMethod from './otsu.module';
-//import sauvolaMethod from './sauvola.module';
-//import gppMethod from './gpp.module';
 import InvertColours from './invertColor.module';
 import binarize from './binarize.module';
 
@@ -22,8 +18,7 @@ import { otsu } from './otsu.script';
 export class BinarizationComponent  {
 
 
-//faExpand = faExpand;
-//faCompress = faCompress;
+
 faSpinner = faSpinner;
 url:any;
 ImgUrl:any;
@@ -186,7 +181,6 @@ otsuBinarization(){
       ctx.drawImage(this.img, 0, 0);
       const imageData = ctx.getImageData(0, 0, w, h);
 
-     //otsuMethod(ctx, w, h);
       this.workerService.run(otsu, {imageData})
       .then( (result:any) => {
           //console.log(result);
@@ -282,8 +276,6 @@ gppdBinarization(){
       canvas.width = w;
       canvas.height = h;
       ctx.drawImage(this.img, 0, 0);
-
-      //gppMethod(ctx, w, h, this.dw, this.k, this.R, this.q, this.p1, this.p2, this.upsampling, this.dw1);
 
       const imageData = ctx.getImageData(0, 0, w, h);
       this.workerService.run(GPP, {imageData,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})

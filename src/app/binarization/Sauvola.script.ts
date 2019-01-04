@@ -1,8 +1,10 @@
-declare function postMessage(message: any): void;
+import { Data } from "@angular/router";
+
+declare function postMessage(message: MessageEvent): void;
 
 
 export const Sauvola = (d:any) => {
-    let data:any;
+    let data:Data;
     const imageData = d.imageData;
     const w = imageData.width;
     const h = imageData.height;
@@ -15,7 +17,7 @@ export const Sauvola = (d:any) => {
 
     function make2Darray(w, h){ 
 
-        var arr = new Array(h);
+        const arr = new Array(h);
         for (let i = 0; i < arr.length; i++){
         arr[i] = new Array(w);
         }

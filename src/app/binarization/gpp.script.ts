@@ -15,9 +15,9 @@ export const GPP = (d:any) => {
 
 
     function greyscale() {
-        var RED_INTENCITY_COEF = 0.2126;
-        var GREEN_INTENCITY_COEF = 0.7152;
-        var BLUE_INTENCITY_COEF = 0.0722;
+        const RED_INTENCITY_COEF = 0.2126;
+        const GREEN_INTENCITY_COEF = 0.7152;
+        const BLUE_INTENCITY_COEF = 0.0722;
            
         for(let i = 0; i < data.length; i += 4) {
               const brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
@@ -57,9 +57,7 @@ export const GPP = (d:any) => {
         let upsampling = _upsampling;
         let dW1 = Math.min(Ix - 1, Math.min(_dw1, Iy - 1));
       
-        //var RH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
-        //var GH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
-        //var BH = Array.apply(null, new Array(256)).map(Number.prototype.valueOf,0);
+        
         let I, I1;
         let pix, gray, gray2, TH, graygray, pix1 = 0, gray1 = 0;
         let ydWIx, ydW_1Ix, ydW1Ix, ydW1_1Ix;
@@ -67,8 +65,7 @@ export const GPP = (d:any) => {
         let d;
         let d2;
       
-        let a;
-        let b;
+        
         let aa, bb, cc, dd;
       
     
@@ -348,9 +345,10 @@ export const GPP = (d:any) => {
         //Thresholding
       
         let PixFor = 0;
-        let D = 0, D1 = 0, D2 = 0;
-        let Hist = new Array(256);
-        for (let i = 0; i < 256; i++) Hist[i] = 0;
+        //let D1 = 0;
+        let D = 0, D2 = 0;
+        //let Hist = new Array(256);
+        //for (let i = 0; i < 256; i++) Hist[i] = 0;
     
         for (let y = 0; y < Iy; y++)
         {
@@ -362,18 +360,18 @@ export const GPP = (d:any) => {
                 {
                     PixFor++;
                     D = D + I1 - I;
-                    D1 = D1 + I;
+                    //D1 = D1 + I;
                     D2 = D2 + I1;
-                    Hist[I]++;
+                    //Hist[I]++;
                 }
             }
         }
         D = PixFor == 0 ? 0 : D / PixFor;
-        D1 = PixFor == 0 ? 0 : D1 / PixFor;
+        //D1 = PixFor == 0 ? 0 : D1 / PixFor;
         D2 = PixFor == 0 ? 0 : D2 / PixFor;
     
-        let HistMax = 0;
-        let H = 0;
+        /*let HistMax = 0;
+          let H = 0;
     
         for (let i = 0; i < 256; i++)
         {
@@ -383,13 +381,13 @@ export const GPP = (d:any) => {
                 H = i;
             }
         }
-        H += 5;
+        H += 5; */
     
         d = D;
         d2 = D2;
     
-        a = (d * (p2 - 1)) / (d2 * q * (p1 - 1));
-        b = (d * (p1 - p2)) / (q * (p1 - 1));
+        //let a = (d * (p2 - 1)) / (d2 * q * (p1 - 1));
+        //let b = (d * (p1 - p2)) / (q * (p1 - 1));
         aa = q * d * (1 - p2);
         bb = -(2 * (1 + p1)) / (1 - p1);
         cc = p2 * d * q;

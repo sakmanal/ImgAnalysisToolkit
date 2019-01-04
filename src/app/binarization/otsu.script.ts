@@ -51,13 +51,13 @@ export const otsu = (d:any) => {
       
     function otsu(histogram, total) {
           let sum = 0;
-          //let n = 0;
+         
           for (let i = 1; i < 256; ++i)
           {
               sum += i * histogram[i];
-              //n += histogram[i];     // for i=0, n instead of total (total num of pixels)
+             
           }
-          //console.log(n, total);    
+           
           let sumB = 0;
           let wB = 0;
           let wF = 0;
