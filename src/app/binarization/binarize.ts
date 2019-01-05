@@ -6,7 +6,7 @@ export default function binarize(threshold, context, w, h) {
     const data = imageData.data;
       
       
-      for(var i = 0; i < data.length; i += 4) {
+      for(let i = 0; i < data.length; i += 4) {
           const brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
           const val = ((brightness >= threshold) ? 255 : 0);
           data[i] = val;

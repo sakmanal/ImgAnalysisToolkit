@@ -1,13 +1,13 @@
 import { Component, ViewChild } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
-import InvertColours from './invertColor.module';
-import binarize from './binarize.module';
+import InvertColours from './invertColor';
+import binarize from './binarize';
 
 import { WebworkerService } from '../worker/webworker.service';
-import { Sauvola } from './Sauvola.script';
-import { GPP } from './gpp.script';
-import { otsu } from './otsu.script';
+import { Sauvola } from './Sauvola.worker';
+import { GPP } from './gpp.worker';
+import { otsu } from './otsu.worker';
 
 
 @Component({
@@ -22,6 +22,7 @@ export class BinarizationComponent  {
 faSpinner = faSpinner;
 url:any;
 ImgUrl:any;
+imageData:any;
 value = 138;
 max = 255;
 min = 0;
@@ -32,14 +33,15 @@ img: HTMLImageElement = new Image;
 height:any;
 width:number;
 maxwidth:number = window.innerWidth;
-flag:boolean;
 ImageName:string;
 showSpinner:boolean = false;
+SauvolaSpinner:boolean = false;
+GppSpinner:boolean = false;
 colorotsu:string = "primary";
 colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
-panelOpenState = false;
+
 
 //sauvola parameters
 masksize:number = 8;
@@ -101,18 +103,26 @@ onSelectFile(event:any):void { // called each time file input changes
   
   reader.onload = (event:any) =>{
     
-    
-    this.flag = true;
     this.url = event.target.result;
     this.disableImageFilter = false;
     this.view();
-    
     
   };
   
   reader.readAsDataURL(event.target.files[0]);
   this.ImageName = event.target.files[0].name;
   //console.log(this.ImageName);
+}
+
+restore(){
+  this.colorotsu = "primary";
+  this.colorsauvola = "primary";
+  this.colornegative = "primary";
+  this.colorgpp = "primary";
+  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  ctx.putImageData(this.imageData, 0, 0);
+  this.ImgUrl = canvas.toDataURL("image/png", 1);
 }
 
 view():void{
@@ -125,28 +135,23 @@ view():void{
   
   
   this.img.onload = () =>{
-     if (this.flag){
-         this.flag = false;
-         this.width = this.img.width;
-         this.height = this.img.height;
-         this.fitscreen();
-     } 
-
+   
+      this.width = this.img.width;
+      this.height = this.img.height;
+      this.fitscreen();
+    
       const w = this.img.width;
       const h = this.img.height;
       canvas.width = w;
       canvas.height = h;
       ctx.drawImage(this.img, 0, 0);
-      
+      this.imageData = ctx.getImageData(0, 0, w, h);
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
       
   };
   this.img.src = this.url;
-
-
-
-  
+ 
 }
 
 InvertColoursFilter(){
@@ -170,33 +175,17 @@ otsuBinarization(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
-  
-  this.img.onload = () =>{
-     
 
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(this.img, 0, 0);
-      const imageData = ctx.getImageData(0, 0, w, h);
-
-      this.workerService.run(otsu, {imageData})
+      this.workerService.run(otsu, {imageData:this.imageData})
       .then( (result:any) => {
-          //console.log(result);
           ctx.putImageData(result, 0, 0);
           this.showSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
         }
       ).catch(console.error);
 
-      
-    };
-    this.img.src = this.url;
+
 }
-
-
-
 
 
 sauvolaBinarization(){
@@ -207,31 +196,17 @@ sauvolaBinarization(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
+  this.SauvolaSpinner = true;
   
-  this.img.onload = () =>{
-     
-
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(this.img, 0, 0);
-      
-      const imageData = ctx.getImageData(0, 0, w, h);
-
-      this.workerService.run(Sauvola, {imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
+      this.workerService.run(Sauvola, {imageData:this.imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
       .then( (result:any) => {
-          //console.log(result);
           ctx.putImageData(result, 0, 0);
           this.showSpinner = false;
+          this.SauvolaSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
         }
       ).catch(console.error);
       
-      
-    };
-    this.img.src = this.url; 
-   
   }    
 
 manualThresholdBinarization(){
@@ -245,14 +220,9 @@ manualThresholdBinarization(){
   
   this.img.onload = () =>{
      
-
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
       ctx.drawImage(this.img, 0, 0);
 
-      binarize(this.value, ctx, w, h);
+      binarize(this.value, ctx, this.img.width, this.img.height);
       this.ImgUrl = canvas.toDataURL("image/png", 1);
     };
     this.img.src = this.url;
@@ -267,27 +237,17 @@ gppdBinarization(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
-  
-  this.img.onload = () =>{
-     
+  this.GppSpinner = true;
 
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(this.img, 0, 0);
-
-      const imageData = ctx.getImageData(0, 0, w, h);
-      this.workerService.run(GPP, {imageData,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
+   
+      this.workerService.run(GPP, {imageData:this.imageData,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
       .then( (result:any) => {
-          //console.log(result);
           ctx.putImageData(result, 0, 0);
           this.showSpinner = false;
+          this.GppSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
         }
       ).catch(console.error);
-    };
-    this.img.src = this.url;
 
 }
 

@@ -1,10 +1,8 @@
-import { Data } from "@angular/router";
-
 declare function postMessage(message: MessageEvent): void;
 
 
 export const Sauvola = (d:any) => {
-    let data:Data;
+    let data;
     const imageData = d.imageData;
     const w = imageData.width;
     const h = imageData.height;

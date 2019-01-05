@@ -8,27 +8,25 @@
 
 
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorotsu" (click)="otsuBinarization()" [disabled]="disableImageFilter">otsu</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="showSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
+  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="SauvolaSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colornegative" (click)="InvertColoursFilter()" [disabled]="disableImageFilter">invert Colours</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter">gpp</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="view()" [disabled]="disableImageFilter">restore Image</button>
+  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="GppSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> gpp</button>
+  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="restore()" [disabled]="disableImageFilter">restore Image</button>
 
-  <button mat-raised-button color="accent" (click)="save()"   [disabled]="disableImageFilter">
+  <button mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
     <mat-icon>save</mat-icon> Save Image
   </button>
 
-  <button mat-raised-button color="warn" style="margin-left: 5px; margin-right: 5px;  margin-bottom: 5px;" matTooltip="fill screen" [disabled]="disableImageFilter" (click)="fillscreen()">
+ 
+  <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
+    <mat-button-toggle (click)="fillscreen()" matTooltip="fill screen">
       <mat-icon>fullscreen</mat-icon>
-    <strong> fill screen</strong>
-  </button>
-
-
-
-
-  <button mat-raised-button color="warn"  matTooltip="fit screen" [disabled]="disableImageFilter" (click)="fitscreen()"> 
+    </mat-button-toggle>
+    <mat-button-toggle (click)="fitscreen()" matTooltip="fit screen">
       <mat-icon>fullscreen_exit</mat-icon>
-      <strong> fit screen</strong> 
-  </button>  
+    </mat-button-toggle>
+  </mat-button-toggle-group>
+
 
 </div>
 

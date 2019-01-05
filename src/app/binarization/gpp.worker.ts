@@ -30,7 +30,7 @@ export const GPP = (d:any) => {
       
     function make2Darray(w, h){ 
       
-       var arr = new Array(h);
+       const arr = new Array(h);
        for (let i = 0; i < arr.length; i++){
          arr[i] = new Array(w);
        }
