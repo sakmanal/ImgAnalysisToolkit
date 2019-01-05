@@ -34,7 +34,7 @@ export default class SauvolaMethod {
                 const imageData = d.data;
                 ctx.putImageData(imageData, 0, 0);
                 this.sauvolaloader = false;
-                //Canvasdata = canvas.toDataURL("image/png", 1);
+                //Canvasdata = canvas.toDataURL("image/png", 1); // Canvasdata = imageData;
                 
             };
         };

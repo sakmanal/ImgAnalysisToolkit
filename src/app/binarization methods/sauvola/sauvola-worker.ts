@@ -4,7 +4,7 @@ import { Data } from "@angular/router";
 //self.onmessage = sauvolaFilter;   --- self not really needed
 
 onmessage = sauvolaFilter;
-var data:Data;
+let data:Data;
 
 function sauvolaFilter( d: MessageEvent ) {
    const imageData = d.data.imageData;
@@ -37,14 +37,14 @@ function make2Darray(w, h){
 
 
 function greyscale() {
-   var RED_INTENCITY_COEF = 0.2126;
-   var GREEN_INTENCITY_COEF = 0.7152;
-   var BLUE_INTENCITY_COEF = 0.0722;
+   const RED_INTENCITY_COEF = 0.2126;
+   const GREEN_INTENCITY_COEF = 0.7152;
+   const BLUE_INTENCITY_COEF = 0.0722;
  
      
      
-     for(var i = 0; i < data.length; i += 4) {
-         var brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
+     for(let i = 0; i < data.length; i += 4) {
+         const brightness = RED_INTENCITY_COEF * data[i] + GREEN_INTENCITY_COEF * data[i + 1] + BLUE_INTENCITY_COEF * data[i + 2];
        
          data[i] = brightness;
          data[i + 1] = brightness;
@@ -56,7 +56,7 @@ function greyscale() {
 }
  
  
-function  sauvola( width, height, _masksize, _stathera, _rstathera, _n){
+function  sauvola(width, height, _masksize, _stathera, _rstathera, _n){
  
  
  
