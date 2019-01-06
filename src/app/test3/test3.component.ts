@@ -537,7 +537,7 @@ mergeSelection(){
                     yTop= i;
                     flag_yTop = false;
                   } 
-                  yBottom = height - i; 
+                  yBottom = height - i - 1; 
             }
             
               
@@ -554,14 +554,14 @@ mergeSelection(){
                     xLeft= k;
                     flag_xLeft = false;
                   } 
-                  xRight = width - k; 
+                  xRight = width - k - 1; 
             }
             
               
           }
         }
       
-      
+
         const ratioX = this.canvasWidth / this.image.width;
         const ratioY = this.canvasHeight / this.image.height;
 
