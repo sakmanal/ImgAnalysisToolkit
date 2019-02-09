@@ -2,6 +2,8 @@ import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter } f
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 import { SavejsonService } from '../savejson.service';
+import { WebworkerService } from '../worker/webworker.service';
+import { GPP } from '../binarization/gpp.worker';
 import 'fabric';
 
 declare const fabric: any;
@@ -13,7 +15,7 @@ declare const fabric: any;
 })
 export class Test3Component implements AfterViewInit {
 
-  constructor(public dialog: MatDialog, private savejsonService: SavejsonService) {}
+  constructor(public dialog: MatDialog, private savejsonService: SavejsonService, private workerService: WebworkerService) {}
 
   
   canvas:any;
@@ -524,62 +526,68 @@ mergeSelection(){
         canvas.height = height;
         ctx.drawImage(img, 0, 0);
         const imageData = ctx.getImageData(0, 0, width, height);
-        const data = imageData.data;
 
+        this.workerService.run(GPP, {imageData:imageData,  dw:5, k:2.0, R:128, q:1.7, p1:0.5, p2:0.7, upsampling:true, dw1:5})
+          .then( (result:any) => {
 
-        for (let i = 0; i < height; i++)
-        {
-          for (let k = 0; k < width; k++)
-          {
+                 const data = result.data;
+                 for (let i = 0; i < height; i++)
+                 {
+                  for (let k = 0; k < width; k++)
+                  {
+                      
+                    if ( data[4 * k + i * 4 * width] == 0 ){
+                          if ( flag_yTop == true){
+                            yTop= i;
+                            flag_yTop = false;
+                          } 
+                          yBottom = height - i - 1; 
+                    }
+                    
+                      
+                  }
+                }
+
+                for (let k = 0; k < width; k++)
+                {
+                  for (let i = 0; i < height; i++)
+                  {
+                      
+                    if ( data[4 * k + i * 4 * width] == 0 ){
+                          if ( flag_xLeft == true){
+                            xLeft= k;
+                            flag_xLeft = false;
+                          } 
+                          xRight = width - k - 1; 
+                    }
+                    
+                      
+                  }
+                }
               
-            if ( data[4 * k + i * 4 * width] == 0 ){
-                  if ( flag_yTop == true){
-                    yTop= i;
-                    flag_yTop = false;
-                  } 
-                  yBottom = height - i - 1; 
+
+                const ratioX = this.canvasWidth / this.image.width;
+                const ratioY = this.canvasHeight / this.image.height;
+
+                const x = Math.round(activeObject.left) + xLeft*ratioX;
+                const y = Math.round(activeObject.top) + yTop*ratioY;
+                const w = Math.round(activeObject.width) - xLeft*ratioX - xRight*ratioX ;
+                const h = Math.round(activeObject.height) - yTop*ratioY - yBottom*ratioY ;  
+
+                activeObject.left = x;
+                activeObject.top = y;
+                activeObject.width = w;
+                activeObject.height = h;
+                activeObject.scaleX = 1;
+                activeObject.scaleY = 1;
+
+                activeObject.setCoords();
+                this.canvas.renderAll();
+                this.canvas.calcOffset();
             }
-            
-              
-          }
-        }
+          ).catch(console.error);
 
-        for (let k = 0; k < width; k++)
-        {
-          for (let i = 0; i < height; i++)
-          {
-              
-            if ( data[4 * k + i * 4 * width] == 0 ){
-                  if ( flag_xLeft == true){
-                    xLeft= k;
-                    flag_xLeft = false;
-                  } 
-                  xRight = width - k - 1; 
-            }
-            
-              
-          }
-        }
-      
-
-        const ratioX = this.canvasWidth / this.image.width;
-        const ratioY = this.canvasHeight / this.image.height;
-
-        const x = Math.round(activeObject.left) + xLeft*ratioX;
-        const y = Math.round(activeObject.top) + yTop*ratioY;
-        const w = Math.round(activeObject.width) - xLeft*ratioX - xRight*ratioX ;
-        const h = Math.round(activeObject.height) - yTop*ratioY - yBottom*ratioY ;  
-
-        activeObject.left = x;
-        activeObject.top = y;
-        activeObject.width = w;
-        activeObject.height = h;
-        activeObject.scaleX = 1;
-        activeObject.scaleY = 1;
-
-        activeObject.setCoords();
-        this.canvas.renderAll();
-        this.canvas.calcOffset();
+        
       }
       img.src = this.cropImg;
 
