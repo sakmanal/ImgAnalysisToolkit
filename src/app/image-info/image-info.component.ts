@@ -84,7 +84,18 @@ export class ImageInfoComponent implements OnInit {
   }
 
 
+  saveJson(text:string, filename:string){
+      const a = document.createElement('a');
+      a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(text));
+      a.setAttribute('download', filename);
+      a.click()
+  }
 
-
+ downloadJson(){
+   if (this.ImageJson){
+     this.saveJson( JSON.stringify(this.ImageJson), this.selectedImage +".json" );
+   }
+  
+ }
 
 }
