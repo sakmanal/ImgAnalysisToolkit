@@ -34,6 +34,10 @@ export class Test3Component implements AfterViewInit {
   LineTool:boolean = false;
   word:string;
   dialogOff:boolean = true;
+  left:number;
+  top:number;
+  showTextInput:boolean = false;
+  value:string;
   @Output() updateEvent = new EventEmitter<boolean>();
 
 ngAfterViewInit() {
@@ -172,6 +176,8 @@ enableBoundaryLimit(){
                 if( obj.top+obj.height >= bounds.h ){ 
                   obj.top = bounds.h - obj.height;
                 }
+
+                this.CalcTextInputCords(obj.left, obj.top, obj.height); //update TextInput div Cords on object moving
         }
 
         
@@ -290,7 +296,7 @@ ResetImageToCanvas(){
   this.canvas.renderAll();
   this.canvas.calcOffset();
   this.setBgImg();
-                                                      
+  this.displayTextInput();                                                    
  }
 
 rect() {
@@ -650,16 +656,55 @@ openDialog(): void {
   }
 }
 
+displayTextInput(){
+  let activeObject = this.canvas.getActiveObject();
+  if (!activeObject){
+    const ob = this.canvas.getObjects();
+    activeObject = ob[ob.length-1];
+  }
+  if (activeObject && activeObject.type == 'rect'){
+    this.word = '';
+    this.showTextInput = true;
+  
+    this.CalcTextInputCords(activeObject.left, activeObject.top, activeObject.height);
+    this.canvas.on("selection:updated", (e:any) =>{
+      const obj = e.target;
+      this.CalcTextInputCords(obj.left, obj.top, obj.height);
+    });
+  }
+     
+}
+
+CalcTextInputCords(left:number, top:number, height:number){
+  this.left = left + document.getElementById("wr").offsetLeft;
+  this.top = top + document.getElementById("wr").offsetTop + height +12;
+}
+
+writeWord(){
+  if (this.word && this.word != "undefined") {
+    this.showTextInput = false;
+    console.log(this.word);
+    this.savejsonService.addword(this.imageName, this.word);
+    this.updateEvent.emit(true);
+    this.word = '';
+  }
+}
+
+cancel() {
+  this.showTextInput = false;
+  this.word = '';
+  this.canvas.off('selection:updated');
+}
 
 @HostListener('document:keyup.enter', ['$event']) 
   onKeydownEnter(event: KeyboardEvent) {
-    if (this.dialogOff){
-       //console.log(event);
+   /*  if (this.dialogOff){                         //open the text-select-pop-up component
        this.openDialog();
-    }
+    } */
+    this.displayTextInput();
   }
 
-@HostListener('document:keyup.backspace', ['$event']) 
+@HostListener('document:keyup.control.backspace', ['$event']) 
   onKeydownBackspace(event: KeyboardEvent) {
     if (this.dialogOff){
       //console.log(event);

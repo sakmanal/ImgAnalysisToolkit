@@ -14,6 +14,10 @@
             <mat-icon>crop_16_9</mat-icon> fit in selection
         </button>
 
+        <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="writeWord()">
+            <mat-icon>create</mat-icon> write text
+        </button>
+
 
 
         <span class="alternative">
@@ -23,15 +27,26 @@
     </div>
 
     <div class="st">
-            <button  mat-mini-fab  (click)="openDialog()" matTooltip="select word" [matTooltipPosition]="position" color="warn"><mat-icon>done</mat-icon></button>
+            <button  mat-mini-fab  (click)="displayTextInput()" matTooltip="select word" [matTooltipPosition]="position" color="warn"><mat-icon>done</mat-icon></button>
             <p><button  mat-mini-fab  (click)="remove()" matTooltip="remove selection" [matTooltipPosition]="position" color="warn"><mat-icon>remove</mat-icon></button></p>
     </div>
 
     <!-- <img src={{cropImg}}> -->
 
     <div class="centerimg">
-        <div  style="cursor: crosshair;" class="responsive">
-        <canvas class="canvas"  id="canvas"></canvas>
+        <div  style="cursor: crosshair;" class="responsive" id="wr">
+        <canvas class="canvas"  id="canvas"></canvas> 
+          <div *ngIf=showTextInput class="arrow_box" [ngStyle]="{'left.px': left, 'top.px': top  }">
+                     <mat-form-field color="warn">
+                        <input matInput type="text" placeholder="enter word" [(ngModel)]="word" cdkFocusInitial (keydown.control.space)=writeWord()/>
+                        <button mat-button *ngIf="word" matSuffix mat-icon-button aria-label="Clear" (click)="word=''">
+                          <mat-icon>close</mat-icon>
+                        </button>  
+                      </mat-form-field>
+                      <button mat-raised-button color="warn" (click)="writeWord()">add</button>
+                      <span class="alternative"><button mat-button color="primary" color="primary" (click)="cancel()">cancel</button></span>
+                      
+          </div>
         </div>
     </div>
 </div> 
