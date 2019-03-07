@@ -177,7 +177,7 @@ enableBoundaryLimit(){
                   obj.top = bounds.h - obj.height;
                 }
 
-                this.CalcTextInputCords(obj.left, obj.top, obj.height); //update TextInput div Cords on object moving
+                this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.bl.y); //update TextInput div Cords on object moving
         }
 
         
@@ -199,6 +199,16 @@ enableZoom(){
       this.canvas.zoomToPoint({ x: opt.e.offsetX, y: opt.e.offsetY }, zoom);
       opt.e.preventDefault();
       opt.e.stopPropagation();
+
+          let activeObject = this.canvas.getActiveObject();
+          if (!activeObject){
+            const ob = this.canvas.getObjects();
+            activeObject = ob[ob.length-1];
+          }
+          if (activeObject && activeObject.type == 'rect'){
+          
+            this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
+          }
       
     });
   
@@ -215,6 +225,7 @@ enableDrag(){
           //this.canvas.selection = false;
           this.canvas.lastPosX = evt.clientX;
           this.canvas.lastPosY = evt.clientY;
+          this.showTextInput = false;
         }
       });
       this.canvas.on('mouse:move', (opt:any) => {
@@ -666,18 +677,18 @@ displayTextInput(){
     this.word = '';
     this.showTextInput = true;
   
-    this.CalcTextInputCords(activeObject.left, activeObject.top, activeObject.height);
+    this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
     this.canvas.on("selection:updated", (e:any) =>{
       const obj = e.target;
-      this.CalcTextInputCords(obj.left, obj.top, obj.height);
+      this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.bl.y);
     });
   }
      
 }
 
-CalcTextInputCords(left:number, top:number, height:number){
+CalcTextInputCords(left:number, top:number){
   this.left = left + document.getElementById("wr").offsetLeft;
-  this.top = top + document.getElementById("wr").offsetTop + height +12;
+  this.top = top + document.getElementById("wr").offsetTop  +12;
 }
 
 writeWord(){
