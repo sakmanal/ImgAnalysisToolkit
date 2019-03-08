@@ -20,8 +20,8 @@
     position:absolute; 
 	background: #424242;
     border: 4px solid #424242;
-    width: 185px;
-    height: 100px;
+    width: 180px;
+    height: 102px;
 }
 .arrow_box:after, .arrow_box:before {
 	bottom: 100%;
@@ -46,3 +46,39 @@
 	border-width: 16px;
 	margin-left: -16px;
 }
+
+.tooltip {
+	position: relative;
+	display: inline-block;
+  }
+  
+  .tooltip .tooltiptext {
+	visibility: hidden;
+	width: 270px;
+	height: 95px;
+	background-color: #424242;
+	color: #fff;
+	text-align: left;
+	border-radius: 6px;
+	padding: 5px 5px;
+	position: absolute;
+	z-index: 1;
+	top: 150%;
+	left: 50%;
+	margin-left: -141px;
+  }
+  
+  .tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	bottom: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+	border-color: transparent transparent #424242 transparent;
+  }
+  
+  .tooltip:hover .tooltiptext {
+	visibility: visible;
+  }

@@ -2,8 +2,12 @@
 <div *ngIf=imageUrl>
     <div style="margin: 5px">
 
-        <button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="openDialog()">
+        <!-- <button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="openDialog()">
             <mat-icon>check_circle</mat-icon> Select word
+        </button> -->
+
+        <button  mat-raised-button color="accent" style="margin-left: 5px; margin-bottom: 5px;" (click)="displayTextInput()">
+            <mat-icon>keyboard</mat-icon> enter word
         </button>
         
         <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="remove()">
@@ -14,21 +18,29 @@
             <mat-icon>crop_16_9</mat-icon> fit in selection
         </button>
 
-        <button  mat-raised-button color="primary" style="margin-left: 5px; margin-bottom: 5px;" (click)="writeWord()">
-            <mat-icon>create</mat-icon> write text
-        </button>
-
 
         <span class="alternative">
                 <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin-left: 5px; margin-bottom: 5px;">Rect selection tool</mat-slide-toggle>
                 <mat-slide-toggle color="accent" [(ngModel)]="LineTool" (change)="selectLine()" style="margin-left: 5px; margin-bottom: 5px;">Line selection tool</mat-slide-toggle>
         </span>
+        <div class="tooltip" style="margin-left: 8px; margin-bottom: 5px;">
+            <fa-icon [icon]="faInfoCircle"  size="lg"></fa-icon>
+            <span class="tooltiptext">
+                <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">mouse wheel:</span> zoom image</div>
+                <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ALT + mouse drag:</span> drag image around</div>
+                <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">BACKSPACE:</span> remove selection</div>
+                <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ENTER:</span> open text input</div>
+                <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + SPACE:</span> save word</div>
+            </span>        
+        </div>
     </div>
-
+    
     <div class="st">
-            <button  mat-mini-fab  (click)="displayTextInput()" matTooltip="select word" [matTooltipPosition]="position" color="warn"><mat-icon>done</mat-icon></button>
+            <button  mat-mini-fab  (click)="displayTextInput()" matTooltip="enter word" [matTooltipPosition]="position" color="warn"><mat-icon>keyboard</mat-icon></button>
             <p><button  mat-mini-fab  (click)="remove()" matTooltip="remove selection" [matTooltipPosition]="position" color="warn"><mat-icon>remove</mat-icon></button></p>
     </div>
+
+
 
     <!-- <img src={{cropImg}}> -->
 
@@ -42,7 +54,7 @@
                           <mat-icon>close</mat-icon>
                         </button>  
                       </mat-form-field>
-                      <button mat-raised-button color="warn" (click)="writeWord()">add</button>
+                      <button mat-raised-button color="warn" (click)="writeWord()"><mat-icon>add</mat-icon> add</button>
                       <span class="alternative"><button mat-button color="primary" color="primary" (click)="cancel()">cancel</button></span>
                       
           </div>

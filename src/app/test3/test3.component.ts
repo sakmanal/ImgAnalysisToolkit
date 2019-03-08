@@ -4,6 +4,7 @@ import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-
 import { SavejsonService } from '../savejson.service';
 import { WebworkerService } from '../worker/webworker.service';
 import { GPP } from '../binarization/gpp.worker';
+import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
 import 'fabric';
 
 declare const fabric: any;
@@ -17,7 +18,7 @@ export class Test3Component implements AfterViewInit {
 
   constructor(public dialog: MatDialog, private savejsonService: SavejsonService, private workerService: WebworkerService) {}
 
-  
+  faInfoCircle = faInfoCircle;
   canvas:any;
   canvasWidth:number = 0;
   canvasHeight:number = 0;
@@ -37,7 +38,6 @@ export class Test3Component implements AfterViewInit {
   left:number;
   top:number;
   showTextInput:boolean = false;
-  value:string;
   @Output() updateEvent = new EventEmitter<boolean>();
 
 ngAfterViewInit() {
@@ -225,7 +225,7 @@ enableDrag(){
           //this.canvas.selection = false;
           this.canvas.lastPosX = evt.clientX;
           this.canvas.lastPosY = evt.clientY;
-          this.showTextInput = false;
+          this.cancel();
         }
       });
       this.canvas.on('mouse:move', (opt:any) => {
@@ -317,6 +317,8 @@ rect() {
     this.enableDrag();
     this.canvas.on('mouse:down',  (o:any) => {
       if (!this.canvas.getActiveObject()  && !this.canvas.isDragging){
+
+          this.cancel();
           //console.log("down rect")
           const pointer = this.canvas.getPointer(o.e);
         
@@ -392,6 +394,8 @@ Line() {
   this.enableDrag();
   this.canvas.on('mouse:down', (o:any) => {
     if (!this.canvas.getActiveObject() && !this.canvas.isDragging){
+
+          this.cancel();
           //console.log("down line")
           //this.canvas.selection = false;
           isDown = true;
@@ -473,7 +477,7 @@ info(){
 
 remove(){
   const activeObject = this.canvas.getActiveObject();
-
+  this.cancel();
   if (activeObject){
     this.canvas.remove(activeObject);
   }else{
