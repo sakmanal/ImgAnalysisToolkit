@@ -71,10 +71,10 @@ export class Test2Component implements OnInit {
 
         const imageData = ctx.getImageData(0, 0, w, h);
 
-        const blobLabels = this.findblobs(imageData); 
+        const blobLabels:number[][] = this.findblobs(imageData); 
 
         const BlobsNumber = this.BlobsNumberCount(blobLabels, imageData);
-        console.log(BlobsNumber);
+        console.log("blobsCount:", BlobsNumber);
 
         this.ColorTheBlobs(imageData, blobLabels,[
           [131,15,208,255],
@@ -85,10 +85,13 @@ export class Test2Component implements OnInit {
           [198,0,198,255],
           [0,208,208,255]
         ]);
-
+        
+        
       ctx.putImageData(imageData,0,0);
+
+      this.findblobsCoords(blobLabels, w, h, ctx);
     
-    };
+  }
   
 
 
@@ -117,7 +120,7 @@ export class Test2Component implements OnInit {
     
 
     // Temporary variables for neighboring pixels and other stuff
-    let minIndex:number;
+    let  nn:number, nw:number, ne:number, ww:number, ee:number, sw:number, ss:number, se:number, minIndex:number;
 
     // We're going to run this algorithm 3 times
     // The first time identifies all of the blobs candidates the second and third pass
@@ -133,7 +136,7 @@ export class Test2Component implements OnInit {
           if( srcPixels[pos] == 0){
 
             // Find the nearest pixels     
-            let r = [];
+           /*  let r = [];                       //same as below but slower 
             for(let t=y-1; t<=y+1; t++){
               for(let g=x-1; g<=x+1; g++){
                   if(t==y && g==x) { continue }
@@ -143,7 +146,26 @@ export class Test2Component implements OnInit {
                     }
                   }
               }        
-            }
+            } */
+
+            if (y-1>0 && x-1>0)        { nw = blobMap[y-1][x-1] }else{ nw = 0 }
+            if (y-1>0)                 { nn = blobMap[y-1][x-0] }else{ nn = 0 }
+            if (y-1>0 && x+1<xSize)    { ne = blobMap[y-1][x+1] }else{ ne = 0 }
+            if (x-1>0)                 { ww = blobMap[y-0][x-1] }else{ ww = 0 }
+            if (x+1<xSize)             { ee = blobMap[y-0][x+1] }else{ ee = 0 }
+            if (y+1<ySize && x-1>0)    { sw = blobMap[y+1][x-1] }else{ sw = 0 }
+            if (y+1<ySize)             { ss = blobMap[y+1][x-0] }else{ ss = 0 }
+            if (y+1<ySize && x+1<xSize){ se = blobMap[y+1][x+1] }else{ se = 0 }
+      
+            let r = [];
+            if (nw>0) { r.push(nw) }
+            if (nn>0) { r.push(nn) }
+            if (ne>0) { r.push(ne) }
+            if (ww>0) { r.push(ww) }
+            if (ee>0) { r.push(ee) }
+            if (sw>0) { r.push(sw) }
+            if (ss>0) { r.push(ss) }
+            if (se>0) { r.push(se) }
 
     
             // This point starts a new blob -- increase the label count and
@@ -160,7 +182,7 @@ export class Test2Component implements OnInit {
               // Find the lowest blob index nearest this pixel
               minIndex = Math.min(...r);
 
-              /* for(let t=y-1; t<=y+1; t++){
+              /* for(let t=y-1; t<=y+1; t++){                                            //same as below but slower
                 for(let g=x-1; g<=x+1; g++){
                     if(t==y && g==x) { continue }
                     if (t<imageData.height && t>=0 && g>=0 && g<imageData.width){
@@ -172,12 +194,21 @@ export class Test2Component implements OnInit {
                 }        
               } */
 
-              for(let h in r){
+              /* for(let h in r){                    //same as below but a little bit slower
                 const f = r[h];
                 if (labelTable[f] > minIndex){
                   labelTable[f] = minIndex;
                 }
-              }
+              } */
+
+              if( minIndex < labelTable[nw] ){ labelTable[nw] = minIndex; }
+              if( minIndex < labelTable[nn] ){ labelTable[nn] = minIndex; }
+              if( minIndex < labelTable[ne] ){ labelTable[ne] = minIndex; }
+              if( minIndex < labelTable[ww] ){ labelTable[ww] = minIndex; }
+              if( minIndex < labelTable[ee] ){ labelTable[ee] = minIndex; }
+              if( minIndex < labelTable[sw] ){ labelTable[sw] = minIndex; }
+              if( minIndex < labelTable[ss] ){ labelTable[ss] = minIndex; }
+              if( minIndex < labelTable[se] ){ labelTable[se] = minIndex; }
 
               blobMap[y][x] = minIndex;
             }
@@ -269,6 +300,49 @@ export class Test2Component implements OnInit {
             }
         }
     }
+
+  }
+
+  findblobsCoords(blobLabels:number[][], w:number, h:number, ctx:CanvasRenderingContext2D){
+    const maxObjects = ((w / 2) + 1) * ((h / 2) + 1) + 1;
+
+    let cordx = [];
+    let cordy = [];
+    let width = [];
+    let height = [];
+
+    for(let i=0; i<maxObjects; i++){
+      cordx[i] = w;
+      cordy[i] = h;
+      width[i] = 0;
+      height[i] = 0;
+    } 
+
+    for(let y=0; y<h; y++){
+      for(let x=0; x<w; x++){
+
+        const t = blobLabels[y][x];
+        if (t>0){
+          if (x < cordx[t])  { cordx[t] = x }
+          if (y < cordy[t])  { cordy[t] = y }
+          if (x > width[t])  { width[t] = x }
+          if (y > height[t]) { height[t] = y }    
+        }
+      }
+    }
+    
+    for(let i=0; i<maxObjects; i++){
+      if (cordx[i] == w && cordy[i] == h && width[i] == 0 && height[i] == 0) {continue}
+      const x1 = cordx[i];
+      const y1 = cordy[i];
+      const x2 = width[i] -  cordx[i];
+      const y2 = height[i] - cordy[i];
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "green";
+      ctx.rect(x1, y1, x2, y2);
+    }
+    ctx.stroke();
 
   }
 
