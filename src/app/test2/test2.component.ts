@@ -1,6 +1,7 @@
 import { Component, OnInit, ViewChild } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
+import BlobCounter from './BlobCounter';
 
 @Component({
   selector: 'app-test2',
@@ -93,8 +94,6 @@ export class Test2Component implements OnInit {
     
   }
   
-
-
 
   findblobs(imageData:ImageData):number[][]{
 
@@ -374,6 +373,42 @@ export class Test2Component implements OnInit {
     }
 
     return sum;
+  }
+
+  ConnectedComponents2(){
+    const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    
+    const w = this.img.width;
+    const h = this.img.height;
+
+    const imageData = ctx.getImageData(0, 0, w, h);
+    for(let i=0; i<imageData.data.length; i+=4){
+      if (imageData.data[i] == 0) { imageData.data[i] = 1}
+      if (imageData.data[i] == 255) { imageData.data[i] = 0}
+    }
+    //console.table(imageData.data)
+
+    /* const t = [0,0,0,0,   0,0,0,0,  0,0,0,0,   1,1,1,1,
+               0,0,0,0,   1,1,1,1,  0,0,0,0,   1,1,1,1,           
+               0,0,0,0,   1,1,1,1,  0,0,0,0,   0,0,0,0,       
+               1,1,1,1,   0,0,0,0,  0,0,0,0,   1,1,1,1,
+               0,0,0,0,   0,0,0,0,  0,0,0,0,   0,0,0,0,
+               1,1,1,1,   0,0,0,0,  1,1,1,1,   1,1,1,1,
+               0,0,0,0,   1,1,1,1,  0,0,0,0,   0,0,0,0,
+               1,1,1,1,   0,0,0,0,  1,1,1,1,   0,0,0,0,] */
+
+
+    const blobCounter:BlobCounter = new BlobCounter();
+    //blobCounter.ProcessImage(t, 4, 8);
+    blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
+    const objectsCount = blobCounter.getObjectsCount();
+    console.log("objectsCount:", objectsCount);
+
+    const objectLabels = blobCounter.getObjectLabels();
+    //console.table(objectLabels);
+
+
   }
 
   make2Darray(w:number, h:number){ 
