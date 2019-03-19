@@ -408,120 +408,47 @@ export class Test2Component implements OnInit {
     const objectLabels = blobCounter.getObjectLabels();
     //console.table(objectLabels);
 
+    this.ColorTheBlobs2(imageData, objectLabels, [
+      [131,15,208,255],
+      [220,0,0,255],
+      [0,0,255,255],
+      [0,153,0,255],
+      [174,174,0,255],
+      [198,0,198,255],
+      [0,208,208,255],
+      [210,153,255,255],
+      [51,153,51,255],
+      [153,102,51,255]
+    ]);
+
+    ctx.putImageData(imageData,0,0);
+
 
   }
 
-  make2Darray(w:number, h:number){ 
-        
-    const arr = new Array(h);
-    for (let i = 0; i < arr.length; i++){
-      arr[i] = new Array(w);
-    }
-    return arr;
-  }
 
-  findblops___(imageData:ImageData){
+  ColorTheBlobs2(imageData:ImageData, objectLabels:number[], colors:number[][]){
 
-      let data = imageData.data;
-      let label = 1;
-      let linked = [];
-      let labels = this.make2Darray(imageData.width, imageData.height);
-      for(let i=0; i<imageData.height; i++){
-        for(let j=0; j<imageData.width; j++){
-            labels[i][j] = 0;
-            //if (data[4 * j + i * 4 * imageData.width] == 0) { labels[i][j]=1}else{labels[i][j]=0}
-        }
-      }
-      
-            //console.table(labels)
-    
-      function union(a:number[], b:number[]){
-            return Array.from(new Set(a.concat(b))); 
-      }
-
-        for(let i=0; i<imageData.height; i++){
-          for(let j=0; j<imageData.width; j++){
-
-              if (data[4 * j + i * 4 * imageData.width] == 0){
-                const neighbors = [];
-                for(let x=i-1; x<=i+1; x++){
-                  for(let y=j-1; y<=j+1; y++){
-                      if (x<imageData.height && x>=0 && x!==y && y>=0 && y<imageData.width){
-                        if (labels[x][y] !== 0){
-                          neighbors.push(labels[x][y])
-                        }
-                      }
-                  }        
-              }
-              //console.log(neighbors)
-
-              if (neighbors.length === 0){
-                linked[label] = [label];
-                labels[i][j] = label;
-                label ++;
-              }else{
-          
-                let min = Math.min(...neighbors);
-                labels[i][j] = min;
-                for (let l in neighbors){
-                  linked[l] = union(linked[l] || [], neighbors);
-                }
-              }
-        /*  const nw = labels[i-1][j-1] || 0;
-            const nn = labels[i-1][j]   || 0;
-            const ne = labels[i-1][j+1] || 0;
-            const ww = labels[i][j-1]   || 0;
-            const ee = labels[i][j+1]   || 0;
-            const sw = labels[i+1][j-1] || 0;
-            const ss = labels[i+1][j]   || 0;
-            const se = labels[i+1][j+1] || 0; */
-  /* 
-            if (labels[i-1][j-1] != undefined)
-              console.log("exixts")
-            else 
-              console.log("no")   */
-
-          /*  const neighbors = [];
-            if (nw !== 0) { neighbors.push(nw) };
-            if (nn !== 0) { neighbors.push(nn) };
-            if (ne !== 0) { neighbors.push(ne) };
-            if (ww !== 0) { neighbors.push(ww) };
-            if (ee !== 0) { neighbors.push(ee) };
-            if (sw !== 0) { neighbors.push(sw) };
-            if (ss !== 0) { neighbors.push(ss) };
-            if (se !== 0) { neighbors.push(se) };
+    let  dstPixels = imageData.data;
+  
+      for (let i=0; i<dstPixels.length; i+=4){
+        const label = objectLabels[i/4];
+        if( label > 0 ){
+          const color = colors[ label % colors.length ];
             
-            if (neighbors.length == 0){
-                  linked[label] = [label];
-                  labels[j][i] = label;
-                  label ++;
-            }else{
-            
-              let min = Math.min(...neighbors);
-              labels[j][i] = min;
-              for (let l in neighbors){
-                linked[l] = union(linked[l] || [], neighbors);
-              }
-            } */
+              dstPixels[i+0] = color[0];
+              dstPixels[i+1] = color[1];
+              dstPixels[i+2] = color[2];
+              dstPixels[i+3] = color[3];
 
+          }else{
+              dstPixels[i+0] = 255;
+              dstPixels[i+1] = 255;
+              dstPixels[i+2] = 255;
+              dstPixels[i+3] = 255;
           }
-
-        }
       }
-      
-    /*  for(let i=0; i<imageData.height; i++){
-        for(let j=0; j<imageData.width; j++){
-
-          if (data[4 * j + i * 4 * imageData.width] == 0){
-            const z = labels[i][j];
-            const k = linked[z];
-            labels[i][j] = Math.min(...k);
-          }
-
-        }
-      } */
-
-      return labels 
-
   }
+
+  
 }
