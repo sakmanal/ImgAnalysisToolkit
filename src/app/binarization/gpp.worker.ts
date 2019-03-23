@@ -70,9 +70,9 @@ export const GPP = (d:any) => {
       
     
       
-        var IMAGE = make2Darray(width, height);
-        var IMAGE11 = make2Darray(width, height);
-        var IMAGE2 = make2Darray(Ix, Iy);
+        const IMAGE = make2Darray(width, height);
+        const IMAGE11 = make2Darray(width, height);
+        const IMAGE2 = make2Darray(Ix, Iy);
         for (let i = 0; i < height; i++)
         {
           for (let k = 0; k < width; k++)

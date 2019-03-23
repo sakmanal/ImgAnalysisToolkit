@@ -1,19 +1,16 @@
-import { Data } from "@angular/router";
-
 //self is a keyword: Reference to this Worker 
 //self.onmessage = sauvolaFilter;   --- self not really needed
 
 onmessage = sauvolaFilter;
-let data:Data;
 
 function sauvolaFilter( d: MessageEvent ) {
    const imageData = d.data.imageData;
    const w = imageData.width;
    const h = imageData.height;
-   data = imageData.data;
+   let data = imageData.data;
 
-   greyscale();
-   sauvola(w, h, d.data.masksize, d.data.stathera, d.data.rstathera, d.data.n);
+   greyscale(data);
+   sauvola(data, w, h, d.data.masksize, d.data.stathera, d.data.rstathera, d.data.n);
 
    const x:any = [imageData.data.buffer]
    postMessage(imageData, x);
@@ -26,7 +23,7 @@ function sauvolaFilter( d: MessageEvent ) {
 
 function make2Darray(w, h){ 
 
-   var arr = new Array(h);
+   const arr = new Array(h);
    for (let i = 0; i < arr.length; i++){
      arr[i] = new Array(w);
    }
@@ -36,7 +33,7 @@ function make2Darray(w, h){
 
 
 
-function greyscale() {
+function greyscale(data) {
    const RED_INTENCITY_COEF = 0.2126;
    const GREEN_INTENCITY_COEF = 0.7152;
    const BLUE_INTENCITY_COEF = 0.0722;
@@ -56,7 +53,7 @@ function greyscale() {
 }
  
  
-function  sauvola(width, height, _masksize, _stathera, _rstathera, _n){
+function  sauvola(data, width, height, _masksize, _stathera, _rstathera, _n){
  
  
  

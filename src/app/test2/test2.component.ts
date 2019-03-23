@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
 import BlobCounter from './BlobCounter';
+import * as GPP from "file-loader?name=[name].js!../binarization methods/GPP/gpp-worker";
 
 @Component({
   selector: 'app-test2',
@@ -11,16 +12,26 @@ import BlobCounter from './BlobCounter';
 export class Test2Component implements OnInit {
 
   img = new Image;
-  url:any;
+  url:string;
   @ViewChild("canvasfilter") fcanvas: { nativeElement: HTMLCanvasElement; };
   faSpinner = faSpinner;
-  public SauvolaImage: SauvolaMethod =  new SauvolaMethod();
+  SauvolaImage: SauvolaMethod =  new SauvolaMethod();
 
   //sauvola parameters
     masksize:number = 8;
     stathera:number = 25;
     rstathera:number = 512;
     n:number = 1;
+
+    //gpp parameters
+    dw:number = 10;
+    k:number = 2.0;
+    R:number = 128;
+    q:number = 1.7;
+    p1:number = 0.5;
+    p2:number = 0.7;
+    upsampling:boolean = true;
+    dw1:number = 20;
 
   ngOnInit(){
     
@@ -60,7 +71,24 @@ export class Test2Component implements OnInit {
 
 
   sauvolaBinarization(){
-    this.SauvolaImage.binarize(this.url, this.masksize, this.stathera, this.rstathera, this.n);
+    this.SauvolaImage.binarize(this.url, this.masksize, this.stathera, this.rstathera, this.n, "myCanvas");
+  }
+
+  GppBinarization(){
+    const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    const w = this.img.width;
+    const h = this.img.height;
+    const imageData = ctx.getImageData(0, 0, w, h);
+    const worker = new Worker(GPP);
+
+    worker.postMessage({imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1}, [imageData.data.buffer]);
+
+    worker.onmessage = (d: MessageEvent)=>{
+      const imageData = d.data;
+      ctx.putImageData(imageData, 0, 0);
+ 
+    };
   }
 
   ConnectedComponents(){
@@ -401,7 +429,9 @@ export class Test2Component implements OnInit {
 
     const blobCounter:BlobCounter = new BlobCounter();
     //blobCounter.ProcessImage(t, 4, 8);
-    blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
+    //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
+    const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
+
     const objectsCount = blobCounter.getObjectsCount();
     console.log("objectsCount:", objectsCount);
 
@@ -423,9 +453,24 @@ export class Test2Component implements OnInit {
 
     ctx.putImageData(imageData,0,0);
 
+    this.DrawRects(rects, objectsCount, ctx);
+
 
   }
 
+  DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){
+     for(let i = 0; i<objectsCount; i++){
+      const x1 = rects[i].x1;
+      const y1 = rects[i].y1;
+      const x2 = rects[i].x2;
+      const y2 = rects[i].y2;
+
+      ctx.lineWidth = 1;
+      ctx.strokeStyle = "green";
+      ctx.rect(x1, y1, x2, y2);
+     }
+     ctx.stroke();
+  }
 
   ColorTheBlobs2(imageData:ImageData, objectLabels:number[], colors:number[][]){
 

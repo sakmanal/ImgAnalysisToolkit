@@ -1,3 +1,10 @@
+interface rect{
+    x1:number;
+    y1:number;
+    x2:number;
+    y2:number;
+  }
+
 export default class BlobCounter {
 
     constructor() {}
@@ -238,5 +245,78 @@ export default class BlobCounter {
 
     }
 
+    // Get array of objects rectangles
+    public  GetObjectRectangles(src:Uint8ClampedArray, width:number, height:number):object{
+
+        
+
+        // process the image
+        this.ProcessImage(src, width, height);
+
+        const labels:number[] = this.objectLabels;
+        const count:number = this.objectsCount;
+
+        let i:number = 0, label:number;
+
+        // create object coordinates arrays
+        const x1:number[] = [];
+        const y1:number[] = [];
+        const x2:number[] = [];
+        const y2:number[] = [];
+
+        for (let j = 1; j <= count; j++)
+        {
+            x1[j] = width;
+            y1[j] = height;
+            x2[j] = 0;
+            y2[j] = 0;
+        }
+
+         // walk through labels array
+         for (let y = 0; y < height; y++)
+         {
+             for (let x = 0; x < width; x++, i++)
+             {
+                 // get current label
+                 label = labels[i];
+
+                 // skip unlabeled pixels
+                 if (label == 0)
+                     continue;
+
+                 // check and update all coordinates
+
+                 if (x < x1[label])
+                 {
+                     x1[label] = x;
+                 }
+                 if (x > x2[label])
+                 {
+                     x2[label] = x;
+                 }
+                 if (y < y1[label])
+                 {
+                     y1[label] = y;
+                 }
+                 if (y > y2[label])
+                 {
+                     y2[label] = y;
+                 }
+             }
+         }
+
+         // create rectangles
+         const rects:object = {};
+         for (let j = 1; j <= count; j++)
+         {
+            const Rectangle:rect = {x1:x1[j], y1:y1[j], x2:x2[j] - x1[j] + 1, y2:y2[j] - y1[j] + 1};
+            rects[j - 1] = Rectangle;
+         }
+
+        return rects;
+
+    }
+
 
 }
+

@@ -6,24 +6,24 @@ import * as workerPath from "file-loader?name=[name].js!./sauvola-worker";
 export default class SauvolaMethod {
 
 
-    img = new Image;
-    sauvolaloader: boolean = false;
+   
+    public sauvolaloader: boolean = false;
     
     constructor() {}
 
-    binarize(url:any,  masksize:number, stathera:number, rstathera:number, n:number){
-        const canvas = <HTMLCanvasElement> document.getElementById("myCanvas");
-        let ctx: CanvasRenderingContext2D = canvas.getContext("2d");
+    public binarize(url:any,  masksize:number, stathera:number, rstathera:number, n:number, canvasId:string){
+        const canvas = <HTMLCanvasElement> document.getElementById(canvasId);
+        const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
         this.sauvolaloader = true;
-       
+        const img = new Image;
         
-        this.img.onload = () =>{
-          
-            const w = this.img.width;
-            const h = this.img.height;
+       img.onload = () =>{
+            
+            const w = img.width;
+            const h = img.height;
             canvas.width = w;
             canvas.height = h;
-            ctx.drawImage(this.img, 0, 0);
+            ctx.drawImage(img, 0, 0);
             
             const imageData = ctx.getImageData(0, 0, w, h);
             const worker = new Worker(workerPath);           //worker can also be made with webworker.service from here
@@ -38,7 +38,7 @@ export default class SauvolaMethod {
                 
             };
         };
-       this.img.src = url;
+        img.src = url;
     }
 
   
