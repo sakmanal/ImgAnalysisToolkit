@@ -411,24 +411,9 @@ export class Test2Component implements OnInit {
     const h = this.img.height;
 
     const imageData = ctx.getImageData(0, 0, w, h);
-    for(let i=0; i<imageData.data.length; i+=4){
-      if (imageData.data[i] == 0) { imageData.data[i] = 1}
-      if (imageData.data[i] == 255) { imageData.data[i] = 0}
-    }
   
-
-    /* const t = [0,0,0,0,   0,0,0,0,  0,0,0,0,   1,1,1,1,
-               0,0,0,0,   1,1,1,1,  0,0,0,0,   1,1,1,1,           
-               0,0,0,0,   1,1,1,1,  0,0,0,0,   0,0,0,0,       
-               1,1,1,1,   0,0,0,0,  0,0,0,0,   1,1,1,1,
-               0,0,0,0,   0,0,0,0,  0,0,0,0,   0,0,0,0,
-               1,1,1,1,   0,0,0,0,  1,1,1,1,   1,1,1,1,
-               0,0,0,0,   1,1,1,1,  0,0,0,0,   0,0,0,0,
-               1,1,1,1,   0,0,0,0,  1,1,1,1,   0,0,0,0,] */
-
-
     const blobCounter:BlobCounter = new BlobCounter();
-    //blobCounter.ProcessImage(t, 4, 8);
+
     //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
     //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
@@ -438,7 +423,7 @@ export class Test2Component implements OnInit {
     //console.log(objects[0])
     //console.log(objects[1])
     //console.log(objects[2])
-    console.log(objects[3]) 
+    //console.log(objects[3]) 
 
     const objectsCount = blobCounter.getObjectsCount();
     console.log("objectsCount:", objectsCount);

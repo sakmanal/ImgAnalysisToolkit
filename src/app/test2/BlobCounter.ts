@@ -248,7 +248,12 @@ export default class BlobCounter {
     // Get array of objects rectangles
     public  GetObjectRectangles(src:Uint8ClampedArray, width:number, height:number):object{
 
-        
+        //convert black pixels(0) to 1
+        //and white pixels(255) to 0 
+        for(let i=0; i<src.length; i+=4){
+            if (src[i] == 0) { src[i] = 1; }
+            if (src[i] == 255) { src[i] = 0; }
+        }
 
         // process the image
         this.ProcessImage(src, width, height);
@@ -444,6 +449,14 @@ export default class BlobCounter {
    // Get array of objects images
    public GetObjects(src:Uint8ClampedArray, width:number, height:number):object{
 
+
+     //convert black pixels(0) to 1
+     //and white pixels(255) to 0 
+     for(let i=0; i<src.length; i+=4){
+        if (src[i] == 0) { src[i] = 1; }
+        if (src[i] == 255) { src[i] = 0; }
+     }
+
      // process the image
      this.ProcessImage(src, width, height);
 
@@ -521,7 +534,7 @@ export default class BlobCounter {
          let p = ymin * width + xmin;
 
          const labelsOffset = width - objectWidth;
-         
+         let s= 0 ;
          // for each line
          for (let y = ymin; y <= ymax; y++)
          {
@@ -530,11 +543,14 @@ export default class BlobCounter {
              {
                  if (labels[p] == k)
                  {
-                    dst[4 * x + y * dstStride]     = src[4 * (x + xmin) + (ymin + y) * srcStride];
+                    dst[s] = src[4 * x + y * srcStride];            
+                    dst[s + 1] = src[4 * x + y * srcStride + 1];     
+                    dst[s + 2] = src[4 * x + y * srcStride + 2];    
+                    //dst[4 * x + y * dstStride] = src[4 * (x + xmin) + (ymin + y) * srcStride];
                     //dst[4 * x + y * dstStride + 1] = src[4 * (x + xmin) + (ymin + y) * srcStride + 1];
                     //dst[4 * x + y * dstStride + 2] = src[4 * (x + xmin) + (ymin + y) * srcStride + 2];
-                    if (k==4){console.log(src[4 * (x + xmin) + (ymin + y) * srcStride])}
-                 }
+                 } 
+                 s+=4;
              }
              p += labelsOffset;
          }
