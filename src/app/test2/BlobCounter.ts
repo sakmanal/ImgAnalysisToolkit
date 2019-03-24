@@ -235,13 +235,13 @@ export default class BlobCounter {
                     reMap[i] = reMap[map[i]];
                 }
             }
-
+            
             // repair object labels
             for (let i = 0, n = this.objectLabels.length; i < n; i++)
             {
-                this.objectLabels[i] = reMap[this.objectLabels[i]];
+                if (this.objectLabels[i]){
+                this.objectLabels[i] = reMap[this.objectLabels[i]];}
             }
-   
 
     }
 
@@ -317,6 +317,235 @@ export default class BlobCounter {
 
     }
 
+    // Get array of objects images
+    public GetObjectsWithArray(SourceImage:ImageData):object{
+        const src:Uint8ClampedArray = SourceImage.data;
+        const width:number = SourceImage.width;
+        const height:number = SourceImage.height;
+        
+        //convert black pixels(0) to 1
+        //and white pixels(255) to 0 
+        for(let i=0; i<src.length; i+=4){
+            if (src[i] == 0) { src[i] = 1; }
+            if (src[i] == 255) { src[i] = 0; }
+        }
+        // process the image
+        this.ProcessImage(src, width, height);
+
+        const labels:number[] = this.objectLabels;
+        const count = this.objectsCount;
+
+        // image size
+        let i:number = 0, label:number;
+
+        // --- STEP 1 - find each objects coordinates
+
+        // create object coordinates arrays
+        const x1:number[] = [];
+        const y1:number[] = [];
+        const x2:number[] = [];
+        const y2:number[] = [];
+
+        for (let k = 1; k <= count; k++)
+        {
+                x1[k] = width;
+                y1[k] = height;
+                x2[k] = 0;
+                y2[k] = 0;
+        }
+
+        // walk through labels array
+        for (let y = 0; y < height; y++)
+        {
+            for (let x = 0; x < width; x++, i++)
+            {
+                // get current label
+                label = labels[i];
+
+                // skip unlabeled pixels
+                if (label == 0)
+                    continue;
+
+                // check and update all coordinates
+
+                if (x < x1[label])
+                {
+                    x1[label] = x;
+                }
+                if (x > x2[label])
+                {
+                    x2[label] = x;
+                }
+                if (y < y1[label])
+                {
+                    y1[label] = y;
+                }
+                if (y > y2[label])
+                {
+                    y2[label] = y;
+                }
+            }
+        }
+         
+        // --- STEP 2 - get each object
+        const objects:object = {};
+
+        // create each array
+        for (let k = 1; k <= count; k++){
+            const xmin = x1[k];
+            const xmax = x2[k];
+            const ymin = y1[k];
+            const ymax = y2[k];
+            const objectWidth = xmax - xmin + 1;
+            const objectHeight = ymax - ymin + 1;
+
+            const array = [];
+            for (let i = 0; i < objectHeight; i++){
+                array[i] = [];
+            }
+
+            /* for(let y=0; y<objectHeight; y++){
+                array.push([]);
+                for(let x=0; x<objectWidth; x++){
+                  array[y].push(false);
+                }
+            } */
+
+            let p = ymin * width + xmin;
+
+            const labelsOffset = width - objectWidth;
+            
+            // for each line
+            for (let y = ymin; y <= ymax; y++)
+            {
+                // copy each pixel
+                for (let x = xmin; x <= xmax; x++, p++)
+                {
+                    if (labels[p] == k)
+                    {
+                        array[y - ymin][x - xmin] = true;
+                    }
+                    else
+                    {
+                        array[y - ymin][x - xmin] = false;
+                    }
+                }
+                p += labelsOffset;
+            }
+
+            objects[k - 1] = {Array:array, x:xmin, y:ymin, height:objectHeight, width:objectWidth}
+
+        } 
+
+        return objects;
+    }
+
+
+   // Get array of objects images
+   public GetObjects(src:Uint8ClampedArray, width:number, height:number):object{
+
+     // process the image
+     this.ProcessImage(src, width, height);
+
+     const labels:number[] = this.objectLabels;
+     const count = this.objectsCount;
+
+     // image size
+     let i:number = 0, label:number;
+
+     // --- STEP 1 - find each objects coordinates
+
+     // create object coordinates arrays
+     const x1:number[] = [];
+     const y1:number[] = [];
+     const x2:number[] = [];
+     const y2:number[] = [];
+
+     for (let k = 1; k <= count; k++)
+     {
+             x1[k] = width;
+             y1[k] = height;
+             x2[k] = 0;
+             y2[k] = 0;
+     }
+
+     // walk through labels array
+     for (let y = 0; y < height; y++)
+     {
+         for (let x = 0; x < width; x++, i++)
+         {
+             // get current label
+             label = labels[i];
+
+             // skip unlabeled pixels
+             if (label == 0)
+                 continue;
+
+             // check and update all coordinates
+
+             if (x < x1[label])
+             {
+                 x1[label] = x;
+             }
+             if (x > x2[label])
+             {
+                 x2[label] = x;
+             }
+             if (y < y1[label])
+             {
+                 y1[label] = y;
+             }
+             if (y > y2[label])
+             {
+                 y2[label] = y;
+             }
+         }
+     }
+
+
+     // --- STEP 2 - get each object
+     const srcStride = 4 * width;
+     const objects:object = {};
+
+     // create each array
+     for (let k = 1; k <= count; k++){
+         const xmin = x1[k];
+         const xmax = x2[k];
+         const ymin = y1[k];
+         const ymax = y2[k];
+         const objectWidth = xmax - xmin + 1;
+         const objectHeight = ymax - ymin + 1;
+         const dstStride = 4 * objectWidth;
+         const dst = new Uint8ClampedArray(dstStride * objectHeight);
+
+         let p = ymin * width + xmin;
+
+         const labelsOffset = width - objectWidth;
+         
+         // for each line
+         for (let y = ymin; y <= ymax; y++)
+         {
+             // copy each pixel
+             for (let x = xmin; x <= xmax; x++, p++)
+             {
+                 if (labels[p] == k)
+                 {
+                    dst[4 * x + y * dstStride]     = src[4 * (x + xmin) + (ymin + y) * srcStride];
+                    //dst[4 * x + y * dstStride + 1] = src[4 * (x + xmin) + (ymin + y) * srcStride + 1];
+                    //dst[4 * x + y * dstStride + 2] = src[4 * (x + xmin) + (ymin + y) * srcStride + 2];
+                    if (k==4){console.log(src[4 * (x + xmin) + (ymin + y) * srcStride])}
+                 }
+             }
+             p += labelsOffset;
+         }
+
+         objects[k - 1] = {Array:dst, x:xmin, y:ymin, height:objectHeight, width:objectWidth}
+
+     } 
+
+     return objects;
+ 
+   }
 
 }
 

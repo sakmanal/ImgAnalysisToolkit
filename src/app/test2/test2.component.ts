@@ -415,7 +415,7 @@ export class Test2Component implements OnInit {
       if (imageData.data[i] == 0) { imageData.data[i] = 1}
       if (imageData.data[i] == 255) { imageData.data[i] = 0}
     }
-    //console.table(imageData.data)
+  
 
     /* const t = [0,0,0,0,   0,0,0,0,  0,0,0,0,   1,1,1,1,
                0,0,0,0,   1,1,1,1,  0,0,0,0,   1,1,1,1,           
@@ -430,13 +430,20 @@ export class Test2Component implements OnInit {
     const blobCounter:BlobCounter = new BlobCounter();
     //blobCounter.ProcessImage(t, 4, 8);
     //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
-    const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
+    //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
+
+    //const objects = blobCounter.GetObjectsWithArray(imageData);
+
+    const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
+    //console.log(objects[0])
+    //console.log(objects[1])
+    //console.log(objects[2])
+    console.log(objects[3]) 
 
     const objectsCount = blobCounter.getObjectsCount();
     console.log("objectsCount:", objectsCount);
 
     const objectLabels = blobCounter.getObjectLabels();
-    //console.table(objectLabels);
 
     this.ColorTheBlobs2(imageData, objectLabels, [
       [131,15,208,255],
@@ -453,7 +460,7 @@ export class Test2Component implements OnInit {
 
     ctx.putImageData(imageData,0,0);
 
-    this.DrawRects(rects, objectsCount, ctx);
+    //this.DrawRects(rects, objectsCount, ctx);
 
 
   }
