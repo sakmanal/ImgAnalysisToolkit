@@ -334,12 +334,13 @@ export default class BlobCounter {
             if (src[i] == 0) { src[i] = 1; }
             if (src[i] == 255) { src[i] = 0; }
         }
+        
         // process the image
         this.ProcessImage(src, width, height);
 
         const labels:number[] = this.objectLabels;
         const count = this.objectsCount;
-
+        
         // image size
         let i:number = 0, label:number;
 
@@ -534,7 +535,7 @@ export default class BlobCounter {
          let p = ymin * width + xmin;
 
          const labelsOffset = width - objectWidth;
-         let s= 0 ;
+         let s = 0 ;
          // for each line
          for (let y = ymin; y <= ymax; y++)
          {

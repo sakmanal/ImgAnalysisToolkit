@@ -2,6 +2,7 @@ import { Component, OnInit, ViewChild } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
 import BlobCounter from './BlobCounter';
+import Filtering from './Filtering';
 import * as GPP from "file-loader?name=[name].js!../binarization methods/GPP/gpp-worker";
 
 @Component({
@@ -417,10 +418,26 @@ export class Test2Component implements OnInit {
     //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
     //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
-    //const objects = blobCounter.GetObjectsWithArray(imageData);
+    const objects = blobCounter.GetObjectsWithArray(imageData);
 
-    const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
-    //console.log(objects[0])
+    /*let FirstPassBlobs = []; 
+    let RejBlobs = [];
+    for(const b in objects){
+       //console.log(objects[b].width)
+                if (objects[b].width >= 4 && objects[b].height >= 4){
+                    FirstPassBlobs.push(objects[b]);
+                }else{
+                    RejBlobs.push(objects[b]);
+                }
+    }
+    console.log(RejBlobs)
+
+    for(const b in RejBlobs){
+      console.log(RejBlobs[b].height)
+    } */
+
+    //const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
+    //console.log(objects[0].width)
     //console.log(objects[1])
     //console.log(objects[2])
     //console.log(objects[3]) 
@@ -448,6 +465,15 @@ export class Test2Component implements OnInit {
     //this.DrawRects(rects, objectsCount, ctx);
 
 
+  }
+
+  test(){
+    const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    const imageData = ctx.getImageData(0, 0, this.img.width, this.img.height);
+
+    const filter:Filtering = new Filtering();
+    const test  = filter.FilterOut(imageData, false);
   }
 
   DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){
