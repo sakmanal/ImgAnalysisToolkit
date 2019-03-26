@@ -418,7 +418,9 @@ export class Test2Component implements OnInit {
     //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
     //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
-    const objects = blobCounter.GetObjectsWithArray(imageData);
+    //const objects = blobCounter.GetObjectsWithArray(imageData);
+    const objects = blobCounter.GetObjectsWithoutArray(imageData);
+    //console.log(objects);
 
     /*let FirstPassBlobs = []; 
     let RejBlobs = [];

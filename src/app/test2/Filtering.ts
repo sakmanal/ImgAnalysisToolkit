@@ -49,8 +49,48 @@ export default class Filtering{
         
     }
 
+    private RemovePanctuation(myImage:ImageData):void{
+        const previos_a:number = this.ARLSA.ARLSA_a;
+        this.ARLSA.ARLSA_a = 1.5;
+
+        const imgi2:ImageData = this.ARLSA.PLAImage(myImage);
+
+        this.ARLSA.ARLSA_a = previos_a;
+
+        const blobCounter = new BlobCounter();
+        const blobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(imgi2));
+        //const blobs = blobCounter.GetObjectsWithoutArray(imgi2);
+
+        const stride = 4 * imgi2.width;
+        let p1:number, p2:number;
+        for(const b in blobs)
+        {
+            p1 = 0; p2 = 0;
+            for (let y = 0; y < blobs[b].height; y++)
+            {
+                for (let x = 0; x < blobs[b].width; x++)
+                {
+                    if (myImage.data[4 * (blobs[b].x + x) + (blobs[b].y + y) * stride] == 0)
+                    {
+                        p1++;
+                    }
+                    if (imgi2.data[4 * (blobs[b].x + x) + (blobs[b].y + y) * stride] == 0)
+                    {
+                        p2++;
+                    }
+                }
+            }
+            if ((p2 / p1) - (this.ARLSA.Pr) <= 0) //((p2 / p1).CompareTo(ARLSA.Pr) <= 0)
+                    this.RejBlobs.push(blobs[b]);
+
+        }
+
+
+
+    }
+
     public Filter():void{
-        
+        //const  AHE = this.AHE(AHE_Number);
         let sum = 0;
         for(const b in this.FirstPassBlobs){
            sum += this.FirstPassBlobs[b].height;
@@ -60,7 +100,7 @@ export default class Filtering{
         this.CalcDensityAndElong();
 
         for(const b in this.FirstPassBlobs){
-            if (//b.height <= (double)AHE / 4 ||
+            if (//this.FirstPassBlobs[b].height <= AHE / 4 ||
                 this.FirstPassBlobs[b].Density <= 0.05 || 
                 this.FirstPassBlobs[b].Density >= 0.9 || 
                 this.FirstPassBlobs[b].Elongation <= 0.08)
@@ -82,13 +122,37 @@ export default class Filtering{
             }
     }
 
-    
-
-    Remove(myImage, RejBlobs){
-
+    public FinalFiltering(InputBlobs:object, PassBlobs:blobObject[], RejBlobs:blobObject[]):void{
+          
+        PassBlobs = [];
+        RejBlobs = [];
+        for(const b in InputBlobs){
+            if (InputBlobs[b].width <= 2 || InputBlobs[b].height <= 2)
+                RejBlobs.push(InputBlobs[b]);
+            else
+                PassBlobs.push(InputBlobs[b]);
+        }
     }
 
-    CalcDensityAndElong(){
+    private Remove(myImage:ImageData, RemBlobs:blobObject[]):void{
+         const stride = myImage.width * 4;
+         for(const b in RemBlobs){
+
+            for (let yy = 0; yy < RemBlobs[b].height; yy++){
+                for (let xx = 0; xx < RemBlobs[b].width; xx++){
+                     if (RemBlobs[b].Array[yy][xx])
+                     {
+                           myImage.data[4 * (RemBlobs[b].x + xx) + (RemBlobs[b].y + yy) * stride] = 255;
+                           myImage.data[4 * (RemBlobs[b].x + xx) + (RemBlobs[b].y + yy) * stride + 1] = 255;
+                           myImage.data[4 * (RemBlobs[b].x + xx) + (RemBlobs[b].y + yy) * stride + 2] = 255;
+                           myImage.data[4 * (RemBlobs[b].x + xx) + (RemBlobs[b].y + yy) * stride + 3] = 255;
+                     }
+                }
+            }
+         }
+    }
+
+    public CalcDensityAndElong():void{
          let blacks = 0;
          for(const b in this.FirstPassBlobs){
             blacks = 0;
@@ -102,6 +166,27 @@ export default class Filtering{
             this.FirstPassBlobs[b].Elongation = Math.min(this.FirstPassBlobs[b].width, this.FirstPassBlobs[b].height) / Math.max(this.FirstPassBlobs[b].width, this.FirstPassBlobs[b].height);
                             
          } 
+    }
+
+    public AHE(Numbers:number):number{
+        const heightValues = this.FirstPassBlobs.map(v => v.height);
+        const Max = Math.max(...heightValues);
+
+        const leng = this.FirstPassBlobs.length - 1;
+
+        let histogram:number[] = [];
+        for(let i = 0; i < Max + 1; i++){
+            histogram[i] = 0;
+        }
+        
+        for (let i = 0; i < Numbers; i++)
+        {
+            const temp = Math.floor(Math.random() * leng); 
+            histogram[this.FirstPassBlobs[temp].height]++;
+        }
+        const maxv:number = Math.max(...histogram);
+
+        return histogram.indexOf(maxv); //histogram.Select((x, index) => index).Where(x => histogram[x] == maxv).Single();
     }
 
 
