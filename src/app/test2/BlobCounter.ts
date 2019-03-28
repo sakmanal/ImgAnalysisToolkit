@@ -323,7 +323,7 @@ export default class BlobCounter {
     }
 
     public GetObjectsWithoutArray(SourceImage:ImageData):object{
-        const src:Uint8ClampedArray = SourceImage.data;
+        const src:Uint8ClampedArray = new Uint8ClampedArray(SourceImage.data);
         const width:number = SourceImage.width;
         const height:number = SourceImage.height;
         
@@ -412,7 +412,7 @@ export default class BlobCounter {
 
     // Get array of objects images
     public GetObjectsWithArray(SourceImage:ImageData):object{
-        const src:Uint8ClampedArray = SourceImage.data;
+        const src:Uint8ClampedArray = new Uint8ClampedArray(SourceImage.data);
         const width:number = SourceImage.width;
         const height:number = SourceImage.height;
         

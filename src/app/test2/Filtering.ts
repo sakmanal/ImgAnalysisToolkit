@@ -124,8 +124,8 @@ export default class Filtering{
 
     public FinalFiltering(InputBlobs:object, PassBlobs:blobObject[], RejBlobs:blobObject[]):void{
           
-        PassBlobs = [];
-        RejBlobs = [];
+        PassBlobs.length = 0; //PassBlobs = [];
+        RejBlobs.length = 0;  //RejBlobs = [];
         for(const b in InputBlobs){
             if (InputBlobs[b].width <= 2 || InputBlobs[b].height <= 2)
                 RejBlobs.push(InputBlobs[b]);

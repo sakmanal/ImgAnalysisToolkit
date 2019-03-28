@@ -10,6 +10,6 @@ export default class MyARLSA{
     public readonly RemoveLines:boolean = true;
 
     public PLAImage(CustomImage:ImageData):ImageData{
-         return
+         return CustomImage
     }
 }

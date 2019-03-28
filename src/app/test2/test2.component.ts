@@ -476,6 +476,8 @@ export class Test2Component implements OnInit {
 
     const filter:Filtering = new Filtering();
     const test  = filter.FilterOut(imageData, false);
+    //console.log(test.data)
+    ctx.putImageData(test,0,0);
   }
 
   DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){
