@@ -52,8 +52,9 @@ export default class Filtering{
     private RemovePanctuation(myImage:ImageData):void{
         const previos_a:number = this.ARLSA.ARLSA_a;
         this.ARLSA.ARLSA_a = 1.5;
-
-        const imgi2:ImageData = this.ARLSA.PLAImage(myImage);
+        
+        const myImageCopy = new ImageData(myImage.data, myImage.width, myImage.height);
+        const imgi2:ImageData = this.ARLSA.PLAImage(myImageCopy);
 
         this.ARLSA.ARLSA_a = previos_a;
 

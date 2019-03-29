@@ -246,7 +246,7 @@ export default class BlobCounter {
     }
 
     // Get array of objects rectangles
-    public  GetObjectRectangles(src:Uint8ClampedArray, width:number, height:number):object{
+    public GetObjectRectangles(src:Uint8ClampedArray, width:number, height:number):object{
 
         //convert black pixels(0) to 1
         //and white pixels(255) to 0 

@@ -3,6 +3,7 @@ import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import SauvolaMethod from 'src/app/binarization methods/sauvola/sauvola-method';
 import BlobCounter from './BlobCounter';
 import Filtering from './Filtering';
+import MyARLSA from './MyARLSA';
 import * as GPP from "file-loader?name=[name].js!../binarization methods/GPP/gpp-worker";
 
 @Component({
@@ -474,10 +475,15 @@ export class Test2Component implements OnInit {
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const imageData = ctx.getImageData(0, 0, this.img.width, this.img.height);
 
-    const filter:Filtering = new Filtering();
-    const test  = filter.FilterOut(imageData, false);
+    //const filter:Filtering = new Filtering();
+    //const test  = filter.FilterOut(imageData, false);
     //console.log(test.data)
-    ctx.putImageData(test,0,0);
+
+    const arlsa:MyARLSA = new MyARLSA();
+    arlsa.run(imageData)
+    const t = arlsa.PLAImage(imageData)
+    //console.log(t)
+    ctx.putImageData(t,0,0);
   }
 
   DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){
