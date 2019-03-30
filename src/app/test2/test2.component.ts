@@ -6,6 +6,31 @@ import Filtering from './Filtering';
 import MyARLSA from './MyARLSA';
 import * as GPP from "file-loader?name=[name].js!../binarization methods/GPP/gpp-worker";
 
+
+interface blobObject{
+  Array:boolean[][];
+  x:number;
+  y:number;
+  height:number;
+  width:number;
+  Right:number;
+  Bottom:number;
+  Density:number;
+  Elongation:number;
+}
+
+interface blobObjectImages{
+  Array:Uint8ClampedArray;
+  x:number;
+  y:number;
+  height:number;
+  width:number;
+  Right:number;
+  Bottom:number;
+  Density:number;
+  Elongation:number;
+}
+
 @Component({
   selector: 'app-test2',
   templateUrl: './test2.component.html',
@@ -420,30 +445,11 @@ export class Test2Component implements OnInit {
     //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
     //const objects = blobCounter.GetObjectsWithArray(imageData);
-    const objects = blobCounter.GetObjectsWithoutArray(imageData);
+    //const objects:blobObject[] = blobCounter.GetObjectsWithoutArray(imageData);
     //console.log(objects);
 
-    /*let FirstPassBlobs = []; 
-    let RejBlobs = [];
-    for(const b in objects){
-       //console.log(objects[b].width)
-                if (objects[b].width >= 4 && objects[b].height >= 4){
-                    FirstPassBlobs.push(objects[b]);
-                }else{
-                    RejBlobs.push(objects[b]);
-                }
-    }
-    console.log(RejBlobs)
-
-    for(const b in RejBlobs){
-      console.log(RejBlobs[b].height)
-    } */
-
-    //const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
-    //console.log(objects[0].width)
-    //console.log(objects[1])
-    //console.log(objects[2])
-    //console.log(objects[3]) 
+    const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
+    //console.log(objects);
 
     const objectsCount = blobCounter.getObjectsCount();
     console.log("objectsCount:", objectsCount);
@@ -465,7 +471,7 @@ export class Test2Component implements OnInit {
 
     ctx.putImageData(imageData,0,0);
 
-    //this.DrawRects(rects, objectsCount, ctx);
+    this.DrawRects(objects, objectsCount, ctx);
 
 
   }
@@ -486,12 +492,13 @@ export class Test2Component implements OnInit {
     //ctx.putImageData(t,0,0);
   }
 
-  DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){
-     for(let i = 0; i<objectsCount; i++){
-      const x1 = rects[i].x1;
-      const y1 = rects[i].y1;
-      const x2 = rects[i].x2;
-      const y2 = rects[i].y2;
+  DrawRects(rects:blobObjectImages[], objectsCount:number, ctx:CanvasRenderingContext2D){
+     //for(let i = 0; i<objectsCount; i++){
+     for(const i in rects){  
+      const x1 = rects[i].x;
+      const y1 = rects[i].y;
+      const x2 = rects[i].width;
+      const y2 = rects[i].height;
 
       ctx.lineWidth = 1;
       ctx.strokeStyle = "green";

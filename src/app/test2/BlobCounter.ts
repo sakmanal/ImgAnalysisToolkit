@@ -3,7 +3,31 @@ interface rect{
     y1:number;
     x2:number;
     y2:number;
-  }
+}
+
+interface blobObject{
+    Array:boolean[][];
+    x:number;
+    y:number;
+    height:number;
+    width:number;
+    Right:number;
+    Bottom:number;
+    Density:number;
+    Elongation:number;
+}
+
+interface blobObjectImages{
+    Array:Uint8ClampedArray;
+    x:number;
+    y:number;
+    height:number;
+    width:number;
+    Right:number;
+    Bottom:number;
+    Density:number;
+    Elongation:number;
+}
 
 export default class BlobCounter {
 
@@ -322,7 +346,7 @@ export default class BlobCounter {
 
     }
 
-    public GetObjectsWithoutArray(SourceImage:ImageData):object{
+    public GetObjectsWithoutArray(SourceImage:ImageData):blobObject[]{
         const src:Uint8ClampedArray = new Uint8ClampedArray(SourceImage.data);
         const width:number = SourceImage.width;
         const height:number = SourceImage.height;
@@ -393,7 +417,7 @@ export default class BlobCounter {
         }
          
         // --- STEP 2 - get each object
-        const objects:object = {};
+        const objects:blobObject[] = [];
 
         // create each array
         for (let k = 1; k <= count; k++){
@@ -404,14 +428,14 @@ export default class BlobCounter {
             const objectWidth = xmax - xmin + 1;
             const objectHeight = ymax - ymin + 1;
 
-            objects[k - 1] = {x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax};
+            objects[k - 1] = {Array:null, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax, Density:null, Elongation:null};
         } 
 
         return objects;
     }
 
     // Get array of objects images
-    public GetObjectsWithArray(SourceImage:ImageData):object{
+    public GetObjectsWithArray(SourceImage:ImageData):blobObject[]{
         const src:Uint8ClampedArray = new Uint8ClampedArray(SourceImage.data);
         const width:number = SourceImage.width;
         const height:number = SourceImage.height;
@@ -482,7 +506,7 @@ export default class BlobCounter {
         }
          
         // --- STEP 2 - get each object
-        const objects:object = {};
+        const objects:blobObject[] = [];
 
         // create each array
         for (let k = 1; k <= count; k++){
@@ -527,7 +551,7 @@ export default class BlobCounter {
                 p += labelsOffset;
             }
 
-            objects[k - 1] = {Array:array, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax}
+            objects[k - 1] = {Array:array, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax, Density:null, Elongation:null}
 
         } 
 
@@ -536,7 +560,7 @@ export default class BlobCounter {
 
 
    // Get array of objects images
-   public GetObjects(src:Uint8ClampedArray, width:number, height:number):object{
+   public GetObjects(src:Uint8ClampedArray, width:number, height:number):blobObjectImages[]{
 
 
      //convert black pixels(0) to 1
@@ -607,7 +631,7 @@ export default class BlobCounter {
 
      // --- STEP 2 - get each object
      const srcStride = 4 * width;
-     const objects:object = {};
+     const objects:blobObjectImages[] = [];
 
      // create each array
      for (let k = 1; k <= count; k++){
@@ -644,7 +668,7 @@ export default class BlobCounter {
              p += labelsOffset;
          }
 
-         objects[k - 1] = {Array:dst, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax}
+         objects[k - 1] = {Array:dst, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax, Density:null, Elongation:null}
 
      } 
 

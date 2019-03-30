@@ -33,11 +33,17 @@ export default class MyARLSA{
         
         this.myimage = new ImageData(BinaryImage.data, BinaryImage.width, BinaryImage.height);
 
+        const blobCounter:BlobCounter = new BlobCounter();
+        const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(this.myimage));
+        console.log(blobCounter.getObjectsCount())
+        //const WidhtArray = initblobs1.map(v => v.height);
+        //const minblobwidth:number = 15 * Math.round();
+
         //let FinalBlobs:blobObject[] = [];
         //let Rejblobs:blobObject[] = [];
         //const myFilter:Filtering = new Filtering();
-        const blobCounter:BlobCounter = new BlobCounter();
-        const blobs:object = blobCounter.GetObjectsWithArray(this.myimage);
+        //const blobCounter:BlobCounter = new BlobCounter();
+        //const blobs:object = blobCounter.GetObjectsWithArray(this.myimage);
         //myFilter.FinalFiltering(blobs, FinalBlobs, Rejblobs);
         //console.log(FinalBlobs, Rejblobs)
         //this.FillblobArray(FinalBlobs, this.myimage); 
@@ -50,6 +56,8 @@ export default class MyARLSA{
 
         //this.xRLSA(1, this.myimage, blobs[0])
         //console.log(this.myimage)
+
+        //this.WordDetection(FinalBlobs, 1, 1, this.myimage, this.myimage)
         
         return
     }
@@ -68,6 +76,63 @@ export default class MyARLSA{
             Fblobs[b].Array = newarray;
         }
 
+    }
+
+    private WordDetection(blobs:blobObject[], minwidth:number, Space:number, image:ImageData,  arlaimg:ImageData):void{
+         
+        let count:number = 0;
+        const stride:number = 4 * image.width;
+
+        for(const b in blobs)
+        {
+            if (blobs[b].width >= minwidth)
+            {
+                 // Get the Vertical Projection
+                 let proj:number[] = [];
+
+                 for (let x = 0; x < blobs[b].width; x++)
+                {
+                    count = 0;
+                    for (let y = 0; y < blobs[b].height; y++)
+                    {
+                        if (blobs[b].Array[y][x])
+                            count++;
+                    }
+                    proj[x] = count;
+                }
+
+                // Get the histogram
+                const histog:number[] = this.HistogramSpaces(proj);
+            
+                //otsu thresholding
+                const thr:number = this.FindThreshold(histog) + 1;
+
+                const letterspacing = this.GetPosofMax( histog.slice(0, thr) );  //GetPosofMax(histog.Take(thr).ToArray());
+                let wordspacing = this.GetPosofMax( histog.slice(thr) );       //GetPosofMax(histog.Skip(thr).ToArray());
+                wordspacing += thr;
+
+                if ((wordspacing - letterspacing) < letterspacing)
+                {
+                    this.xRLSA(blobs[b].width, image, blobs[b]);
+                }
+                else
+                {
+                    this.xRLSA(Math.ceil((wordspacing + thr) / 2), image, blobs[b]);
+                }
+            }
+            else
+            {
+                for (let x = blobs[b].x; x <= blobs[b].Right; x++)  //for (let x = blobs[b].x; x < blobs[b].Right; x++)
+                {
+                    for (let y = blobs[b].y; y <= blobs[b].Bottom; y++) //for (let y = blobs[b].y; y < blobs[b].Bottom; y++)
+                    {
+                        image.data[4 * x + y * stride] = arlaimg.data[4 * x + y * stride];
+                        image.data[4 * x + y * stride + 1] = arlaimg.data[4 * x + y * stride + 1];
+                        image.data[4 * x + y * stride + 2] = arlaimg.data[4 * x + y * stride + 2];
+                    }
+                }
+            }
+        }
     }
 
     private GetPosofMax(histog:number[]):number{
@@ -152,7 +217,7 @@ export default class MyARLSA{
             }
         }
 
-        if (threshold == 0) threshold = histog.length / 2;
+        if (threshold == 0) threshold = Math.floor(histog.length / 2);
         return threshold;
     }
 
@@ -163,8 +228,7 @@ export default class MyARLSA{
         for (let x = 0; x < proj.length; x++){
             histog.push(0);
         }
-        
-        
+               
         const min = Math.min(...proj);
         if (min > 0)
         {
@@ -201,7 +265,7 @@ export default class MyARLSA{
             }
         } 
     
-        return histog.slice(0, psr + 1)    //histog.Take(psr + 1).ToArray()
+        return histog.slice(0, psr + 1);    //histog.Take(psr + 1).ToArray()
     }
 
     private PreFiltering(blobs:blobObject[]):blobObject[]{
@@ -223,7 +287,7 @@ export default class MyARLSA{
 
     private DynHorRLA(HeightRatio_th:number, overlapping_c:number, blockdistance_a:number, CustomImage:ImageData = null):ImageData{
         
-        let myBlobs:object;
+        let myBlobs:blobObject[];
         let I:number, J:number, id:number, id2:number, K:number, L:number, M:number, bW:number, bH:number, Store:number, CCH1:number, CCH2:number, CCX1:number, CCX2:number, BDistance:number, Hoverlapping:number, MinHeight:number;
         let HRatio:number;
         let CC1:blobObject, CC2:blobObject;

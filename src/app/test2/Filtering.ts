@@ -17,7 +17,7 @@ export default class Filtering{
     
     private RejBlobs:blobObject[];
     private FirstPassBlobs:blobObject[];
-    private InitBlobs:object;
+    private InitBlobs:blobObject[];
     private ARLSA:MyARLSA;
 
     public Filtering(arlsa:MyARLSA){
@@ -29,7 +29,7 @@ export default class Filtering{
     public FilterOut(initmyImage:ImageData, PunctuationMarks:boolean = false):ImageData{
         this.RejBlobs = [];
         this.FirstPassBlobs = [];
-        const myImage:ImageData = initmyImage;
+        const myImage:ImageData = new ImageData(initmyImage.data, initmyImage.width, initmyImage.height )
 
         const blobCounter = new BlobCounter(); 
         //this.InitBlobs = blobCounter.GetObjectsWithArray(ApplyInvert(initmyImage));
@@ -47,6 +47,9 @@ export default class Filtering{
         this.FirstPassBlobs = [];
         this.RejBlobs = [];
 
+        //this.RemovePanctuation(myImage);
+        //this.Remove(myImage, this.RejBlobs);
+
         return myImage;
         
     }
@@ -61,8 +64,8 @@ export default class Filtering{
         this.ARLSA.ARLSA_a = previos_a;
 
         const blobCounter = new BlobCounter();
-        const blobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(imgi2));
-        //const blobs = blobCounter.GetObjectsWithoutArray(imgi2);
+        //const blobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(imgi2));
+        const blobs = blobCounter.GetObjectsWithoutArray(imgi2);
 
         const stride = 4 * imgi2.width;
         let p1:number, p2:number;
@@ -118,14 +121,13 @@ export default class Filtering{
         for(const b in this.InitBlobs)
             {
                 if (this.InitBlobs[b].width > 5 && this.InitBlobs[b].height > 5)
-                //if (this.InitBlobs[b].width > 1 && this.InitBlobs[b].height > 1)
                     this.FirstPassBlobs.push(this.InitBlobs[b]);
                 else
                     this.RejBlobs.push(this.InitBlobs[b]);
             }
     }
 
-    public FinalFiltering(InputBlobs:object, PassBlobs:blobObject[], RejBlobs:blobObject[]):void{
+    public FinalFiltering(InputBlobs:blobObject[], PassBlobs:blobObject[], RejBlobs:blobObject[]):void{
           
         PassBlobs.length = 0; //PassBlobs = [];
         RejBlobs.length = 0;  //RejBlobs = [];
