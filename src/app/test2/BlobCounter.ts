@@ -404,7 +404,7 @@ export default class BlobCounter {
             const objectWidth = xmax - xmin + 1;
             const objectHeight = ymax - ymin + 1;
 
-            objects[k - 1] = {x:xmin, y:ymin, height:objectHeight, width:objectWidth};
+            objects[k - 1] = {x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax};
         } 
 
         return objects;
@@ -527,7 +527,7 @@ export default class BlobCounter {
                 p += labelsOffset;
             }
 
-            objects[k - 1] = {Array:array, x:xmin, y:ymin, height:objectHeight, width:objectWidth}
+            objects[k - 1] = {Array:array, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax}
 
         } 
 
@@ -644,7 +644,7 @@ export default class BlobCounter {
              p += labelsOffset;
          }
 
-         objects[k - 1] = {Array:dst, x:xmin, y:ymin, height:objectHeight, width:objectWidth}
+         objects[k - 1] = {Array:dst, x:xmin, y:ymin, height:objectHeight, width:objectWidth, Right:xmax, Bottom:ymax}
 
      } 
 

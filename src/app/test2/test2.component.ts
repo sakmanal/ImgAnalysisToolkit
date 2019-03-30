@@ -481,9 +481,9 @@ export class Test2Component implements OnInit {
 
     const arlsa:MyARLSA = new MyARLSA();
     arlsa.run(imageData)
-    const t = arlsa.PLAImage(imageData)
+    //const t = arlsa.PLAImage(imageData)
     //console.log(t)
-    ctx.putImageData(t,0,0);
+    //ctx.putImageData(t,0,0);
   }
 
   DrawRects(rects:object, objectsCount:number, ctx:CanvasRenderingContext2D){

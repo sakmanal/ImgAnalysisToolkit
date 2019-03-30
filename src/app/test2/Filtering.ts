@@ -8,6 +8,8 @@ interface blobObject{
     y:number;
     height:number;
     width:number;
+    Right:number;
+    Bottom:number;
     Density:number;
     Elongation:number;
 }
@@ -115,8 +117,8 @@ export default class Filtering{
     private InitFilter():void{
         for(const b in this.InitBlobs)
             {
-                //if (this.InitBlobs[b].width > 5 && this.InitBlobs[b].height > 5)
-                if (this.InitBlobs[b].width > 1 && this.InitBlobs[b].height > 1)
+                if (this.InitBlobs[b].width > 5 && this.InitBlobs[b].height > 5)
+                //if (this.InitBlobs[b].width > 1 && this.InitBlobs[b].height > 1)
                     this.FirstPassBlobs.push(this.InitBlobs[b]);
                 else
                     this.RejBlobs.push(this.InitBlobs[b]);

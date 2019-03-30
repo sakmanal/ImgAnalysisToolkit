@@ -8,6 +8,8 @@ interface blobObject{
     y:number;
     height:number;
     width:number;
+    Right:number;
+    Bottom:number;
     Density:number;
     Elongation:number;
 }
@@ -30,9 +32,190 @@ export default class MyARLSA{
     public run(BinaryImage:ImageData):blobObject[]{
         
         this.myimage = new ImageData(BinaryImage.data, BinaryImage.width, BinaryImage.height);
+
+        //let FinalBlobs:blobObject[] = [];
+        //let Rejblobs:blobObject[] = [];
+        //const myFilter:Filtering = new Filtering();
+        const blobCounter:BlobCounter = new BlobCounter();
+        const blobs:object = blobCounter.GetObjectsWithArray(this.myimage);
+        //myFilter.FinalFiltering(blobs, FinalBlobs, Rejblobs);
+        //console.log(FinalBlobs, Rejblobs)
+        //this.FillblobArray(FinalBlobs, this.myimage); 
+
+        //console.log(this.GetPosofMax([2, 4, 7, 9, 34, 5, 23, 11]));
+        //console.log(this.FindThreshold([223, 46, 72, 98, 21, 56, 232, 111]));
+        //const arr = [2, 4, 7, 9, 34, 5, 23, 11];
+        //const a = this.HistogramSpaces(arr)
+        //console.log(a)
+
+        //this.xRLSA(1, this.myimage, blobs[0])
+        //console.log(this.myimage)
         
         return
     }
+
+    private FillblobArray(Fblobs:blobObject[], timg:ImageData):void{
+
+        const stride = 4 * timg.width;
+        for(const b in Fblobs){
+            const newarray:boolean[][] = [];
+            for (let y = 0; y < Fblobs[b].height; y++){
+                newarray[y] = [];
+                for (let x = 0; x < Fblobs[b].width; x++){
+                    newarray[y][x] = (timg.data[4 * (Fblobs[b].x + x) + (Fblobs[b].y + y) * stride] == 0 && Fblobs[b].Array[y][x]) ? true : false;
+                }
+            }
+            Fblobs[b].Array = newarray;
+        }
+
+    }
+
+    private GetPosofMax(histog:number[]):number{
+        if (histog.length == 0) return 0;
+        /* const maxv:number = Math.max(...histog);
+        return histog.indexOf(maxv); */
+        let pos:number = 0; let max:number = histog[pos];
+        for (let i = 1; i < histog.length; i++){
+            if (max < histog[i])
+            {
+                max = histog[i];
+                pos = i;
+            }
+        }
+        return pos;
+    }
+
+    private xRLSA(x_c:number, img:ImageData, b:blobObject):void{
+
+        let number:number = 0;
+        let start:boolean = false;
+        const stride = 4 * img.width;
+
+        for (let y = b.y; y <= b.Bottom; y++)    //for (let y = b.y; y < b.Bottom; y++)
+        {
+            for (let x = b.x; x <= b.Right; x++)  //for (let x = b.x; x < b.Right; x++)
+            {
+                if (b.Array[y - b.y][x - b.x]  == false)
+                {  
+                    number++;
+                    if (start == false) start = true;
+                }
+                else if (b.Array[y - b.y][x - b.x])
+                {
+                    if (start)
+                    {
+                        if (number <= x_c)
+                        {
+                            for (let i = 1; i <= number; i++)
+                            {
+                                img.data[4 * (x - i) + y * stride] = 0;
+                                img.data[4 * (x - i) + y * stride + 1] = 0;
+                                img.data[4 * (x - i) + y * stride + 2] = 0;
+                            }
+                        }
+                        start = false;
+                        number = 0;
+                    }
+                }
+            }
+
+            start = false;
+            number = 0;
+        }
+    }
+
+    private FindThreshold(histog:number[]):number{
+
+        let sum = 0, csum = 0, threshold = 0;
+        let m1 = 0, m2 = 0, sb = 0, fmax = -1;
+        let n = 0, n1 = 0, n2 = 0;
+        for (let k = 0; k < histog.length; k++)
+        {
+            sum += k * histog[k];
+            n += histog[k];
+        }
+
+       for (let k = 0; k < histog.length; k++)
+        {
+            n1 += histog[k];
+            if (n1 == 0) continue;
+            n2 = n - n1;
+            if (n == 0) break;
+            csum += k * histog[k];
+            m1 = csum / n1;
+            m2 = (sum - csum) / n2;
+            sb = n1 * n2 * (m1 - m2) * (m1 - m2);
+            if (sb > fmax)
+            {
+                fmax = sb;
+                threshold = k;
+            }
+        }
+
+        if (threshold == 0) threshold = histog.length / 2;
+        return threshold;
+    }
+
+    private HistogramSpaces(proj1:number[]):number[]{
+
+        const proj:number[] = proj1.slice();
+        const histog:number[] = [];
+        for (let x = 0; x < proj.length; x++){
+            histog.push(0);
+        }
+        
+        
+        const min = Math.min(...proj);
+        if (min > 0)
+        {
+            for (let x = 0; x < proj.length; x++)
+                proj[x] = proj[x] - min;
+        }
+
+        let start:boolean = false;
+        let number:number = 0;
+        for (let x = 0; x < proj.length; x++)
+        {
+            if (proj[x] == 0)
+            {
+                number++;
+                if (start == false) start = true;
+            }
+            else
+            {
+                if (start)
+                {
+                    histog[number]++;
+                    start = false;
+                    number = 0;
+                }
+            }
+        }
+
+        let psr:number = histog.length - 1;
+        for (let i = histog.length - 1; i >= 0; i--){
+            if (histog[i] > 0)
+            {
+                psr = i;
+                break;
+            }
+        } 
+    
+        return histog.slice(0, psr + 1)    //histog.Take(psr + 1).ToArray()
+    }
+
+    private PreFiltering(blobs:blobObject[]):blobObject[]{
+
+        const _return1:blobObject[] = [];
+        for (let i = 0; i < blobs.length; i++)
+        {
+            if (blobs[i].height <= this.myimage.height / 4 && blobs[i].height > 5 && blobs[i].width > 5)
+            {
+                _return1.push(blobs[i]);
+            }
+        }
+        return _return1;
+    } 
 
     public PLAImage(CustomImage:ImageData):ImageData{
          return this.DynHorRLA(this.ARLSA_Th, this.ARLSA_c, this.ARLSA_a, CustomImage);
@@ -67,13 +250,111 @@ export default class MyARLSA{
             }
         }
         
-        const temp_ccs:number[] = [];
-        let maxcc:number;
+        const blobCounter = new BlobCounter();
+        myBlobs = blobCounter.GetObjectsWithoutArray(myBMP);
+        //myBlobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(myBMP));
+        const temp_ccs:number[] = blobCounter.getObjectLabels();
+        const maxcc:number = blobCounter.getObjectsCount();
 
-       
+        for (let i = 0; i < bH; i++){
+            for (let j = 0; j < bW; j++){
+                this.CCsLabelsArray[i][j] = temp_ccs[i * bW + j];
+            }
+        }
 
-
+        for (I = 0; I < bH; I++){
+            for (J = 0; J < bW; J++){
+                Temp[I][J] = (myBMP.data[I * stride + 4 * J] == 0) ? true : false;
+            }
+        }
         
+        for (I = 1; I < bH - 1; I++)
+        {
+            for (J = 1; J < bW - 2; J++)
+            {
+                if (!PassArr[I][J])
+                {
+                    if (this.CCsLabelsArray[I][J] > 0 && this.CCsLabelsArray[I][J + 1] <= 0)
+                    {
+                        PassArr[I][J + 1] = true;
+                        id = this.CCsLabelsArray[I][J];
+                        CC1 = myBlobs[id - 1];
+                        CCH1 = CC1.height;
+                        CCX1 = CC1.Right;
+                        K = J + 1; Store = K;
+                        do
+                        {
+                            K++;
+                            PassArr[I][K] = true;
+                        }
+                        while (this.CCsLabelsArray[I][K] == 0 && K < bW - 1);
+                        PassArr[I][K] = false;
+                        if (this.CCsLabelsArray[I][K] == 0) continue;
+
+                        if (this.CCsLabelsArray[I][K] == id)
+                        {
+                            for (L = Store; L < K; L++)
+                                Temp[I][L] = true;
+                        }
+                        else
+                        {
+                            id2 = this.CCsLabelsArray[I][K];
+                            CC2 = myBlobs[id2 - 1];
+                            CCH2 = CC2.height;
+                            CCX2 = CC2.x;
+                            HRatio = Math.max(CCH1, CCH2) / Math.min(CCH1, CCH2);
+                            BDistance = CCX2 - CCX1;
+                            MinHeight = Math.min(CCH1, CCH2);
+                            Hoverlapping = Math.abs(Math.max(CC1.y, CC2.y) - Math.min(CC1.Bottom + 1, CC2.Bottom + 1));
+                            if (HRatio <= HeightRatio_th &&
+                                BDistance <= blockdistance_a * Math.min(CCH1, CCH2) &&
+                                Hoverlapping >= overlapping_c * MinHeight)
+                            {
+                                for (L = Store; L < K; L++)
+                                    if (this.CheckNeighborhood(I, L, id, id2, bW) == false)
+                                    {
+                                        Temp[I][L] = true;
+                                    }
+                                    else
+                                    {
+                                        for (M = Store; M <= L; M++)
+                                            Temp[I][M] = false;
+                                    }
+                            }
+                        }
+
+
+                    }
+                }
+            }
+        }
+
+        for (I = 0; I < bH; I++){
+            for (J = 0; J < bW; J++){
+                if (Temp[I][J])
+                {
+                    myBMP.data[I * stride + 4 * J] = 0;
+                    myBMP.data[I * stride + 4 * J + 1] = 0;
+                    myBMP.data[I * stride + 4 * J + 2] = 0;
+                }
+            }
+        }
+        
+       
         return myBMP;
     }
+
+    private CheckNeighborhood(I:number, L:number, id:number, id2:number, bW:number):boolean{
+        let Result:boolean = false;
+        for (let R = I - 1; R <= I + 1; R++){
+            for (let C = L - 1; C <= L + 1; C++){
+                if (this.CCsLabelsArray[R][C] > 0 && this.CCsLabelsArray[R][C] != id && this.CCsLabelsArray[R][C] != id2){
+                    Result = true;
+                }
+            }
+        }
+
+        return Result;
+    }
+
 }
