@@ -356,7 +356,7 @@ export default class BlobCounter {
         for(let i=0; i<src.length; i+=4){
             if (src[i] == 0) { src[i] = 1; }
             if (src[i] == 255) { src[i] = 0; }
-        }
+        } 
         
         // process the image
         this.ProcessImage(src, width, height);

@@ -34,7 +34,8 @@ export default class MyARLSA{
         this.myimage = new ImageData(BinaryImage.data, BinaryImage.width, BinaryImage.height);
 
         const blobCounter:BlobCounter = new BlobCounter();
-        const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(this.myimage));
+        //const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(this.myimage));
+        const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(this.myimage);
         console.log(blobCounter.getObjectsCount())
         //const WidhtArray = initblobs1.map(v => v.height);
         //const minblobwidth:number = 15 * Math.round();

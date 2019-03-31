@@ -5,6 +5,7 @@ import BlobCounter from './BlobCounter';
 import Filtering from './Filtering';
 import MyARLSA from './MyARLSA';
 import * as GPP from "file-loader?name=[name].js!../binarization methods/GPP/gpp-worker";
+import ApplyInvert from './ApplyInvert';
 
 
 interface blobObject{
@@ -445,10 +446,11 @@ export class Test2Component implements OnInit {
     //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
     //const objects = blobCounter.GetObjectsWithArray(imageData);
-    //const objects:blobObject[] = blobCounter.GetObjectsWithoutArray(imageData);
+    const objects = blobCounter.GetObjectsWithoutArray(imageData);
+    //const objects:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(new ImageData(imageData.data, imageData.width, imageData.height )));
     //console.log(objects);
 
-    const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
+    //const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
     //console.log(objects);
 
     const objectsCount = blobCounter.getObjectsCount();
@@ -492,7 +494,7 @@ export class Test2Component implements OnInit {
     //ctx.putImageData(t,0,0);
   }
 
-  DrawRects(rects:blobObjectImages[], objectsCount:number, ctx:CanvasRenderingContext2D){
+  DrawRects(rects:blobObject[], objectsCount:number, ctx:CanvasRenderingContext2D){
      //for(let i = 0; i<objectsCount; i++){
      for(const i in rects){  
       const x1 = rects[i].x;
