@@ -473,7 +473,7 @@ export class Test2Component implements OnInit {
 
     ctx.putImageData(imageData,0,0);
 
-    this.DrawRects(objects, objectsCount, ctx);
+    this.DrawRects(objects, /* objectsCount, */ ctx);
 
 
   }
@@ -488,13 +488,13 @@ export class Test2Component implements OnInit {
     //console.log(test.data)
 
     const arlsa:MyARLSA = new MyARLSA();
-    arlsa.run(imageData)
-    //const t = arlsa.PLAImage(imageData)
-    //console.log(t)
-    //ctx.putImageData(t,0,0);
+    const objects = arlsa.run(imageData);
+    //console.log(objects)
+
+    this.DrawRects(objects, ctx);
   }
 
-  DrawRects(rects:blobObject[], objectsCount:number, ctx:CanvasRenderingContext2D){
+  DrawRects(rects:blobObject[], /* objectsCount:number, */ ctx:CanvasRenderingContext2D){
      //for(let i = 0; i<objectsCount; i++){
      for(const i in rects){  
       const x1 = rects[i].x;

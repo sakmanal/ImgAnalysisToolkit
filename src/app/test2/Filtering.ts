@@ -36,8 +36,8 @@ export default class Filtering{
         this.InitBlobs = blobCounter.GetObjectsWithArray(initmyImage);
 
        
-        const objectsCount = blobCounter.getObjectsCount();
-        console.log("objectsCount:", objectsCount);
+        //const objectsCount = blobCounter.getObjectsCount();
+        //console.log("objectsCount:", objectsCount);
       
       
         this.InitFilter();
