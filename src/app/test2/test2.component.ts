@@ -62,7 +62,8 @@ export class Test2Component implements OnInit {
     dw1:number = 20;
 
   ngOnInit(){
-    
+    this.url = "../assets/fdgv.jpg";
+    this.view();
   }
 
   onSelectFile(event:any):void {
@@ -439,43 +440,51 @@ export class Test2Component implements OnInit {
     const h = this.img.height;
 
     const imageData = ctx.getImageData(0, 0, w, h);
-  
-    const blobCounter:BlobCounter = new BlobCounter();
 
-    //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
-    //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
+    const worker = new Worker(GPP);
 
-    //const objects = blobCounter.GetObjectsWithArray(imageData);
-    const objects = blobCounter.GetObjectsWithoutArray(imageData);
-    //const objects:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(new ImageData(imageData.data, imageData.width, imageData.height )));
-    //console.log(objects);
+    worker.postMessage({imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1}, [imageData.data.buffer]);
 
-    //const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
-    //console.log(objects);
+    worker.onmessage = (d: MessageEvent)=>{
+      const imageData = d.data;
+      //ctx.putImageData(imageData, 0, 0);
 
-    const objectsCount = blobCounter.getObjectsCount();
-    console.log("objectsCount:", objectsCount);
+      const blobCounter:BlobCounter = new BlobCounter();
 
-    const objectLabels = blobCounter.getObjectLabels();
+      //blobCounter.ProcessImage(imageData.data, imageData.width, imageData.height);
+      //const rects = blobCounter.GetObjectRectangles(imageData.data, imageData.width, imageData.height);
 
-    this.ColorTheBlobs2(imageData, objectLabels, [
-      [131,15,208,255],
-      [220,0,0,255],
-      [0,0,255,255],
-      [0,153,0,255],
-      [174,174,0,255],
-      [198,0,198,255],
-      [0,208,208,255],
-      [210,153,255,255],
-      [51,153,51,255],
-      [153,102,51,255]
-    ]);
+      //const objects = blobCounter.GetObjectsWithArray(imageData);
+      const objects = blobCounter.GetObjectsWithoutArray(imageData);
+      //const objects:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(new ImageData(imageData.data, imageData.width, imageData.height )));
+      //console.log(objects);
 
-    ctx.putImageData(imageData,0,0);
+      //const objects = blobCounter.GetObjects(imageData.data, imageData.width, imageData.height);
+      //console.log(objects);
 
-    this.DrawRects(objects, /* objectsCount, */ ctx);
+      const objectsCount = blobCounter.getObjectsCount();
+      console.log("objectsCount:", objectsCount);
 
+      const objectLabels = blobCounter.getObjectLabels();
 
+      this.ColorTheBlobs2(imageData, objectLabels, [
+        [131,15,208,255],
+        [220,0,0,255],
+        [0,0,255,255],
+        [0,153,0,255],
+        [174,174,0,255],
+        [198,0,198,255],
+        [0,208,208,255],
+        [210,153,255,255],
+        [51,153,51,255],
+        [153,102,51,255]
+      ]);
+
+      ctx.putImageData(imageData,0,0);
+
+      this.DrawRects(objects, /* objectsCount, */ ctx);
+ 
+    };
   }
 
   test(){
@@ -483,15 +492,20 @@ export class Test2Component implements OnInit {
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const imageData = ctx.getImageData(0, 0, this.img.width, this.img.height);
 
-    //const filter:Filtering = new Filtering();
-    //const test  = filter.FilterOut(imageData, false);
-    //console.log(test.data)
+    const worker = new Worker(GPP);
 
-    const arlsa:MyARLSA = new MyARLSA();
-    const objects = arlsa.run(imageData);
-    //console.log(objects)
+    worker.postMessage({imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1}, [imageData.data.buffer]);
 
-    this.DrawRects(objects, ctx);
+    worker.onmessage = (d: MessageEvent)=>{
+      const imageData = d.data;
+      ctx.putImageData(imageData, 0, 0);
+      const arlsa:MyARLSA = new MyARLSA();
+      const objects = arlsa.run(imageData);
+      //console.log(objects)
+
+      this.DrawRects(objects, ctx);
+    };
+    
   }
 
   DrawRects(rects:blobObject[], /* objectsCount:number, */ ctx:CanvasRenderingContext2D){

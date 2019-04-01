@@ -1,11 +1,11 @@
 
 <input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
 <button mat-raised-button style="margin: 10px;   font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
-<button mat-raised-button  (click)="sauvolaBinarization()"><fa-icon *ngIf="SauvolaImage.sauvolaloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
-<button mat-raised-button (click)="GppBinarization()">GPP</button>
-<button mat-raised-button color="primary"  (click)="ConnectedComponents()"> My Connected Components</button>
-<button mat-raised-button color="warn"  (click)="ConnectedComponents2()">Connected Components 2</button>
+<!-- <button mat-raised-button  (click)="sauvolaBinarization()"><fa-icon *ngIf="SauvolaImage.sauvolaloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button> -->
+<!-- <button mat-raised-button (click)="GppBinarization()">GPP</button> -->
+<!-- <button mat-raised-button color="primary"  (click)="ConnectedComponents()"> My Connected Components</button> -->
+<button mat-raised-button color="warn"  (click)="ConnectedComponents2()">Draw Connected Components</button>
+<button mat-raised-button color="primary"  (click)="test()">test Segmentation</button>
 <button mat-raised-button  (click)="view()"><mat-icon>undo</mat-icon> undo</button>
-<button mat-raised-button  (click)="test()">test</button>
 <br>
 <canvas class="responsive"  #canvasfilter  id="myCanvas"></canvas>

@@ -2,6 +2,7 @@ import BlobCounter from './BlobCounter';
 import Filtering from './Filtering';
 import ApplyInvert from './ApplyInvert';
 import Lines from './Lines';
+import copy from "./copy";
 
 interface blobObject{
     Array:boolean[][];
@@ -32,23 +33,28 @@ export default class MyARLSA{
 
     public run(BinaryImage:ImageData):blobObject[]{
         
-        this.myimage = new ImageData(BinaryImage.data, BinaryImage.width, BinaryImage.height);
+        this.myimage = copy(BinaryImage);
 
         const blobCounter:BlobCounter = new BlobCounter();
         //const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(ApplyInvert(this.myimage));
         const initblobs1:blobObject[] = blobCounter.GetObjectsWithoutArray(this.myimage);
         //console.log(blobCounter.getObjectsCount())
 
-        const HeightArray:number[] = initblobs1.map(v => v.height).filter(v => v <= 20);
-        const AverageHeight:number = HeightArray.reduce((sum, v) => sum + v) / HeightArray.length;
-        const minblobwidth:number = 15 * Math.round(AverageHeight);
+        const WidthArray:number[] = initblobs1.map(v => v.width).filter(v => v <= 20);
+        let AverageWidth:number;
+        if (WidthArray.length == 0){
+            AverageWidth = 0;
+        }else{
+             AverageWidth = WidthArray.reduce((sum, v) => sum + v) / WidthArray.length;
+        }    
+        const minblobwidth:number = 15 * Math.round(AverageWidth);
 
         //Remove Lines
         let removelines:ImageData;
         if (this.RemoveLines)
         {
             const lines:Lines = new Lines();
-            removelines = lines.RemoveLines(this.myimage, this.Lines_Thr, this.Lines_MinWidth, initblobs1);
+            removelines = lines.RemoveLines(copy(this.myimage), this.Lines_Thr, this.Lines_MinWidth, initblobs1);
 
             // Morphology
                
@@ -59,14 +65,20 @@ export default class MyARLSA{
         }
         else
         {
-            removelines = new ImageData(this.myimage.data, this.myimage.width, this.myimage.height);
+            removelines = copy(this.myimage);
         }
         
         const myFilter:Filtering = new Filtering();
         myFilter.Filtering(this);
         this.myimage = myFilter.FilterOut(new ImageData(removelines.data, removelines.width, removelines.height ));
 
+        //const canvas = <HTMLCanvasElement> document.getElementById("myCanvas");    //<---------------------------------display img to canvas
+        //const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
+        //ctx.putImageData(this.myimage,0,0);
+
         const res:ImageData = this.DynHorRLA(this.ARLSA_Th, this.ARLSA_c, this.ARLSA_a);
+
+        //ctx.putImageData(res,0,0);                                                      //<---------------------------------display img to canvas
         
         //const blobs:blobObject[] = blobCounter.GetObjectsWithArray(ApplyInvert(res));
         const blobs:blobObject[] = blobCounter.GetObjectsWithArray(res);
@@ -75,15 +87,18 @@ export default class MyARLSA{
         let Rejblobs:blobObject[] = [];
         myFilter.FinalFiltering(blobs, FinalBlobs, Rejblobs);
 
-        //this.RemoveBlobs(Rejblobs, this.myimage);
-        //this.FillblobArray(FinalBlobs, this.myimage);
+        this.RemoveBlobs(Rejblobs, this.myimage);
+        this.FillblobArray(FinalBlobs, this.myimage);
 
-        /*const res2:ImageData = this.ExtractBlobs(FinalBlobs, this.myimage.width, this.myimage.height);
-        const res3 = new ImageData(res2.data, res2.width, res2.height);
+        const res2:ImageData = this.ExtractBlobs(FinalBlobs, this.myimage.width, this.myimage.height);   
+        //ctx.putImageData(res2,0,0);                                                   //<---------------------------------display img to canvas
+ 
+        const res3 = copy(res2);
         
         const tmpFinalBlobs:blobObject[] = [];
         for(const b in FinalBlobs){
             if (FinalBlobs[b].width > 10){
+            //if (FinalBlobs[b].width > 15){
                tmpFinalBlobs.push(FinalBlobs[b]);
             }
         }
@@ -103,8 +118,8 @@ export default class MyARLSA{
         this.FillblobArray(FinalBlobs2, res3);
 
 
-        return FinalBlobs2;  */
-        return FinalBlobs;
+        return FinalBlobs2; 
+        //return FinalBlobs;
     }
     
     private FillblobArray(Fblobs:blobObject[], timg:ImageData):void{
@@ -123,7 +138,7 @@ export default class MyARLSA{
 
     }
 
-    private WordDetection(blobs:blobObject[], minwidth:number, Space:number, image:ImageData,  arlaimg:ImageData):void{
+    private WordDetection(blobs:blobObject[], minwidth:number, Space:number, image:ImageData, arlaimg:ImageData):void{
          
         let count:number = 0;
         const stride:number = 4 * image.width;
@@ -337,9 +352,7 @@ export default class MyARLSA{
         let HRatio:number;
         let CC1:blobObject, CC2:blobObject;
 
-        
-        const myimageCopy = new ImageData(this.myimage.data, this.myimage.width, this.myimage.height )
-        const myBMP:ImageData = (CustomImage == null) ? myimageCopy : CustomImage;
+        const myBMP:ImageData = (CustomImage == null) ? copy(this.myimage) : CustomImage;
 
         bW = myBMP.width; bH = myBMP.height;
         const stride = 4 * bW;
@@ -494,10 +507,13 @@ export default class MyARLSA{
         for(const b in FinalBlobs){
             for (let yy = 0; yy < FinalBlobs[b].height; yy++){
                 for (let xx = 0; xx < FinalBlobs[b].width; xx++){
+                    if (FinalBlobs[b].Array[yy][xx])
+                    {
                            myimage.data[4 * (FinalBlobs[b].x + xx) + (FinalBlobs[b].y + yy) * stride] = 0;
                            myimage.data[4 * (FinalBlobs[b].x + xx) + (FinalBlobs[b].y + yy) * stride + 1] = 0;
                            myimage.data[4 * (FinalBlobs[b].x + xx) + (FinalBlobs[b].y + yy) * stride + 2] = 0;
-                           myimage.data[4 * (FinalBlobs[b].x + xx) + (FinalBlobs[b].y + yy) * stride + 3] = 255;           
+                           myimage.data[4 * (FinalBlobs[b].x + xx) + (FinalBlobs[b].y + yy) * stride + 3] = 255; 
+                    }                
                 }
             }
              

@@ -1,6 +1,7 @@
 import MyARLSA from './MyARLSA';
 import BlobCounter from './BlobCounter';
 import ApplyInvert from './ApplyInvert';
+import copy from "./copy";
 
 interface blobObject{
     Array:boolean[][];
@@ -29,17 +30,15 @@ export default class Filtering{
     public FilterOut(initmyImage:ImageData, PunctuationMarks:boolean = false):ImageData{
         this.RejBlobs = [];
         this.FirstPassBlobs = [];
-        const myImage:ImageData = new ImageData(initmyImage.data, initmyImage.width, initmyImage.height )
+        const myImage:ImageData = initmyImage;
 
         const blobCounter = new BlobCounter(); 
         //this.InitBlobs = blobCounter.GetObjectsWithArray(ApplyInvert(initmyImage));
         this.InitBlobs = blobCounter.GetObjectsWithArray(initmyImage);
-
-       
+   
         //const objectsCount = blobCounter.getObjectsCount();
         //console.log("objectsCount:", objectsCount);
-      
-      
+         
         this.InitFilter();
         this.Filter();
         this.Remove(myImage, this.RejBlobs);
@@ -47,25 +46,28 @@ export default class Filtering{
         this.FirstPassBlobs = [];
         this.RejBlobs = [];
 
-        //this.RemovePanctuation(myImage);
-        //this.Remove(myImage, this.RejBlobs);
+        this.RemovePanctuation(myImage);
+        this.Remove(myImage, this.RejBlobs);
 
-        return myImage;
-        
+        return myImage;      
     }
 
     private RemovePanctuation(myImage:ImageData):void{
         const previos_a:number = this.ARLSA.ARLSA_a;
         this.ARLSA.ARLSA_a = 1.5;
         
-        const myImageCopy = new ImageData(myImage.data, myImage.width, myImage.height);
-        const imgi2:ImageData = this.ARLSA.PLAImage(myImageCopy);
+        const imgi2:ImageData = this.ARLSA.PLAImage(copy(myImage));
+
+        //const canvas = <HTMLCanvasElement> document.getElementById("myCanvas");   //<-----------------------display img to canvas
+        //const ctx: CanvasRenderingContext2D = canvas.getContext("2d");
+        //ctx.putImageData(imgi2,0,0);
 
         this.ARLSA.ARLSA_a = previos_a;
 
         const blobCounter = new BlobCounter();
-        //const blobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(imgi2));
-        const blobs = blobCounter.GetObjectsWithoutArray(imgi2);
+        //const blobs = blobCounter.GetObjectsWithoutArray(ApplyInvert(imgi2)); 
+        //const blobs = blobCounter.GetObjectsWithoutArray(imgi2);
+        const blobs = blobCounter.GetObjectsWithArray(imgi2);
 
         const stride = 4 * imgi2.width;
         let p1:number, p2:number;
@@ -90,9 +92,6 @@ export default class Filtering{
                     this.RejBlobs.push(blobs[b]);
 
         }
-
-
-
     }
 
     public Filter():void{
