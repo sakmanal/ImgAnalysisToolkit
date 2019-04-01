@@ -1,14 +1,13 @@
 //self is a keyword: Reference to this Worker 
 //self.onmessage = sauvolaFilter;   --- self not really needed
 onmessage = sauvolaFilter;
-var data;
 function sauvolaFilter(d) {
     var imageData = d.data.imageData;
     var w = imageData.width;
     var h = imageData.height;
-    data = imageData.data;
-    greyscale();
-    sauvola(w, h, d.data.masksize, d.data.stathera, d.data.rstathera, d.data.n);
+    var data = imageData.data;
+    greyscale(data);
+    sauvola(data, w, h, d.data.masksize, d.data.stathera, d.data.rstathera, d.data.n);
     var x = [imageData.data.buffer];
     postMessage(imageData, x);
     // use:
@@ -22,7 +21,7 @@ function make2Darray(w, h) {
     }
     return arr;
 }
-function greyscale() {
+function greyscale(data) {
     var RED_INTENCITY_COEF = 0.2126;
     var GREEN_INTENCITY_COEF = 0.7152;
     var BLUE_INTENCITY_COEF = 0.0722;
@@ -33,7 +32,7 @@ function greyscale() {
         data[i + 2] = brightness;
     }
 }
-function sauvola(width, height, _masksize, _stathera, _rstathera, _n) {
+function sauvola(data, width, height, _masksize, _stathera, _rstathera, _n) {
     var masksize = _masksize;
     var stathera = _stathera;
     var rstathera = _rstathera;
