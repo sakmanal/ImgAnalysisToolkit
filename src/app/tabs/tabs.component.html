@@ -6,7 +6,7 @@
      <app-binarization></app-binarization>
     </mat-tab>
 
-    <mat-tab label="Segmentation">
+    <mat-tab label="Document Words Picker Tool">
         <ng-template matTabContent> 
             <app-test3
               (updateEvent)="updateTable($event)" 
@@ -18,6 +18,10 @@
 
     <mat-tab label="Saved Text Documents">
       <app-image-info></app-image-info>
+    </mat-tab>
+    
+    <mat-tab label="Segmentation Test">
+      <app-test2></app-test2>
     </mat-tab>
 
     <mat-tab label="Test">

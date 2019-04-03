@@ -43,7 +43,13 @@ export class Test2Component implements OnInit {
   url:string;
   @ViewChild("canvasfilter") fcanvas: { nativeElement: HTMLCanvasElement; };
   faSpinner = faSpinner;
+  testloader:boolean  = false;
   SauvolaImage: SauvolaMethod =  new SauvolaMethod();
+
+  //ARLSA parameters
+  ARLSA_a:number = 1;
+  ARLSA_c:number = 0.7;
+  ARLSA_Th:number = 3.5;
 
   //sauvola parameters
     masksize:number = 8;
@@ -62,7 +68,7 @@ export class Test2Component implements OnInit {
     dw1:number = 20;
 
   ngOnInit(){
-    this.url = "../assets/fdgv.jpg";
+    this.url = "../assets/printed.jpg";
     this.view();
   }
 
@@ -98,6 +104,11 @@ export class Test2Component implements OnInit {
 
   }
 
+  restore(){
+    this.ARLSA_a= 1;
+    this.ARLSA_c = 0.7;
+    this.ARLSA_Th = 3.5;
+  }
 
   sauvolaBinarization(){
     this.SauvolaImage.binarize(this.url, this.masksize, this.stathera, this.rstathera, this.n, "myCanvas");
@@ -151,7 +162,6 @@ export class Test2Component implements OnInit {
     
   }
   
-
   findblobs(imageData:ImageData):number[][]{
 
     const xSize = imageData.width,
@@ -491,19 +501,22 @@ export class Test2Component implements OnInit {
     const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const imageData = ctx.getImageData(0, 0, this.img.width, this.img.height);
-
+    this.testloader = true;
     const worker = new Worker(GPP);
 
     worker.postMessage({imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1}, [imageData.data.buffer]);
 
     worker.onmessage = (d: MessageEvent)=>{
       const imageData = d.data;
-      ctx.putImageData(imageData, 0, 0);
-      const arlsa:MyARLSA = new MyARLSA();
+      //ctx.putImageData(imageData, 0, 0);
+      const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
       const objects = arlsa.run(imageData);
       //console.log(objects)
-
+        
+      this.ColorTheBlobs3(imageData, objects);
+      ctx.putImageData(imageData, 0, 0);
       this.DrawRects(objects, ctx);
+      this.testloader = false;
     };
     
   }
@@ -544,6 +557,38 @@ export class Test2Component implements OnInit {
               dstPixels[i+3] = 255;
           }
       }
+  }
+
+  ColorTheBlobs3(imageData:ImageData, objects:blobObject[]){
+    const colors:number[][] = [
+      [131,15,208,255],
+      [220,0,0,255],
+      [0,0,255,255],
+      [0,153,0,255],
+      [174,174,0,255],
+      [198,0,198,255],
+      [0,208,208,255],
+      [210,153,255,255],
+      [51,153,51,255],
+      [153,102,51,255]
+    ];
+    const stride = imageData.width * 4;
+    for(let b=0; b<objects.length; b++){
+        for (let yy = 0; yy < objects[b].height; yy++){
+            for (let xx = 0; xx < objects[b].width; xx++){
+                const label = b;
+                if (objects[b].Array[yy][xx])
+                {
+                  const color:number[] = colors[ label % colors.length ];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride] = color[0];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 1] = color[1];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 2] = color[2];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 3] = color[3];
+                }                
+            }
+        }
+         
+    }
   }
 
   
