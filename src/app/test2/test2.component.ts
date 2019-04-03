@@ -498,11 +498,13 @@ export class Test2Component implements OnInit {
 
     worker.onmessage = (d: MessageEvent)=>{
       const imageData = d.data;
-      ctx.putImageData(imageData, 0, 0);
+      //ctx.putImageData(imageData, 0, 0);
       const arlsa:MyARLSA = new MyARLSA();
       const objects = arlsa.run(imageData);
       //console.log(objects)
-
+        
+      this.ColorTheBlobs3(imageData, objects);
+      ctx.putImageData(imageData, 0, 0);
       this.DrawRects(objects, ctx);
     };
     
@@ -544,6 +546,38 @@ export class Test2Component implements OnInit {
               dstPixels[i+3] = 255;
           }
       }
+  }
+
+  ColorTheBlobs3(imageData:ImageData, objects:blobObject[]){
+    const colors:number[][] = [
+      [131,15,208,255],
+      [220,0,0,255],
+      [0,0,255,255],
+      [0,153,0,255],
+      [174,174,0,255],
+      [198,0,198,255],
+      [0,208,208,255],
+      [210,153,255,255],
+      [51,153,51,255],
+      [153,102,51,255]
+    ];
+    const stride = imageData.width * 4;
+    for(let b=0; b<objects.length; b++){
+        for (let yy = 0; yy < objects[b].height; yy++){
+            for (let xx = 0; xx < objects[b].width; xx++){
+                const label = b;
+                if (objects[b].Array[yy][xx])
+                {
+                  const color:number[] = colors[ label % colors.length ];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride] = color[0];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 1] = color[1];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 2] = color[2];
+                  imageData.data[4 * (objects[b].x + xx) + (objects[b].y + yy) * stride + 3] = color[3];
+                }                
+            }
+        }
+         
+    }
   }
 
   
