@@ -43,7 +43,13 @@ export class Test2Component implements OnInit {
   url:string;
   @ViewChild("canvasfilter") fcanvas: { nativeElement: HTMLCanvasElement; };
   faSpinner = faSpinner;
+  testloader:boolean  = false;
   SauvolaImage: SauvolaMethod =  new SauvolaMethod();
+
+  //ARLSA parameters
+  ARLSA_a:number = 1;
+  ARLSA_c:number = 0.7;
+  ARLSA_Th:number = 3.5;
 
   //sauvola parameters
     masksize:number = 8;
@@ -62,7 +68,7 @@ export class Test2Component implements OnInit {
     dw1:number = 20;
 
   ngOnInit(){
-    this.url = "../assets/fdgv.jpg";
+    this.url = "../assets/printed.jpg";
     this.view();
   }
 
@@ -98,6 +104,11 @@ export class Test2Component implements OnInit {
 
   }
 
+  restore(){
+    this.ARLSA_a= 1;
+    this.ARLSA_c = 0.7;
+    this.ARLSA_Th = 3.5;
+  }
 
   sauvolaBinarization(){
     this.SauvolaImage.binarize(this.url, this.masksize, this.stathera, this.rstathera, this.n, "myCanvas");
@@ -151,7 +162,6 @@ export class Test2Component implements OnInit {
     
   }
   
-
   findblobs(imageData:ImageData):number[][]{
 
     const xSize = imageData.width,
@@ -491,7 +501,7 @@ export class Test2Component implements OnInit {
     const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const imageData = ctx.getImageData(0, 0, this.img.width, this.img.height);
-
+    this.testloader = true;
     const worker = new Worker(GPP);
 
     worker.postMessage({imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1}, [imageData.data.buffer]);
@@ -499,13 +509,14 @@ export class Test2Component implements OnInit {
     worker.onmessage = (d: MessageEvent)=>{
       const imageData = d.data;
       //ctx.putImageData(imageData, 0, 0);
-      const arlsa:MyARLSA = new MyARLSA();
+      const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
       const objects = arlsa.run(imageData);
       //console.log(objects)
         
       this.ColorTheBlobs3(imageData, objects);
       ctx.putImageData(imageData, 0, 0);
       this.DrawRects(objects, ctx);
+      this.testloader = false;
     };
     
   }
