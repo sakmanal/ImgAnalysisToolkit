@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter, ViewChild } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 import { SavejsonService } from '../savejson.service';
@@ -314,7 +314,7 @@ ResetImageToCanvas(){
 
 @HostListener('window:resize', ['$event'])
  onResize(event:any) {
-   
+    this.cancel();
     this.calcCanvasDimensions(); 
                
     const factorX = this.canvasWidth / this.oldCanvasWidth;
@@ -360,7 +360,7 @@ ResetImageToCanvas(){
   this.canvas.renderAll();
   this.canvas.calcOffset();
   this.setBgImg();
-  this.displayTextInput();                                                    
+                                                      
  }
 
 rect() {
@@ -394,7 +394,7 @@ rect() {
                   hasRotatingPoint:false,
                   objectCaching: false,
                   stroke: '#00b300',
-                  strokeWidth: 2,
+                  strokeWidth: 1,
                   transparentCorners: false,
                   cornerSize: 6,
           });
@@ -789,25 +789,25 @@ cancel() {
    }
   }
 
-  WordsSegment(){
-    this.cancel();
-    this.removeAllObjects();
-     this.Segmloader = true;
-     if (this.Binary){
-          this.Segmentation(this.imagedata);
-          this.Segmloader = false;
-     }else{
-       
-      this.workerService.run(GPP, {imageData:this.imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
-      .then( (result:any) => {
+WordsSegment(){
+  this.cancel();
+  this.removeAllObjects();
+    this.Segmloader = true;
+    if (this.Binary){
+        this.Segmentation(this.imagedata);
+        this.Segmloader = false;
+    }else{
+      
+    this.workerService.run(GPP, {imageData:this.imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
+    .then( (result:any) => {
 
-          this.Segmentation(result);
-          this.Segmloader = false;
-        }
-      ).catch(console.error);
+        this.Segmentation(result);
+        this.Segmloader = false;
+      }
+    ).catch(console.error);
 
-     }
-  }
+    }
+}
 
 Segmentation(imageData:ImageData){
   const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
@@ -843,12 +843,8 @@ DrawRects(rects:blobObject[]){
         transparentCorners: false,
         cornerSize: 6,
       });
-      this.canvas.add(rectangle);
-
-      
+      this.canvas.add(rectangle);     
     }
-
-
 }
 
 restore(){
@@ -856,5 +852,6 @@ restore(){
   this.ARLSA_c = 0.7;
   this.ARLSA_Th = 3.5;
 }
+
 
 }
