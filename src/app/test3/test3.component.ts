@@ -4,10 +4,24 @@ import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-
 import { SavejsonService } from '../savejson.service';
 import { WebworkerService } from '../worker/webworker.service';
 import { GPP } from '../binarization/gpp.worker';
-import { faInfoCircle } from '@fortawesome/free-solid-svg-icons';
+import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import 'fabric';
+import { IsBinary } from '../Segmentation/IsBinary';
+import MyARLSA from '../Segmentation/MyARLSA';
 
 declare const fabric: any;
+
+interface blobObject{
+  Array:boolean[][];
+  x:number;
+  y:number;
+  height:number;
+  width:number;
+  Right:number;
+  Bottom:number;
+  Density:number;
+  Elongation:number;
+}
 
 @Component({
   selector: 'app-test3',
@@ -39,6 +53,25 @@ export class Test3Component implements AfterViewInit {
   top:number;
   showTextInput:boolean = false;
   @Output() updateEvent = new EventEmitter<boolean>();
+  Binary:boolean;
+  imagedata:ImageData;
+  faSpinner = faSpinner;
+  Segmloader:boolean  = false;
+
+  //gpp parameters
+  dw:number = 10;
+  k:number = 2.0;
+  R:number = 128;
+  q:number = 1.7;
+  p1:number = 0.5;
+  p2:number = 0.7;
+  upsampling:boolean = true;
+  dw1:number = 20;
+
+  //ARLSA parameters
+  ARLSA_a:number = 1;
+  ARLSA_c:number = 0.7;
+  ARLSA_Th:number = 3.5;
 
 ngAfterViewInit() {
   if (this.imageUrl){
@@ -49,43 +82,63 @@ ngAfterViewInit() {
     });
 
     
-    this.image.src = this.imageUrl;
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;     
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     this.image.onload = () =>{
         this.imgWidth = this.image.width;
         this.imgHeight = this.image.height;
+        canvas.width = this.image.width;
+        canvas.height = this.image.height;
+        ctx.drawImage(this.image, 0, 0);
+        this.imagedata = ctx.getImageData(0, 0, this.image.width, this.image.height);
+        this.IsBinaryImage();
         this.initCanvas();
-    }
+    };
+    this.image.src = this.imageUrl;
+
+    
     
     this.enableZoom();
     
-      this.canvas.uniScaleTransform = true;
-
-      this.canvas.targetFindTolerance = 20;
-
-
-      this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
-        const target = e.target;
-      if (target && target.type == 'line'){
-          //console.log("line scale");
-            return
-          
-        }else if (target && target.type == 'rect'){
-          //console.log("rect scale")
-          const sX = target.scaleX;
-          const sY = target.scaleY;
-          target.width *= sX;
-          target.height *= sY;
-          target.scaleX = 1;
-          target.scaleY = 1;
-        }
+    this.canvas.uniScaleTransform = true;
+    this.canvas.targetFindTolerance = 20;
     
-        
-      }); 
-      
-      this.enableBoundaryLimit();
+    this.EnableObjectsScaling();
+
+    this.enableBoundaryLimit();
       
   }
 } 
+
+IsBinaryImage(){
+  this.workerService.run(IsBinary, this.imagedata)
+        .then( (result:any) => {
+            this.Binary = result;        
+          }
+        ).catch(console.error);
+}
+
+EnableObjectsScaling(){
+  this.canvas.on("object:scaling", (e:any) => {   //or "object:modified"
+  const target = e.target;
+  if (target && target.type == 'line'){
+      //console.log("line scale");
+        return
+      
+    }else if (target && target.type == 'rect'){
+      //console.log("rect scale")
+      const sX = target.scaleX;
+      const sY = target.scaleY;
+      target.width *= sX;
+      target.height *= sY;
+      target.scaleX = 1;
+      target.scaleY = 1;
+      this.CalcTextInputCords(target.left, target.top + target.height);
+    }
+
+    
+  }); 
+}
 
 
 initCanvas(){
@@ -271,7 +324,7 @@ ResetImageToCanvas(){
     this.oldCanvasHeight = this.canvasHeight; 
 
    const objects = this.canvas.getObjects();
-   for (var i in objects) {
+   for (const i in objects) {
      
     const scaleX = objects[i].scaleX;
     const scaleY = objects[i].scaleY;
@@ -331,16 +384,16 @@ rect() {
                   left: origX,
                   top: origY,
                   fill: 'transparent',
-                  strokeDashArray: [5, 5],
-                  strokeLineCap: 'square',
+                  /* strokeDashArray: [5, 5],
+                  strokeLineCap: 'square', */
                   opacity: 1,
                   width: 1,
                   height: 1,
-                  borderColor: '#80dfff',
-                  cornerColor: '33ccff',
+                  borderColor: '#00b300',
+                  cornerColor: '#004d00',
                   hasRotatingPoint:false,
                   objectCaching: false,
-                  stroke: '#33ccff',
+                  stroke: '#00b300',
                   strokeWidth: 2,
                   transparentCorners: false,
                   cornerSize: 6,
@@ -353,7 +406,7 @@ rect() {
       if (!this.canvas.getActiveObject() && isDown){
               //console.log("move rect")
               //if (!isDown) return;
-              var pointer = this.canvas.getPointer(o.e);
+              const pointer = this.canvas.getPointer(o.e);
               if(origX>pointer.x){
                   rectangle.set({ left: Math.abs(pointer.x) });
               }
@@ -486,6 +539,13 @@ remove(){
   }
 }
 
+removeAllObjects(){
+  const objects = this.canvas.getObjects();
+   for (const i in objects) {
+    this.canvas.remove(objects[i]);
+   }
+}
+
 
 cropImage(){
 
@@ -605,6 +665,8 @@ mergeSelection(){
                 activeObject.setCoords();
                 this.canvas.renderAll();
                 this.canvas.calcOffset();
+
+                this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
             }
           ).catch(console.error);
 
@@ -726,5 +788,73 @@ cancel() {
       this.remove();
    }
   }
+
+  WordsSegment(){
+    this.cancel();
+    this.removeAllObjects();
+     this.Segmloader = true;
+     if (this.Binary){
+          this.Segmentation(this.imagedata);
+          this.Segmloader = false;
+     }else{
+       
+      this.workerService.run(GPP, {imageData:this.imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
+      .then( (result:any) => {
+
+          this.Segmentation(result);
+          this.Segmloader = false;
+        }
+      ).catch(console.error);
+
+     }
+  }
+
+Segmentation(imageData:ImageData){
+  const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
+  const objects:blobObject[] = arlsa.run(imageData);
+  //console.log(objects)
+  this.DrawRects(objects);
+}
+
+DrawRects(rects:blobObject[]){
+    //const ratio = this.image.width / this.canvasWidth;
+    const ratio = this.canvasWidth / this.image.width;
+    for(const i in rects){  
+      const x1 = rects[i].x * ratio;
+      const y1 = rects[i].y * ratio;
+      const x2 = rects[i].width * ratio;
+      const y2 = rects[i].height * ratio;
+
+      const rectangle = new fabric.Rect({ 
+        left: x1,
+        top: y1,
+        fill: 'transparent',
+        /* strokeDashArray: [5, 5],   <-- for dashed Rect-line borders -->
+        strokeLineCap: 'square', */
+        opacity: 1,
+        width: x2,
+        height: y2,
+        borderColor: '#00b300',
+        cornerColor: '#004d00',
+        hasRotatingPoint:false,
+        objectCaching: false,
+        stroke: '#00b300',
+        strokeWidth: 1,
+        transparentCorners: false,
+        cornerSize: 6,
+      });
+      this.canvas.add(rectangle);
+
+      
+    }
+
+
+}
+
+restore(){
+  this.ARLSA_a= 1;
+  this.ARLSA_c = 0.7;
+  this.ARLSA_Th = 3.5;
+}
 
 }
