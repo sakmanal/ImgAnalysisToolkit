@@ -7,13 +7,13 @@
         </button>
 
         <mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-            <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a">
+            <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
         </mat-form-field>
         <mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-            <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c">
+            <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c" step="0.1">
         </mat-form-field>
         <mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-            <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th">
+            <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th" step="0.1">
         </mat-form-field>
 
         <button mat-raised-button style="margin:5px" (click)="restore()"> restore default values</button>
