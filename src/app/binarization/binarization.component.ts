@@ -20,9 +20,9 @@ export class BinarizationComponent  {
 
 
 faSpinner = faSpinner;
-url:any;
-ImgUrl:any;
-imageData:any;
+url:string;
+ImgUrl:string;
+imageData:ImageData;
 value = 138;
 max = 255;
 min = 0;
@@ -30,7 +30,7 @@ step = 1;
 @ViewChild("canvasfilter") fcanvas;
 disableImageFilter:boolean = true;
 img: HTMLImageElement = new Image;
-height:any;
+height:number;
 width:number;
 maxwidth:number = window.innerWidth;
 ImageName:string;
@@ -41,7 +41,7 @@ colorotsu:string = "primary";
 colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
-@Output() updateImageEvent = new EventEmitter<string>();
+@Output() updateImageEvent = new EventEmitter<object>();
 
 
 //sauvola parameters
@@ -124,6 +124,7 @@ restore(){
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   ctx.putImageData(this.imageData, 0, 0);
   this.ImgUrl = canvas.toDataURL("image/png", 1);
+  this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 }
 
 view():void{
@@ -149,7 +150,7 @@ view():void{
       this.imageData = ctx.getImageData(0, 0, w, h);
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
-      this.updateImageEvent.emit(this.ImgUrl);
+      this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
       
   };
   this.img.src = this.url;
@@ -167,6 +168,7 @@ InvertColoursFilter(){
   
   InvertColours(ctx, this.img.width, this.img.height);
   this.ImgUrl = canvas.toDataURL("image/png", 1);
+  this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 }
 
 otsuBinarization(){
@@ -183,7 +185,7 @@ otsuBinarization(){
           ctx.putImageData(result, 0, 0);
           this.showSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
-          
+          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});         
         }
       ).catch(console.error);
 
@@ -207,6 +209,7 @@ sauvolaBinarization(){
           this.showSpinner = false;
           this.SauvolaSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
+          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
         }
       ).catch(console.error);
       
@@ -227,6 +230,7 @@ manualThresholdBinarization(){
 
       binarize(this.value, ctx, this.img.width, this.img.height);
       this.ImgUrl = canvas.toDataURL("image/png", 1);
+      this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
     };
     this.img.src = this.url;
 
@@ -249,6 +253,7 @@ gppdBinarization(){
           this.showSpinner = false;
           this.GppSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
+          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
         }
       ).catch(console.error);
 

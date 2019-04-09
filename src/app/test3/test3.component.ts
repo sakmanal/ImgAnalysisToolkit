@@ -1,4 +1,4 @@
-import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter, ViewChild } from '@angular/core';
+import { Component, AfterViewInit, HostListener, Input, Output, EventEmitter } from '@angular/core';
 import { MatDialog } from '@angular/material';
 import { TextSelectPopUpComponent } from '../text-select-pop-up/text-select-pop-up.component';
 import { SavejsonService } from '../savejson.service';

@@ -14,10 +14,7 @@ export class TabsComponent implements AfterViewChecked {
 
   ImgUrl:any;
   ImgName:string;
-  initCanvas:Boolean = false;
 
-  init:boolean = false;
-  
   @ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
   @ViewChild(WordsSegmentComponent) WordsSegment;
@@ -34,24 +31,16 @@ export class TabsComponent implements AfterViewChecked {
     this.ImageInfo.showImageInfo();
   }
 
-  updateImage(event:MessageEvent){
+  updateImage(event){
     //console.log(event)
-    this.WordsSegment.imageUrl = event;
-    this.WordsSegment.ImageChange = true;
-    /* if (this.init){
-      this.WordsSegment.b();
-    }else{
-       this.WordsSegment.c();
-       this.init = true;
-    } */
-    
-
+    this.WordsSegment.imageUrl = event.dataURL;
+    this.WordsSegment.imageName = event.name;
+    this.WordsSegment.ImageChange = true;  
   }
 
   tabSelectionChanged(event:MatTabChangeEvent){
-    if (event.index == 1 /* && !this.initCanvas */){
-      this.WordsSegment.xxx();
-      //this.initCanvas = true;
+    if (event.index == 1 && this.WordsSegment.imageUrl){
+      this.WordsSegment.handleComponentView();
     }
 
   }
