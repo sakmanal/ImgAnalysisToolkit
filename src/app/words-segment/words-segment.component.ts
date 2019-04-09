@@ -52,7 +52,7 @@ export class WordsSegmentComponent {
   top:number;
   showTextInput:boolean = false;
   @Output() updateEvent = new EventEmitter<boolean>();
-  Binary:boolean;
+  Binary:boolean = false;
   imagedata:ImageData;
   faSpinner = faSpinner;
   Segmloader:boolean  = false;
@@ -457,9 +457,10 @@ export class WordsSegmentComponent {
         if (!this.canvas.getActiveObject() && isDown){
           //console.log("up rect")
           isDown = false;
-          if (rectangle.width<10 ) {rectangle.width = 20;  this.canvas.renderAll();}
-          if (rectangle.height<10) {rectangle.height = 20; this.canvas.renderAll();}
+          if (rectangle.width<5 ) {rectangle.width = 10;  this.canvas.renderAll();}
+          if (rectangle.height<5) {rectangle.height = 10; this.canvas.renderAll();}
           rectangle.setCoords();
+          this.mergeSelection();
         }
       }); 
   
@@ -613,12 +614,7 @@ export class WordsSegmentComponent {
         const img = new Image;
         const canvas = document.createElement('canvas') as HTMLCanvasElement;
         let ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-        let yTop:number = 0;
-        let yBottom:number = 0;
-        let flag_yTop:boolean = true;
-        let xRight:number = 0;
-        let xLeft:number = 0;
-        let flag_xLeft:boolean = true;
+        
   
         img.onload = () =>{
   
@@ -628,70 +624,17 @@ export class WordsSegmentComponent {
           canvas.height = height;
           ctx.drawImage(img, 0, 0);
           const imageData = ctx.getImageData(0, 0, width, height);
-  
-          this.workerService.run(GPP, {imageData:imageData,  dw:5, k:2.0, R:128, q:1.7, p1:0.5, p2:0.7, upsampling:true, dw1:5})
+
+          if (this.Binary){
+            this.mergeObjectsCoords(imageData.data, width, height, activeObject);
+          }else{
+            this.workerService.run(GPP, {imageData:imageData,  dw:5, k:2.0, R:128, q:1.7, p1:0.5, p2:0.7, upsampling:true, dw1:5})
             .then( (result:any) => {
-  
-                   const data = result.data;
-                   for (let i = 0; i < height; i++)
-                   {
-                    for (let k = 0; k < width; k++)
-                    {
-                        
-                      if ( data[4 * k + i * 4 * width] == 0 ){
-                            if ( flag_yTop == true){
-                              yTop= i;
-                              flag_yTop = false;
-                            } 
-                            yBottom = height - i - 1; 
-                      }
-                      
-                        
-                    }
-                  }
-  
-                  for (let k = 0; k < width; k++)
-                  {
-                    for (let i = 0; i < height; i++)
-                    {
-                        
-                      if ( data[4 * k + i * 4 * width] == 0 ){
-                            if ( flag_xLeft == true){
-                              xLeft= k;
-                              flag_xLeft = false;
-                            } 
-                            xRight = width - k - 1; 
-                      }
-                      
-                        
-                    }
-                  }
-                
-  
-                  const ratioX = this.canvasWidth / this.image.width;
-                  const ratioY = this.canvasHeight / this.image.height;
-  
-                  const x = Math.round(activeObject.left) + xLeft*ratioX;
-                  const y = Math.round(activeObject.top) + yTop*ratioY;
-                  const w = Math.round(activeObject.width) - xLeft*ratioX - xRight*ratioX ;
-                  const h = Math.round(activeObject.height) - yTop*ratioY - yBottom*ratioY ;  
-  
-                  activeObject.left = x;
-                  activeObject.top = y;
-                  activeObject.width = w;
-                  activeObject.height = h;
-                  activeObject.scaleX = 1;
-                  activeObject.scaleY = 1;
-  
-                  activeObject.setCoords();
-                  this.canvas.renderAll();
-                  this.canvas.calcOffset();
-  
-                  this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
+                   this.mergeObjectsCoords(result.data, width, height, activeObject);              
               }
             ).catch(console.error);
-  
-          
+
+          }      
         }
         img.src = this.cropImg;
   
@@ -699,6 +642,72 @@ export class WordsSegmentComponent {
       }
     }
    
+  }
+
+  mergeObjectsCoords(data:Uint8ClampedArray, width:number, height:number, activeObject){
+
+    let yTop:number = 0;
+    let yBottom:number = 0;
+    let flag_yTop:boolean = true;
+    let xRight:number = 0;
+    let xLeft:number = 0;
+    let flag_xLeft:boolean = true;
+
+    for (let i = 0; i < height; i++)
+    {
+     for (let k = 0; k < width; k++)
+     {
+         
+       if ( data[4 * k + i * 4 * width] == 0 ){
+             if ( flag_yTop == true){
+               yTop= i;
+               flag_yTop = false;
+             } 
+             yBottom = height - i - 1; 
+       }
+       
+         
+     }
+   }
+
+   for (let k = 0; k < width; k++)
+   {
+     for (let i = 0; i < height; i++)
+     {
+         
+       if ( data[4 * k + i * 4 * width] == 0 ){
+             if ( flag_xLeft == true){
+               xLeft= k;
+               flag_xLeft = false;
+             } 
+             xRight = width - k - 1; 
+       }
+       
+         
+     }
+   }
+ 
+
+   const ratioX = this.canvasWidth / this.image.width;
+   const ratioY = this.canvasHeight / this.image.height;
+
+   const x = Math.round(activeObject.left) + xLeft*ratioX;
+   const y = Math.round(activeObject.top) + yTop*ratioY;
+   const w = Math.round(activeObject.width) - xLeft*ratioX - xRight*ratioX ;
+   const h = Math.round(activeObject.height) - yTop*ratioY - yBottom*ratioY ;  
+
+   activeObject.left = x;
+   activeObject.top = y;
+   activeObject.width = w;
+   activeObject.height = h;
+   activeObject.scaleX = 1;
+   activeObject.scaleY = 1;
+
+   activeObject.setCoords();
+   this.canvas.renderAll();
+   this.canvas.calcOffset();
+
+   this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
   }
   
   

@@ -1,4 +1,4 @@
-import { Component, ViewChild, AfterViewChecked} from '@angular/core';
+import { Component, ViewChild} from '@angular/core';
 import { BinarizationComponent } from '../binarization/binarization.component';
 import { ImageInfoComponent } from '../image-info/image-info.component';
 import { WordsSegmentComponent } from '../words-segment/words-segment.component';
@@ -10,22 +10,11 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.css']
 })
-export class TabsComponent implements AfterViewChecked {
-
-  ImgUrl:any;
-  ImgName:string;
+export class TabsComponent{
 
   @ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
   @ViewChild(WordsSegmentComponent) WordsSegment;
-
-  
-
-  ngAfterViewChecked(){
-    this.ImgUrl = this.Binarization.ImgUrl;
-    this.ImgName = this.Binarization.ImageName;
-  }
-
 
   updateTable(event:MessageEvent){
     this.ImageInfo.showImageInfo();

@@ -1,6 +1,6 @@
 
 
-<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)">  <!-- [dynamicHeight]="true" --> 
+<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)">  
 
     <mat-tab label="Binarization"> 
      <app-binarization
@@ -13,16 +13,6 @@
          (updateEvent)="updateTable($event)">
       </app-words-segment>
     </mat-tab>
-
-    <!-- <mat-tab label="Segmentation">
-        <ng-template matTabContent> 
-            <app-test3
-              (updateEvent)="updateTable($event)" 
-              [imageUrl]="ImgUrl"
-              [imageName]="ImgName">
-            </app-test3>
-        </ng-template>  
-    </mat-tab> -->
 
     <mat-tab label="Saved Text Documents">
       <app-image-info></app-image-info>
