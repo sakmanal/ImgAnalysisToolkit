@@ -30,6 +30,8 @@
             <mat-icon>crop_16_9</mat-icon> fit in selection
         </button>
 
+        <mat-checkbox color="warn" style="margin:5px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
+
         <div>
             <span class="alternative">
                     <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin-left: 5px; margin-bottom: 5px;">Rect selection tool</mat-slide-toggle>

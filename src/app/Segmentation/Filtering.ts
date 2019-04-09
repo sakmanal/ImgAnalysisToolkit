@@ -27,7 +27,7 @@ export default class Filtering{
        this.ARLSA = arlsa;
     }
 
-    public FilterOut(initmyImage:ImageData, PunctuationMarks:boolean = false):ImageData{
+    public FilterOut(initmyImage:ImageData, PunctuationMarks:boolean = true):ImageData{
         this.RejBlobs = [];
         this.FirstPassBlobs = [];
         const myImage:ImageData = initmyImage;
@@ -45,9 +45,12 @@ export default class Filtering{
 
         this.FirstPassBlobs = [];
         this.RejBlobs = [];
-
-        this.RemovePanctuation(myImage);
-        this.Remove(myImage, this.RejBlobs);
+        
+        if (PunctuationMarks){
+            this.RemovePanctuation(myImage);
+            this.Remove(myImage, this.RejBlobs);
+        }
+        
 
         return myImage;      
     }

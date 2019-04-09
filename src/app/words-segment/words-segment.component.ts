@@ -56,6 +56,7 @@ export class WordsSegmentComponent {
   imagedata:ImageData;
   faSpinner = faSpinner;
   Segmloader:boolean  = false;
+  RemovePunctuationMarks:boolean = true;
 
   //gpp parameters
   dw:number = 10;
@@ -814,7 +815,7 @@ export class WordsSegmentComponent {
   
   Segmentation(imageData:ImageData){
     const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
-    const objects:blobObject[] = arlsa.run(imageData);
+    const objects:blobObject[] = arlsa.run(imageData, this.RemovePunctuationMarks);
     //console.log(objects)
     this.DrawRects(objects);
   }
