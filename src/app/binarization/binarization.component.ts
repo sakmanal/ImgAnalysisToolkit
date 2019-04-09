@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 
 import InvertColours from './invertColor';
@@ -41,6 +41,7 @@ colorotsu:string = "primary";
 colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
+@Output() updateImageEvent = new EventEmitter<string>();
 
 
 //sauvola parameters
@@ -148,6 +149,7 @@ view():void{
       this.imageData = ctx.getImageData(0, 0, w, h);
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
+      this.updateImageEvent.emit(this.ImgUrl);
       
   };
   this.img.src = this.url;
@@ -181,6 +183,7 @@ otsuBinarization(){
           ctx.putImageData(result, 0, 0);
           this.showSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
+          
         }
       ).catch(console.error);
 

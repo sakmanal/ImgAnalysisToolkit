@@ -1,9 +1,15 @@
 
 
-<mat-tab-group>  <!-- [dynamicHeight]="true" --> 
+<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)">  <!-- [dynamicHeight]="true" --> 
 
     <mat-tab label="Binarization"> 
-     <app-binarization></app-binarization>
+     <app-binarization
+       (updateImageEvent)="updateImage($event)">
+     </app-binarization>
+    </mat-tab>
+
+    <mat-tab label="test">
+      <app-words-segment></app-words-segment>
     </mat-tab>
 
     <mat-tab label="Segmentation">
