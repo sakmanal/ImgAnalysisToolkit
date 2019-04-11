@@ -59,6 +59,7 @@ export class WordsSegmentComponent {
   ImageChange:boolean;
   expandFullScreen:boolean = false;
   @ViewChild("inputField") inputField: ElementRef;
+  blobId:number = 0;
 
   //gpp parameters
   dw:number = 10;
@@ -622,6 +623,7 @@ export class WordsSegmentComponent {
   }
   
   removeAllObjects(){
+    this.blobId = 0;
     const objects = this.canvas.getObjects();
      for (const i in objects) {
       this.canvas.remove(objects[i]);
@@ -836,7 +838,26 @@ export class WordsSegmentComponent {
       this.savejsonService.addword(this.imageName, this.word);
       this.updateEvent.emit(true);
       this.word = '';
+      this.CalcNextInputCoords();
     }
+  }
+
+  CalcNextInputCoords(){
+    const activeObject = this.canvas.getActiveObject();
+    const objects = this.canvas.getObjects();
+    const obIndex = objects.indexOf(activeObject);
+    //console.log(obIndex)
+    let nextOb:any;
+    if (obIndex == objects.length - 1){
+      nextOb = activeObject;
+    }else{
+      nextOb = objects[obIndex + 1];
+    }
+    this.CalcTextInputCords(nextOb.oCoords.tl.x, nextOb.oCoords.tl.y, nextOb.oCoords.tr.x - nextOb.oCoords.tl.x + 1);
+    setTimeout(()=>{
+    this.inputField.nativeElement.focus();
+    },0);
+    this.canvas.setActiveObject(nextOb);
   }
   
   cancel() {
@@ -911,6 +932,7 @@ export class WordsSegmentComponent {
           strokeWidth: 1,
           transparentCorners: false,
           cornerSize: 6,
+          id: this.blobId++
         });
         this.canvas.add(rectangle);     
       }
