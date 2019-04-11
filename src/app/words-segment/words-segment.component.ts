@@ -42,12 +42,10 @@ export class WordsSegmentComponent {
   imgWidth:number;
   imgHeight:number;
   image = new Image;
-  cropImg:any;
-  position = 'left';
+  cropImg:string;
   RectTool:boolean = false;
   LineTool:boolean = false;
   word:string;
-  dialogOff:boolean = true;
   left:number;
   top:number;
   showTextInput:boolean = false;
@@ -56,7 +54,8 @@ export class WordsSegmentComponent {
   imagedata:ImageData;
   faSpinner = faSpinner;
   Segmloader:boolean  = false;
-  RemovePunctuationMarks:boolean = true;
+  firstTimeInit:boolean = true;
+  ImageChange:boolean;
 
   //gpp parameters
   dw:number = 10;
@@ -72,10 +71,9 @@ export class WordsSegmentComponent {
   ARLSA_a:number = 1;
   ARLSA_c:number = 0.7;
   ARLSA_Th:number = 3.5;
+  RemovePunctuationMarks:boolean = true;
 
-  firstTimeInit:boolean = true;
-
-  ImageChange:boolean;
+ 
 
   handleComponentView(){
     if (this.firstTimeInit){
@@ -137,6 +135,8 @@ export class WordsSegmentComponent {
         ctx.drawImage(this.image, 0, 0);
         this.imagedata = ctx.getImageData(0, 0, this.image.width, this.image.height);
         this.IsBinaryImage();
+        this.oldCanvasWidth = undefined;
+        this.oldCanvasHeight = undefined;
         this.initCanvas();
         
     };
@@ -348,6 +348,7 @@ export class WordsSegmentComponent {
   
   @HostListener('window:resize', ['$event'])
    onResize(event:any) {
+     if (this.canvas){
       this.cancel();
       this.calcCanvasDimensions(); 
                  
@@ -358,43 +359,43 @@ export class WordsSegmentComponent {
       this.oldCanvasHeight = this.canvasHeight; 
   
      const objects = this.canvas.getObjects();
-     for (const i in objects) {
-       
-      const scaleX = objects[i].scaleX;
-      const scaleY = objects[i].scaleY;
-      const left = objects[i].left;
-      const top = objects[i].top;
-      const width = objects[i].width;
-      const height = objects[i].height;
+      for (const i in objects) {
+        
+        const scaleX = objects[i].scaleX;
+        const scaleY = objects[i].scaleY;
+        const left = objects[i].left;
+        const top = objects[i].top;
+        const width = objects[i].width;
+        const height = objects[i].height;
+    
+        const tempScaleX = scaleX * factorX;
+        const tempScaleY = scaleY * factorY;
+        const tempLeft = left * factorX;
+        const tempTop = top * factorY;
+        const tempWidth = width * factorX;
+        const tempHeight = height * factorY;
+    
+        if ( objects[i].type == 'line'){
+          objects[i].scaleX = tempScaleX;
+          objects[i].scaleY = tempScaleY;
+          objects[i].left = tempLeft;
+          objects[i].top = tempTop;
+        }else{
+          objects[i].left = tempLeft;
+          objects[i].top = tempTop;
+          objects[i].width = tempWidth;
+          objects[i].height = tempHeight;
+          objects[i].scaleX = 1;
+          objects[i].scaleY = 1;
+        }
+        
+        objects[i].setCoords(); 
+      } 
   
-      const tempScaleX = scaleX * factorX;
-      const tempScaleY = scaleY * factorY;
-      const tempLeft = left * factorX;
-      const tempTop = top * factorY;
-      const tempWidth = width * factorX;
-      const tempHeight = height * factorY;
-  
-      if ( objects[i].type == 'line'){
-        objects[i].scaleX = tempScaleX;
-        objects[i].scaleY = tempScaleY;
-        objects[i].left = tempLeft;
-        objects[i].top = tempTop;
-      }else{
-        objects[i].left = tempLeft;
-        objects[i].top = tempTop;
-        objects[i].width = tempWidth;
-        objects[i].height = tempHeight;
-        objects[i].scaleX = 1;
-        objects[i].scaleY = 1;
-      }
-      
-      objects[i].setCoords(); 
-    } 
-  
-    this.canvas.renderAll();
-    this.canvas.calcOffset();
-    this.setBgImg();
-                                                        
+      this.canvas.renderAll();
+      this.canvas.calcOffset();
+      this.setBgImg();
+    }                                                   
    }
   
   rect() {
@@ -779,16 +780,14 @@ export class WordsSegmentComponent {
   
   @HostListener('document:keyup.enter', ['$event']) 
     onKeydownEnter(event: KeyboardEvent) {
-     /*  if (this.dialogOff){                         //open the text-select-pop-up component
-         this.openDialog();
-      } */
-      this.displayTextInput();
+      if (this.canvas){
+         this.displayTextInput();
+      }
     }
   
   @HostListener('document:keyup.control.backspace', ['$event']) 
     onKeydownBackspace(event: KeyboardEvent) {
-      if (this.dialogOff){
-        //console.log(event);
+      if (this.canvas){
         this.remove();
      }
     }
