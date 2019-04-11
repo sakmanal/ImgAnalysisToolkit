@@ -78,6 +78,8 @@
                             <mat-icon>crop_16_9</mat-icon> fit in selection
                         </button>
 
+                        <button (click)="displayNextTextInput()">sakis</button>
+
                         
 
                         
@@ -102,7 +104,8 @@
                                     </span>        
                                 </div>
                             
-                        </div>    
+                        </div>   
+                        <p><strong><span style="color:#ffc400;font-size:15px; margin:3px"> Document: </span> {{imageName}}</strong></p> 
                     </div>
                     
                     
@@ -124,17 +127,21 @@
                 <div class="centerimg">
                     <div  style="cursor: crosshair;" class="responsive" id="wr">
                     <canvas class="canvas" id="canvas"></canvas> 
-                      <div *ngIf=showTextInput class="arrow_box" [ngStyle]="{'left.px': left, 'top.px': top  }">
-                                 <mat-form-field color="warn">
-                                    <input matInput type="text" placeholder="enter word" [(ngModel)]="word" cdkFocusInitial (keydown.control.space)=writeWord()/>
-                                    <button mat-button *ngIf="word" matSuffix mat-icon-button aria-label="Clear" (click)="word=''">
+                      <div *ngIf=showTextInput class="InputBox" [ngStyle]="{'left.px': left, 'top.px': top, 'width.px': width  }">
+                                 <!-- <mat-form-field color="warn"> -->
+                                    
+                                          <input matInput type="text" style="border:1px solid #ff0000" [(ngModel)]="word" #inputField (keydown.control.space)=writeWord()/>
+                                     
+                                   
+                                    <!-- <button mat-button *ngIf="word" matSuffix mat-icon-button aria-label="Clear" (click)="word=''">
                                       <mat-icon>close</mat-icon>
-                                    </button>  
-                                  </mat-form-field>
-                                  <button mat-raised-button color="warn" (click)="writeWord()"><mat-icon>add</mat-icon> add</button>
-                                  <span class="alternative"><button mat-button color="primary" color="primary" (click)="cancel()">cancel</button></span>
+                                    </button>  --> 
+                                 <!--  </mat-form-field> -->
+                                  <!-- <button mat-raised-button color="warn" (click)="writeWord()"><mat-icon>add</mat-icon> add</button>
+                                  <span class="alternative"><button mat-button color="primary" color="primary" (click)="cancel()">cancel</button></span> -->
                                   
                       </div>
                     </div>
                 </div>
+                
 </div> 

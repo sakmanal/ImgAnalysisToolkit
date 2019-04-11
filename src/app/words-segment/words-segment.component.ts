@@ -1,4 +1,4 @@
-import { Component, HostListener, Input, Output, EventEmitter } from '@angular/core';
+import { Component, HostListener, Output, EventEmitter, ViewChild, ElementRef  } from '@angular/core';
 import { SavejsonService } from '../savejson.service';
 import { WebworkerService } from '../worker/webworker.service';
 import { GPP } from '../binarization/gpp.worker';
@@ -48,6 +48,7 @@ export class WordsSegmentComponent {
   word:string;
   left:number;
   top:number;
+  width:number;
   showTextInput:boolean = false;
   @Output() updateEvent = new EventEmitter<boolean>();
   Binary:boolean = false;
@@ -57,6 +58,7 @@ export class WordsSegmentComponent {
   firstTimeInit:boolean = true;
   ImageChange:boolean;
   expandFullScreen:boolean = false;
+  @ViewChild("inputField") inputField: ElementRef;
 
   //gpp parameters
   dw:number = 10;
@@ -168,7 +170,7 @@ export class WordsSegmentComponent {
         target.height *= sY;
         target.scaleX = 1;
         target.scaleY = 1;
-        this.CalcTextInputCords(target.left, target.top + target.height);
+        this.CalcTextInputCords(target.left, target.top, target.width);
       }
   
       
@@ -223,13 +225,14 @@ export class WordsSegmentComponent {
   }
 
   expandCanvas(){
+    this.cancel();
     this.oldCanvasWidth = undefined;
     this.oldCanvasHeight = undefined;
     const w = this.canvasWidth;
     const h = this.canvasHeight;
     this.initCanvas();
     const factorX = this.canvasWidth / w;
-    const factorY = this.canvasHeight / h;  
+    const factorY = this.canvasHeight / h;
   
      const objects = this.canvas.getObjects();
       for (const i in objects) {
@@ -267,6 +270,9 @@ export class WordsSegmentComponent {
   
       this.canvas.renderAll();
       this.canvas.calcOffset();
+
+      
+    
   }
   
   enableBoundaryLimit(){
@@ -316,7 +322,7 @@ export class WordsSegmentComponent {
                     obj.top = bounds.h - obj.height;
                   }
   
-                  this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.bl.y); //update TextInput div Cords on object moving
+                  this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1); //update TextInput div Cords on object moving
           }
   
           
@@ -346,7 +352,7 @@ export class WordsSegmentComponent {
             }
             if (activeObject && activeObject.type == 'rect'){
             
-              this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
+              this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
             }
         
       });
@@ -761,7 +767,7 @@ export class WordsSegmentComponent {
    this.canvas.renderAll();
    this.canvas.calcOffset();
 
-   this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
+   this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
   }
   
   
@@ -800,23 +806,32 @@ export class WordsSegmentComponent {
       this.word = '';
       this.showTextInput = true;
     
-      this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.bl.y);
+      this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
+      setTimeout(()=>{
+        this.inputField.nativeElement.focus();
+      },0);
       this.canvas.on("selection:updated", (e:any) =>{
         const obj = e.target;
-        this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.bl.y);
+        if (obj && obj.type == 'rect'){
+           this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1);
+           setTimeout(()=>{
+            this.inputField.nativeElement.focus();
+          },0);
+      }
       });
     }
        
   }
   
-  CalcTextInputCords(left:number, top:number){
+  CalcTextInputCords(left:number, top:number, width:number){
     this.left = left + document.getElementById("wr").offsetLeft;
-    this.top = top + document.getElementById("wr").offsetTop  +12;
+    this.top = top + document.getElementById("wr").offsetTop - 22;
+    this.width = width;
   }
   
   writeWord(){
     if (this.word && this.word != "undefined") {
-      this.showTextInput = false;
+      //this.showTextInput = false;
       console.log(this.word);
       this.savejsonService.addword(this.imageName, this.word);
       this.updateEvent.emit(true);
@@ -872,7 +887,6 @@ export class WordsSegmentComponent {
   }
   
   DrawRects(rects:blobObject[]){
-      //const ratio = this.image.width / this.canvasWidth;
       const ratio = this.canvasWidth / this.image.width;
       for(const i in rects){  
         const x1 = rects[i].x * ratio;
