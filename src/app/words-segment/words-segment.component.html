@@ -79,13 +79,16 @@
                         </button>
 
                         
+
+                        
                 
                         
                 
                         <div>
                             <span class="alternative">
-                                    <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin: 3px;">Rect selection tool</mat-slide-toggle>
-                                    <mat-slide-toggle color="accent" [(ngModel)]="LineTool" (change)="selectLine()" style="margin: 3px;">Line selection tool</mat-slide-toggle>
+                                    <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin: 3px;">Draw Word</mat-slide-toggle>
+                                    <mat-slide-toggle color="accent" [(ngModel)]="LineTool" (change)="selectLine()" style="margin: 3px;">Draw Line</mat-slide-toggle>
+                                    <mat-slide-toggle color="warn" [(ngModel)]="expandFullScreen" (change)="expandCanvas()" style="margin: 3px;">full Sreen</mat-slide-toggle>
                             </span>
 
                             <div class="tooltip" style="margin: 3px;">

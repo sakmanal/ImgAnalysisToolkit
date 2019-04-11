@@ -56,6 +56,7 @@ export class WordsSegmentComponent {
   Segmloader:boolean  = false;
   firstTimeInit:boolean = true;
   ImageChange:boolean;
+  expandFullScreen:boolean = false;
 
   //gpp parameters
   dw:number = 10;
@@ -188,12 +189,16 @@ export class WordsSegmentComponent {
     
   calcCanvasDimensions(){
     const aspectRatio = this.imgHeight/this.imgWidth;
-  
-    if (this.imgWidth > window.innerWidth-50){
+    if (this.expandFullScreen){
       this.canvasWidth = window.innerWidth - 50;
     }else{
-      this.canvasWidth = this.imgWidth;
-    } 
+      if (this.imgWidth > window.innerWidth-50){
+          this.canvasWidth = window.innerWidth - 50;
+      }else{
+          this.canvasWidth = this.imgWidth;
+      } 
+    }
+    
   
     this.canvasHeight = this.canvasWidth * aspectRatio;
   }
@@ -215,6 +220,53 @@ export class WordsSegmentComponent {
         this.canvas.setBackgroundImage(img, this.canvas.renderAll.bind(this.canvas));
       
        });
+  }
+
+  expandCanvas(){
+    this.oldCanvasWidth = undefined;
+    this.oldCanvasHeight = undefined;
+    const w = this.canvasWidth;
+    const h = this.canvasHeight;
+    this.initCanvas();
+    const factorX = this.canvasWidth / w;
+    const factorY = this.canvasHeight / h;  
+  
+     const objects = this.canvas.getObjects();
+      for (const i in objects) {
+        
+        const scaleX = objects[i].scaleX;
+        const scaleY = objects[i].scaleY;
+        const left = objects[i].left;
+        const top = objects[i].top;
+        const width = objects[i].width;
+        const height = objects[i].height;
+    
+        const tempScaleX = scaleX * factorX;
+        const tempScaleY = scaleY * factorY;
+        const tempLeft = left * factorX;
+        const tempTop = top * factorY;
+        const tempWidth = width * factorX;
+        const tempHeight = height * factorY;
+    
+        if ( objects[i].type == 'line'){
+          objects[i].scaleX = tempScaleX;
+          objects[i].scaleY = tempScaleY;
+          objects[i].left = tempLeft;
+          objects[i].top = tempTop;
+        }else{
+          objects[i].left = tempLeft;
+          objects[i].top = tempTop;
+          objects[i].width = tempWidth;
+          objects[i].height = tempHeight;
+          objects[i].scaleX = 1;
+          objects[i].scaleY = 1;
+        }
+        
+        objects[i].setCoords(); 
+      } 
+  
+      this.canvas.renderAll();
+      this.canvas.calcOffset();
   }
   
   enableBoundaryLimit(){
