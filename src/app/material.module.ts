@@ -1,27 +1,24 @@
 import { NgModule } from '@angular/core';
 
 import { MatButtonModule, MatToolbarModule, 
-         MatProgressSpinnerModule, MatCardModule, 
-         MatInputModule, MatIconModule, MatMenuModule, 
-         MatSidenavModule, MatListModule, MatTooltipModule, 
+        
+         MatInputModule, MatIconModule, 
+         MatSidenavModule, MatTooltipModule, MatPaginatorModule,
          MatTabsModule, MatSlideToggleModule, MatSliderModule, 
-         MatCheckboxModule, MatDialogModule, MatSelectModule, 
-         MatDividerModule, MatExpansionModule, MatTableModule, 
-         MatPaginatorModule, MatButtonToggleModule} from '@angular/material';
+         MatCheckboxModule, MatSelectModule, MatExpansionModule, 
+         MatTableModule, MatButtonToggleModule, MatSnackBarModule} from '@angular/material';
          
 @NgModule({
-  imports: [MatButtonModule, MatToolbarModule, MatProgressSpinnerModule,
-            MatCardModule, MatInputModule, MatIconModule, MatMenuModule, 
-            MatSidenavModule, MatListModule, MatTooltipModule, MatTabsModule, 
-            MatSlideToggleModule, MatSliderModule, MatCheckboxModule, MatDialogModule, 
-            MatSelectModule, MatDividerModule, MatExpansionModule, MatTableModule, 
-            MatPaginatorModule, MatButtonToggleModule],
+  imports: [MatButtonModule, MatToolbarModule, MatPaginatorModule,
+            MatInputModule, MatIconModule, MatExpansionModule,
+            MatSidenavModule, MatTooltipModule, MatTabsModule, 
+            MatSlideToggleModule, MatSliderModule, MatCheckboxModule, 
+            MatSelectModule, MatTableModule, MatButtonToggleModule, MatSnackBarModule],
 
-  exports: [MatButtonModule, MatToolbarModule, MatProgressSpinnerModule,
-            MatCardModule, MatInputModule, MatIconModule, MatMenuModule, 
-            MatSidenavModule, MatListModule, MatTooltipModule, MatTabsModule, 
-            MatSlideToggleModule, MatSliderModule, MatCheckboxModule, MatDialogModule, 
-            MatSelectModule, MatDividerModule, MatExpansionModule, MatTableModule, 
-            MatPaginatorModule, MatButtonToggleModule],
+  exports: [MatButtonModule, MatToolbarModule, MatPaginatorModule,
+            MatInputModule, MatIconModule, MatExpansionModule,
+            MatSidenavModule, MatTooltipModule, MatTabsModule, 
+            MatSlideToggleModule, MatSliderModule, MatCheckboxModule, 
+            MatSelectModule,  MatTableModule, MatButtonToggleModule, MatSnackBarModule],
 })
 export class MaterialModule { }

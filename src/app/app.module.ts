@@ -19,6 +19,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 import { WindowScrollDirective } from './window-scroll.directive';
 import { Test3Component } from './test3/test3.component';
 import { WordsSegmentComponent } from './words-segment/words-segment.component';
+import { WordSnackBarComponent } from './word-snack-bar/word-snack-bar.component';
 
 @NgModule({
   declarations: [
@@ -33,7 +34,8 @@ import { WordsSegmentComponent } from './words-segment/words-segment.component';
     MouseWheelDirective,
     WindowScrollDirective,
     Test3Component,
-    WordsSegmentComponent
+    WordsSegmentComponent,
+    WordSnackBarComponent
  
   ],
   imports: [
@@ -47,7 +49,8 @@ import { WordsSegmentComponent } from './words-segment/words-segment.component';
     FlexLayoutModule
   ],
   entryComponents: [
-    TextSelectPopUpComponent
+    TextSelectPopUpComponent,
+    WordSnackBarComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

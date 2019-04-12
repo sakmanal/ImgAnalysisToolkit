@@ -6,6 +6,8 @@ import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import 'fabric';
 import { IsBinary } from '../Segmentation/IsBinary';
 import MyARLSA from '../Segmentation/MyARLSA';
+import {MatSnackBar} from '@angular/material';
+import {WordSnackBarComponent} from '../word-snack-bar/word-snack-bar.component';
 
 interface blobObject{
   Array:boolean[][];
@@ -29,7 +31,7 @@ declare const fabric: any;
 export class WordsSegmentComponent {
 
  
-  constructor(private savejsonService: SavejsonService, private workerService: WebworkerService) {}
+  constructor(private savejsonService: SavejsonService, private workerService: WebworkerService, public snackBar: MatSnackBar) {}
 
   faInfoCircle = faInfoCircle;
   canvas:any;
@@ -836,12 +838,20 @@ export class WordsSegmentComponent {
   
   writeWord(){
     if (this.words[this.id]){
-        console.log(this.words[this.id]);
+        //console.log(this.words[this.id]);
+        this.openSnackBar(this.words[this.id]);
         const activeObject = this.canvas.getActiveObject();
         activeObject.stroke = '#ff1a1a';
         this.CalcNextInputCoords();
         this.canvas.renderAll();
     }
+  }
+
+  openSnackBar(word:string) {
+    this.snackBar.openFromComponent(WordSnackBarComponent, {
+      duration: 500,
+      data: word
+    });
   }
 
   save(){
