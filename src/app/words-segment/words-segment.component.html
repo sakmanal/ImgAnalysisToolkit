@@ -78,7 +78,11 @@
                             <mat-icon>crop_16_9</mat-icon> fit in selection
                         </button>
 
-                        <!-- <button (click)="CalcNextInputCoords()">test next input</button> -->
+                        <button  mat-raised-button color="accent" style="margin: 3px;" (click)="save()">
+                            <mat-icon>save</mat-icon> Save Document Words
+                        </button>
+
+            
              
                         <div>
                             <span class="alternative">
@@ -93,8 +97,8 @@
                                         <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">mouse wheel:</span> zoom image</div>
                                         <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ALT + mouse drag:</span> drag image around</div>
                                         <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + BACKSPACE:</span> remove selection</div>
-                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ENTER:</span> open text input</div>
-                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + SPACE:</span> save word</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + SPACE:</span> open/close text input</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ENTER:</span> add word and select the next one</div>
                                     </span>        
                                 </div>
                             
@@ -112,7 +116,10 @@
 
 
 
-
+    <div *ngIf=showTextInput class="st">
+        <button  mat-mini-fab  (click)="writeWord()" color="warn"><mat-icon>add</mat-icon></button>
+        <p><button  mat-mini-fab  (click)="cancel()" color="warn"><mat-icon>close</mat-icon></button></p>
+    </div>
 
 
 
@@ -122,17 +129,8 @@
                     <div  style="cursor: crosshair;" class="responsive" id="wr">
                     <canvas class="canvas" id="canvas"></canvas> 
                       <div *ngIf=showTextInput class="InputBox" [ngStyle]="{'left.px': left, 'top.px': top, 'width.px': width  }">
-                                 <!-- <mat-form-field color="warn"> -->
                                     
                                           <input matInput type="text" style="border:1px solid #ff0000" [(ngModel)]="words[id]" #inputField (keydown.enter)=writeWord()/>
-                                     
-                                   
-                                    <!-- <button mat-button *ngIf="word" matSuffix mat-icon-button aria-label="Clear" (click)="word=''">
-                                      <mat-icon>close</mat-icon>
-                                    </button>  --> 
-                                 <!--  </mat-form-field> -->
-                                  <!-- <button mat-raised-button color="warn" (click)="writeWord()"><mat-icon>add</mat-icon> add</button>
-                                  <span class="alternative"><button mat-button color="primary" color="primary" (click)="cancel()">cancel</button></span> -->
                                   
                       </div>
                     </div>

@@ -30,8 +30,8 @@ display: inline-block;
 
 .tooltip .tooltiptext {
 visibility: hidden;
-width: 280px;
-height: 110px;
+width: 320px;
+height: 100px;
 background-color: #424242;
 color: #fff;
 text-align: left;

@@ -45,7 +45,6 @@ export class WordsSegmentComponent {
   cropImg:string;
   RectTool:boolean = false;
   LineTool:boolean = false;
-  word:string;
   left:number;
   top:number;
   width:number;
@@ -92,6 +91,7 @@ export class WordsSegmentComponent {
         //console.log("image changed");
         this.cancel();
         this.removeAllObjects();
+        this.words = [];
         this.changeImage();
         this.ImageChange = false;
       }
@@ -273,9 +273,7 @@ export class WordsSegmentComponent {
   
       this.canvas.renderAll();
       this.canvas.calcOffset();
-
-      
-    
+   
   }
   
   enableBoundaryLimit(){
@@ -493,6 +491,7 @@ export class WordsSegmentComponent {
                     strokeWidth: 1,
                     transparentCorners: false,
                     cornerSize: 6,
+                    id: this.blobId++
             });
             this.canvas.add(rectangle);
        }
@@ -807,7 +806,6 @@ export class WordsSegmentComponent {
       activeObject = ob[ob.length-1];
     }
     if (activeObject && activeObject.type == 'rect'){
-      this.word = '';
       this.showTextInput = true;
       this.id = activeObject.id;
     
@@ -817,8 +815,9 @@ export class WordsSegmentComponent {
       },0);
       this.canvas.on("selection:updated", (e:any) =>{
         const obj = e.target;
-        this.id = obj.id;
+      
         if (obj && obj.type == 'rect'){
+           this.id = obj.id;
            this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1);
            setTimeout(()=>{
             this.inputField.nativeElement.focus();
@@ -836,29 +835,32 @@ export class WordsSegmentComponent {
   }
   
   writeWord(){
-    //if (this.word && this.word != "undefined") {
-      //this.showTextInput = false;
-      //console.log(this.word);
-      //this.savejsonService.addword(this.imageName, this.word);
-    if (this.words[this.id] && this.words[this.id] != "undefined"){
-      console.log(this.words[this.id]);
-      this.savejsonService.addword(this.imageName, this.words[this.id]);
-      this.updateEvent.emit(true);
-      //this.word = '';
-      const activeObject = this.canvas.getActiveObject();
-      activeObject.stroke = '#ff1a1a';
-      this.CalcNextInputCoords();
-      this.canvas.renderAll();
+    if (this.words[this.id]){
+        console.log(this.words[this.id]);
+        const activeObject = this.canvas.getActiveObject();
+        activeObject.stroke = '#ff1a1a';
+        this.CalcNextInputCoords();
+        this.canvas.renderAll();
     }
+  }
+
+  save(){
+    for(const i in this.words){
+      if (this.words[i] && this.words[i] != "undefined"){
+        this.savejsonService.addword(this.imageName, this.words[i]);
+      } 
+    }
+    this.updateEvent.emit(true);
   }
 
   CalcNextInputCoords(){
     const activeObject = this.canvas.getActiveObject();
-    const objects = this.canvas.getObjects();
+    const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');;
     const obIndex = objects.indexOf(activeObject);
     let nextOb:any;
     if (obIndex == objects.length - 1){
-      nextOb = activeObject;
+      //nextOb = activeObject;
+      return;
     }else{
       nextOb = objects[obIndex + 1];
     }
@@ -871,7 +873,6 @@ export class WordsSegmentComponent {
   
   cancel() {
     this.showTextInput = false;
-    this.word = '';
     this.canvas.off('selection:updated');
   }
   
