@@ -124,7 +124,7 @@
                       <div *ngIf=showTextInput class="InputBox" [ngStyle]="{'left.px': left, 'top.px': top, 'width.px': width  }">
                                  <!-- <mat-form-field color="warn"> -->
                                     
-                                          <input matInput type="text" style="border:1px solid #ff0000" [(ngModel)]="word" #inputField (keydown.control.space)=writeWord()/>
+                                          <input matInput type="text" style="border:1px solid #ff0000" [(ngModel)]="words[id]" #inputField (keydown.enter)=writeWord()/>
                                      
                                    
                                     <!-- <button mat-button *ngIf="word" matSuffix mat-icon-button aria-label="Clear" (click)="word=''">

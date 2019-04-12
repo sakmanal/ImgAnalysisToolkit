@@ -60,6 +60,8 @@ export class WordsSegmentComponent {
   expandFullScreen:boolean = false;
   @ViewChild("inputField") inputField: ElementRef;
   blobId:number = 0;
+  words:string[] = [];
+  id:number;
 
   //gpp parameters
   dw:number = 10;
@@ -807,6 +809,7 @@ export class WordsSegmentComponent {
     if (activeObject && activeObject.type == 'rect'){
       this.word = '';
       this.showTextInput = true;
+      this.id = activeObject.id;
     
       this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
       setTimeout(()=>{
@@ -814,6 +817,7 @@ export class WordsSegmentComponent {
       },0);
       this.canvas.on("selection:updated", (e:any) =>{
         const obj = e.target;
+        this.id = obj.id;
         if (obj && obj.type == 'rect'){
            this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1);
            setTimeout(()=>{
@@ -832,13 +836,19 @@ export class WordsSegmentComponent {
   }
   
   writeWord(){
-    if (this.word && this.word != "undefined") {
+    //if (this.word && this.word != "undefined") {
       //this.showTextInput = false;
-      console.log(this.word);
-      this.savejsonService.addword(this.imageName, this.word);
+      //console.log(this.word);
+      //this.savejsonService.addword(this.imageName, this.word);
+    if (this.words[this.id] && this.words[this.id] != "undefined"){
+      console.log(this.words[this.id]);
+      this.savejsonService.addword(this.imageName, this.words[this.id]);
       this.updateEvent.emit(true);
-      this.word = '';
+      //this.word = '';
+      const activeObject = this.canvas.getActiveObject();
+      activeObject.stroke = '#ff1a1a';
       this.CalcNextInputCoords();
+      this.canvas.renderAll();
     }
   }
 
@@ -846,7 +856,6 @@ export class WordsSegmentComponent {
     const activeObject = this.canvas.getActiveObject();
     const objects = this.canvas.getObjects();
     const obIndex = objects.indexOf(activeObject);
-    //console.log(obIndex)
     let nextOb:any;
     if (obIndex == objects.length - 1){
       nextOb = activeObject;
@@ -866,10 +875,15 @@ export class WordsSegmentComponent {
     this.canvas.off('selection:updated');
   }
   
-  @HostListener('document:keyup.enter', ['$event']) 
+  @HostListener('document:keyup.control.space', ['$event']) 
     onKeydownEnter(event: KeyboardEvent) {
       if (this.canvas){
-         this.displayTextInput();
+        this.showTextInput = !this.showTextInput;
+        if (this.showTextInput){
+          this.displayTextInput();
+        }else{
+          this.canvas.off('selection:updated');
+        } 
       }
     }
   
