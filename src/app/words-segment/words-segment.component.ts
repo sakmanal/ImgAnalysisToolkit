@@ -524,8 +524,8 @@ export class WordsSegmentComponent {
           if (rectangle.width<5 ) {rectangle.width = 10;  this.canvas.renderAll();}
           if (rectangle.height<5) {rectangle.height = 10; this.canvas.renderAll();}
           rectangle.setCoords();
-          this.mergeSelection();
           this.canvas.setActiveObject(rectangle);
+          this.mergeSelection();    
         }
       }); 
   
@@ -635,11 +635,8 @@ export class WordsSegmentComponent {
   
   cropImage(){
   
-    let activeObject = this.canvas.getActiveObject();
-    if (!activeObject){
-      const ob = this.canvas.getObjects();
-      activeObject = ob[ob.length-1];
-    }
+    const activeObject = this.canvas.getActiveObject();
+    
     if (activeObject && activeObject.type == 'rect'){
       const ratio = this.image.width / this.canvasWidth;
   
@@ -664,12 +661,8 @@ export class WordsSegmentComponent {
   
   
   mergeSelection(){
-    let activeObject = this.canvas.getActiveObject();
-    if (!activeObject){
-      const ob = this.canvas.getObjects();
-      activeObject = ob[ob.length-1];
-    }
-  
+    const activeObject = this.canvas.getActiveObject();
+   
     if (activeObject && activeObject.type == 'rect'){
     
       this.cropImage();
@@ -801,31 +794,37 @@ export class WordsSegmentComponent {
   
   
   displayTextInput(){
-    let activeObject = this.canvas.getActiveObject();
-    if (!activeObject){
-      const ob = this.canvas.getObjects();
-      activeObject = ob[ob.length-1];
-    }
-    if (activeObject && activeObject.type == 'rect'){
-      this.showTextInput = true;
-      this.id = activeObject.id;
-    
-      this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
-      setTimeout(()=>{
-        this.inputField.nativeElement.focus();
-      },0);
-      this.canvas.on("selection:updated", (e:any) =>{
-        const obj = e.target;
-      
-        if (obj && obj.type == 'rect'){
-           this.id = obj.id;
-           this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1);
-           setTimeout(()=>{
+    if (!this.showTextInput){
+        const activeObject = this.canvas.getActiveObject();
+  
+        if (activeObject && activeObject.type == 'rect'){
+          this.showTextInput = true;
+          this.id = activeObject.id;
+        
+          this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
+          setTimeout(()=>{
             this.inputField.nativeElement.focus();
           },0);
-      }
-      });
-    }
+
+          this.canvas.on("selection:updated", (e:any) =>{
+            const obj = e.target;
+      
+            if (obj && obj.type == 'rect'){
+              this.id = obj.id;
+              this.CalcTextInputCords(obj.oCoords.tl.x, obj.oCoords.tl.y, obj.oCoords.tr.x - obj.oCoords.tl.x + 1);
+              setTimeout(()=>{
+                this.inputField.nativeElement.focus();
+              },0);
+          }
+          });
+
+          this.canvas.on("selection:cleared", () =>{
+              if (this.showTextInput) this.cancel();
+          });
+
+
+        }
+     }
        
   }
   
@@ -884,17 +883,13 @@ export class WordsSegmentComponent {
   cancel() {
     this.showTextInput = false;
     this.canvas.off('selection:updated');
+    this.canvas.off('selection:cleared');
   }
   
   @HostListener('document:keyup.control.space', ['$event']) 
     onKeydownEnter(event: KeyboardEvent) {
-      if (this.canvas){
-        this.showTextInput = !this.showTextInput;
-        if (this.showTextInput){
+      if (this.canvas){     
           this.displayTextInput();
-        }else{
-          this.canvas.off('selection:updated');
-        } 
       }
     }
   
