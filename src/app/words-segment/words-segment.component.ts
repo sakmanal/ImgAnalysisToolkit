@@ -2,10 +2,10 @@ import { Component, HostListener, Output, EventEmitter, ViewChild, ElementRef  }
 import { SavejsonService } from '../savejson.service';
 import { WebworkerService } from '../worker/webworker.service';
 import { GPP } from '../binarization/gpp.worker';
+import { GetSegments } from '../Segmentation/MyARLSA.worker';
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import 'fabric';
 import { IsBinary } from '../Segmentation/IsBinary';
-import MyARLSA from '../Segmentation/MyARLSA';
 import {MatSnackBar} from '@angular/material';
 import {WordSnackBarComponent} from '../word-snack-bar/word-snack-bar.component';
 
@@ -525,6 +525,7 @@ export class WordsSegmentComponent {
           if (rectangle.height<5) {rectangle.height = 10; this.canvas.renderAll();}
           rectangle.setCoords();
           this.mergeSelection();
+          this.canvas.setActiveObject(rectangle);
         }
       }); 
   
@@ -548,7 +549,6 @@ export class WordsSegmentComponent {
   
             this.cancel();
             //console.log("down line")
-            //this.canvas.selection = false;
             isDown = true;
             const pointer = this.canvas.getPointer(o.e);
             const points = [pointer.x, pointer.y, pointer.x, pointer.y];
@@ -608,7 +608,6 @@ export class WordsSegmentComponent {
               mtr: false
             });
             line.setCoords();
-            //this.canvas.selection = true;
        }
     });
   
@@ -842,6 +841,7 @@ export class WordsSegmentComponent {
         this.openSnackBar(this.words[this.id]);
         const activeObject = this.canvas.getActiveObject();
         activeObject.stroke = '#ff1a1a';
+        activeObject.borderColor = '#ff1a1a';
         this.CalcNextInputCoords();
         this.canvas.renderAll();
     }
@@ -911,14 +911,12 @@ export class WordsSegmentComponent {
       this.Segmloader = true;
       if (this.Binary){
           this.Segmentation(this.imagedata);
-          this.Segmloader = false;
       }else{
         
       this.workerService.run(GPP, {imageData:this.imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
       .then( (result:any) => {
   
           this.Segmentation(result);
-          this.Segmloader = false;
         }
       ).catch(console.error);
   
@@ -926,10 +924,15 @@ export class WordsSegmentComponent {
   }
   
   Segmentation(imageData:ImageData){
-    const arlsa:MyARLSA = new MyARLSA(this.ARLSA_a, this.ARLSA_c, this.ARLSA_Th);
-    const objects:blobObject[] = arlsa.run(imageData, this.RemovePunctuationMarks);
-    //console.log(objects)
-    this.DrawRects(objects);
+
+    this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks})
+          .then( (objects:any) => {
+  
+            //console.log(objects)
+            this.DrawRects(objects);
+            this.Segmloader = false;
+          }
+        ).catch(console.error);
   }
   
   DrawRects(rects:blobObject[]){
