@@ -21,6 +21,14 @@ interface blobObject{
   Elongation:number;
 }
 
+interface TextSegments{
+  x:number;
+  y:number;
+  width:number;
+  height:number;
+  word:string;
+}
+
 declare const fabric: any;
 
 @Component({
@@ -348,11 +356,8 @@ export class WordsSegmentComponent {
         opt.e.preventDefault();
         opt.e.stopPropagation();
   
-            let activeObject = this.canvas.getActiveObject();
-            if (!activeObject){
-              const ob = this.canvas.getObjects();
-              activeObject = ob[ob.length-1];
-            }
+            const activeObject = this.canvas.getActiveObject();
+            
             if (activeObject && activeObject.type == 'rect'){
             
               this.CalcTextInputCords(activeObject.oCoords.tl.x, activeObject.oCoords.tl.y, activeObject.oCoords.tr.x - activeObject.oCoords.tl.x + 1);
@@ -862,9 +867,26 @@ export class WordsSegmentComponent {
     this.updateEvent.emit(true);
   }
 
+  saveSegments(){
+    const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');
+    const ratio = this.canvasWidth / this.image.width;
+    const Segments:TextSegments[] = [];
+    for(const i in objects){
+         const x = Math.floor(objects[i].left / ratio);
+         const y = Math.floor(objects[i].top / ratio);
+         const w = Math.floor(objects[i].width / ratio);
+         const h = Math.floor(objects[i].height / ratio);
+         const word = this.words[objects[i].id];
+
+         const segment:TextSegments = {x:x, y:y, width:w, height:h, word:word};
+         Segments.push(segment);
+    }
+    console.log(Segments);
+  }
+
   CalcNextInputCoords(){
     const activeObject = this.canvas.getActiveObject();
-    const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');;
+    const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');
     const obIndex = objects.indexOf(activeObject);
     let nextOb:any;
     if (obIndex == objects.length - 1){
