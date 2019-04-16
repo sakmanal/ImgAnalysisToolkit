@@ -858,14 +858,10 @@ export class WordsSegmentComponent {
     });
   }
 
-  save(){
-    for(const i in this.words){
-      if (this.words[i] && this.words[i] != "undefined"){
-        this.savejsonService.addword(this.imageName, this.words[i]);
-      } 
-    }
+  /* save(){
+    this.savejsonService.saveWords(this.imageName, this.words);
     this.updateEvent.emit(true);
-  }
+  } */
 
   saveSegments(){
     const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');
@@ -878,10 +874,12 @@ export class WordsSegmentComponent {
          const h = Math.floor(objects[i].height / ratio);
          const word = this.words[objects[i].id];
 
-         const segment:TextSegments = {x:x, y:y, width:w, height:h, word:word};
+         const segment:TextSegments = {"x":x, "y":y, "width":w, "height":h, "word":word};
          Segments.push(segment);
     }
-    console.log(Segments);
+    //console.log(Segments);
+    this.savejsonService.saveTextSegments(this.imageName, Segments);
+    this.updateEvent.emit(true);
   }
 
   CalcNextInputCoords(){
