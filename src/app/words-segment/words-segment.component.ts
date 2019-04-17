@@ -923,6 +923,7 @@ export class WordsSegmentComponent {
   WordsSegment(){
     this.cancel();
     this.removeAllObjects();
+    this.words = [];
       this.Segmloader = true;
       if (this.Binary){
           this.Segmentation(this.imagedata);
