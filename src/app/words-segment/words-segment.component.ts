@@ -1,5 +1,6 @@
 import { Component, HostListener, Output, EventEmitter, ViewChild, ElementRef  } from '@angular/core';
 import { SavejsonService } from '../savejson.service';
+import {  GetjsonService } from '../getjson.service';
 import { WebworkerService } from '../worker/webworker.service';
 import { GPP } from '../binarization/gpp.worker';
 import { GetSegments } from '../Segmentation/MyARLSA.worker';
@@ -39,7 +40,7 @@ declare const fabric: any;
 export class WordsSegmentComponent {
 
  
-  constructor(private savejsonService: SavejsonService, private workerService: WebworkerService, public snackBar: MatSnackBar) {}
+  constructor(private savejsonService: SavejsonService, private getjsonService: GetjsonService, private workerService: WebworkerService, public snackBar: MatSnackBar) {}
 
   faInfoCircle = faInfoCircle;
   canvas:any;
@@ -132,7 +133,8 @@ export class WordsSegmentComponent {
           this.canvas.uniScaleTransform = true;
           this.canvas.targetFindTolerance = 20;
           this.EnableObjectsScaling();
-          this.enableBoundaryLimit();      
+          this.enableBoundaryLimit();
+          this.loadblobs();      
 
         }, 50);
 
@@ -154,6 +156,7 @@ export class WordsSegmentComponent {
         this.oldCanvasWidth = undefined;
         this.oldCanvasHeight = undefined;
         this.initCanvas();
+        this.loadblobs();
         
     };
     this.image.src = this.imageUrl;   
@@ -188,6 +191,33 @@ export class WordsSegmentComponent {
   
       
     }); 
+  }
+
+  loadblobs(){
+    const ImageJson:any = this.getjsonService.getJson(this.imageName);
+    if (ImageJson){
+      //this.blobId = 0;
+      const rects = [];
+      for (let i=0; i<ImageJson.words.length; i++){
+          rects[i] = { x:      ImageJson.words[i].x,
+                       y:      ImageJson.words[i].y,
+                       width:  ImageJson.words[i].width,
+                       height: ImageJson.words[i].height 
+                      };
+                      
+          this.words[i] = ImageJson.words[i].word;             
+      }
+      this.DrawRects(rects);
+
+      const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');
+      for(const i in objects){
+        if (this.words[objects[i].id]){
+            objects[i].borderColor = '#ff1a1a';
+            objects[i].stroke = '#ff1a1a';
+        }
+      }
+      this.canvas.renderAll();  
+    }
   }
   
   
@@ -868,10 +898,10 @@ export class WordsSegmentComponent {
     const ratio = this.canvasWidth / this.image.width;
     const Segments:TextSegments[] = [];
     for(const i in objects){
-         const x = Math.floor(objects[i].left / ratio);
-         const y = Math.floor(objects[i].top / ratio);
-         const w = Math.floor(objects[i].width / ratio);
-         const h = Math.floor(objects[i].height / ratio);
+         const x = /* Math.floor */(objects[i].left / ratio);
+         const y = /* Math.floor */(objects[i].top / ratio);
+         const w = /* Math.floor */(objects[i].width / ratio);
+         const h = /* Math.floor */(objects[i].height / ratio);
          const word = this.words[objects[i].id];
 
          const segment:TextSegments = {"x":x, "y":y, "width":w, "height":h, "word":word};
@@ -954,10 +984,10 @@ export class WordsSegmentComponent {
   DrawRects(rects:blobObject[]){
       const ratio = this.canvasWidth / this.image.width;
       for(const i in rects){  
-        const x1 = Math.floor(rects[i].x * ratio);
-        const y1 = Math.floor(rects[i].y * ratio);
-        const x2 = Math.floor(rects[i].width * ratio);
-        const y2 = Math.floor(rects[i].height * ratio);
+        const x1 = /* Math.floor */(rects[i].x * ratio);
+        const y1 = /* Math.floor */(rects[i].y * ratio);
+        const x2 = /* Math.floor */(rects[i].width * ratio);
+        const y2 = /* Math.floor */(rects[i].height * ratio);
   
         const rectangle = new fabric.Rect({ 
           left: x1,
