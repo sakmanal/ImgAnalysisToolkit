@@ -7,8 +7,10 @@ import { GetSegments } from '../Segmentation/MyARLSA.worker';
 import { faInfoCircle, faSpinner } from '@fortawesome/free-solid-svg-icons';
 import 'fabric';
 import { IsBinary } from '../Segmentation/IsBinary';
-import {MatSnackBar} from '@angular/material';
-import {WordSnackBarComponent} from '../word-snack-bar/word-snack-bar.component';
+import evaluation from '../SegmentsEvaluation/evaluation';
+import { MatSnackBar } from '@angular/material';
+import { WordSnackBarComponent } from '../word-snack-bar/word-snack-bar.component';
+import * as GTSegments from '../SegmentsEvaluation/GTsegments.json';
 
 interface blobObject{
   Array:boolean[][];
@@ -72,6 +74,7 @@ export class WordsSegmentComponent {
   blobId:number = 0;
   words:string[] = [];
   id:number;
+  MyArlsaRects:blobObject[];
 
   //gpp parameters
   dw:number = 10;
@@ -208,6 +211,7 @@ export class WordsSegmentComponent {
           this.words[i] = ImageJson.words[i].word;             
       }
       this.DrawRects(rects);
+      this.MyArlsaRects = rects;
 
       const objects = this.canvas.getObjects().filter(obj => obj.type == 'rect');
       for(const i in objects){
@@ -977,6 +981,7 @@ export class WordsSegmentComponent {
             //console.log(objects)
             this.DrawRects(objects);
             this.Segmloader = false;
+            this.MyArlsaRects = objects;
           }
         ).catch(console.error);
   }
@@ -1016,6 +1021,15 @@ export class WordsSegmentComponent {
     this.ARLSA_a= 1;
     this.ARLSA_c = 0.7;
     this.ARLSA_Th = 3.5;
+  }
+
+  evaluation(){
+    const GroundTruthRects = (<any>GTSegments).words;
+    const SegmentsEvaluation = new evaluation();
+    SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects);
+    const Recall = SegmentsEvaluation.getRecall();
+    const Precision = SegmentsEvaluation.getPrecision();
+    console.log("Recall:" +Recall.toFixed(2), "Precision:" +Precision.toFixed(2));
   }
 
 }
