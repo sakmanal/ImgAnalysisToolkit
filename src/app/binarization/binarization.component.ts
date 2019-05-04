@@ -46,8 +46,8 @@ colorgpp:string = "primary";
 
 //sauvola parameters
 masksize:number = 8;
-stathera:number = 25;
-rstathera:number = 512;
+stathera:number = 25; //0.5
+rstathera:number = 512; //128
 n:number = 1;
 
 //gpp parameters
