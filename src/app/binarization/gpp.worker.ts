@@ -142,7 +142,6 @@ export const GPP = (d:any) => {
                         I1 = IMAGE[ydW_1Ix][x];
                         IX_pix[x] = IX_pix1[x];
                         IX_gray[x] = IX_gray1[x] + I - I1;
-                        ;
                         IX_graygray[x] = IX_graygray1[x] + I * I - I1 * I1;
                         IX_pix1[x] = IX_pix[x];
                         IX_gray1[x] = IX_gray[x];
