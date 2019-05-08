@@ -78,9 +78,9 @@ export class WordsSegmentComponent {
 
   //gpp parameters
   dw:number = 10;
-  k:number = 2.0;
+  k:number = 0.2;
   R:number = 128;
-  q:number = 1.7;
+  q:number = 0.6;
   p1:number = 0.5;
   p2:number = 0.7;
   upsampling:boolean = true;
@@ -724,7 +724,7 @@ export class WordsSegmentComponent {
           if (this.Binary){
             this.mergeObjectsCoords(imageData.data, width, height, activeObject);
           }else{
-            this.workerService.run(GPP, {imageData:imageData,  dw:5, k:2.0, R:128, q:1.7, p1:0.5, p2:0.7, upsampling:true, dw1:5})
+            this.workerService.run(GPP, {imageData:imageData,  dw:5, k:0.2, R:128, q:0.6, p1:0.5, p2:0.7, upsampling:true, dw1:5})
             .then( (result:any) => {
                    this.mergeObjectsCoords(result.data, width, height, activeObject);              
               }

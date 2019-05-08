@@ -52,9 +52,9 @@ n:number = 1;
 
 //gpp parameters
 dw:number = 10;
-k:number = 2.0;
+k:number = 0.2;
 R:number = 128;
-q:number = 1.7;
+q:number = 0.6;
 p1:number = 0.5;
 p2:number = 0.7;
 upsampling:boolean = true;

@@ -49,9 +49,10 @@ export const GPP = (d:any) => {
         let dW = Math.min(Ix - 2, Math.min(_dw, Iy - 2));  
       
         let k = _k;  
-        k = k / 10;
+        //k = k / 10;
         let R = _R;
-        let q = 1 / _q;   
+        //let q = 1 / _q;
+        let q = _q;   
         let p1 = _p1;
         let p2 = _p2;  
         let upsampling = _upsampling;
