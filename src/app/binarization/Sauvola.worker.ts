@@ -166,10 +166,10 @@ export const Sauvola = (d:any) => {
                     }
                     
                 }
-        deviation = Math.sqrt(deviation / ((masksize * 2 + 1) - 1));   
-        //deviation = Math.sqrt(deviation / ((masksize * 2 + 1)*(masksize * 2 + 1)));       
-        return (mean + (1 + stathera * ((deviation / rstathera) - 1)));
-        //return (mean * (1 + stathera * ((deviation / rstathera) - 1)));
+        //deviation = Math.sqrt(deviation / ((masksize * 2 + 1) - 1));   
+        deviation = Math.sqrt(deviation / ((masksize * 2 + 1)*(masksize * 2 + 1)));       
+        //return (mean + (1 + stathera * ((deviation / rstathera) - 1)));
+        return (mean * (1 + stathera * ((deviation / rstathera) - 1)));
     }  
     
     function  SauvolaAverage(finalImage, i, k, n, baseArray, width, height){
