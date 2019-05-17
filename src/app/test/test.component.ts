@@ -7,6 +7,8 @@ import { WebworkerService } from '../worker/webworker.service';
 interface imageObject{
    name:string;
    url:string;
+   originUrl:string;
+   spin:boolean;
 }
 
 @Component({
@@ -36,7 +38,7 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false};
        this.ImageFiles.push(imageFile);
        
         
@@ -47,29 +49,30 @@ export class TestComponent  {
 
   binarization_otsu(){
     for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].url;
+        const imageDataUrl = this.ImageFiles[i].originUrl;
         this.otsu(imageDataUrl, i);
     }
   }
 
   binarization_sauvola(){
     for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].url;
+        const imageDataUrl = this.ImageFiles[i].originUrl;
         this.sauvola(imageDataUrl, i);
     }
   }
 
   binarization_gpp(){
     for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].url;
+        const imageDataUrl = this.ImageFiles[i].originUrl;
         this.gpp(imageDataUrl, i);
     }
   }
 
-  otsu(imageDataUrl, id){
+  otsu(imageDataUrl:string, id:number){
     const canvas = document.createElement('canvas') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const img = new Image;
+    this.ImageFiles[id].spin = true;
 
     img.onload = () =>{
           const width = img.width;
@@ -85,6 +88,7 @@ export class TestComponent  {
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
+                      this.ImageFiles[id].spin = false;
                         
                 }
               ).catch(console.error);
@@ -105,10 +109,11 @@ export class TestComponent  {
   upsampling:boolean = true;
   dw1:number = 20;
 
-  gpp(imageDataUrl, id){
+  gpp(imageDataUrl:string, id:number){
     const canvas = document.createElement('canvas') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     const img = new Image;
+    this.ImageFiles[id].spin = true;
 
     img.onload = () =>{
           const width = img.width;
@@ -124,6 +129,7 @@ export class TestComponent  {
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
+                      this.ImageFiles[id].spin = false;
                         
                 }
               ).catch(console.error);
@@ -132,8 +138,43 @@ export class TestComponent  {
     }
     img.src = imageDataUrl;
   }
+  
 
-  sauvola(imageDataUrl, id){
+
+  //sauvola parameters
+  masksize:number = 4;
+  stathera:number = 0.5; 
+  rstathera:number = 128; 
+  n:number = 3;
+
+  sauvola(imageDataUrl:string, id:number){
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    const img = new Image;
+    this.ImageFiles[id].spin = true;
+
+    img.onload = () =>{
+          const width = img.width;
+          const height = img.height;
+          canvas.width = width;
+          canvas.height = height;
+          ctx.drawImage(img, 0, 0);
+          const imageData = ctx.getImageData(0, 0, width, height);
+
+          this.workerService.run(Sauvola, {imageData:imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
+              .then( (result:any) => {
+                      this.ImageFiles[id].url = result.data;  
+                      //console.log(result.data);
+                      ctx.putImageData(result, 0, 0);
+                      this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
+                      this.ImageFiles[id].spin = false;
+                        
+                }
+              ).catch(console.error);
+
+
+    }
+    img.src = imageDataUrl;
 
   }
 
