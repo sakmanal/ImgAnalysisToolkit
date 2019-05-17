@@ -1,19 +1,30 @@
 
 <div style="margin: 10px">
     <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;  font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Text Documents</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" color="warn" (click)="binarization_otsu()">Otsu</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" color="warn" (click)="binarization_sauvola()">Sauvola</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" color="warn" (click)="binarization_gpp()">GPP</button>
+    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorotsu" (click)="binarization_otsu()">Otsu</button>
+    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
+    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
+    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" (click)="restore()"><mat-icon>undo</mat-icon> undo</button>
     
     <input  style="display: none" type='file' multiple="multiple" (change)="selectFiles($event)" #fileInput accept="image/*">
     
 
-    <div *ngFor="let image of ImageFiles">
+    <!-- <div *ngFor="let image of ImageFiles">
         <div style="margin: 10px; width: 300px" class="container">
             <div *ngIf="image.name" style="margin: 2px">{{image.name}}</div>
             <img width="300px" src={{image.url}} />
             <div *ngIf="image.spin" class="spinner"></div>
-        </div>
-        
-    </div>
+        </div>   
+    </div> -->
 </div>
+
+
+<ul class="auto-grid">
+        <span *ngFor="let image of ImageFiles">
+                <div style="width: 300px" class="container">
+                    <div *ngIf="image.name" style="margin: 2px">{{image.name.substr(0, 40)}}</div>
+                    <img class="image" src={{image.url}} />
+                    <div *ngIf="image.spin" class="spinner"></div>
+                </div>   
+            </span>
+</ul>

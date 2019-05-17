@@ -21,6 +21,10 @@ export class TestComponent  {
  
   ImageFiles:imageObject[] = [];
 
+  colorotsu:string = "primary";
+  colorsauvola:string = "primary";
+  colorgpp:string = "primary";
+
   constructor(private workerService: WebworkerService){}
   
     
@@ -48,6 +52,9 @@ export class TestComponent  {
   }
 
   binarization_otsu(){
+    this.colorotsu = "warn";
+    this.colorsauvola = "primary";
+    this.colorgpp = "primary"; 
     for(let i = 0; i < this.ImageFiles.length; i++){
         const imageDataUrl = this.ImageFiles[i].originUrl;
         this.otsu(imageDataUrl, i);
@@ -55,6 +62,9 @@ export class TestComponent  {
   }
 
   binarization_sauvola(){
+    this.colorotsu = "primary";
+    this.colorsauvola = "warn";
+    this.colorgpp = "primary";
     for(let i = 0; i < this.ImageFiles.length; i++){
         const imageDataUrl = this.ImageFiles[i].originUrl;
         this.sauvola(imageDataUrl, i);
@@ -62,6 +72,9 @@ export class TestComponent  {
   }
 
   binarization_gpp(){
+    this.colorotsu = "primary";
+    this.colorsauvola = "primary";
+    this.colorgpp = "warn"; 
     for(let i = 0; i < this.ImageFiles.length; i++){
         const imageDataUrl = this.ImageFiles[i].originUrl;
         this.gpp(imageDataUrl, i);
@@ -176,6 +189,16 @@ export class TestComponent  {
     }
     img.src = imageDataUrl;
 
+  }
+
+  restore(){
+    this.colorotsu = "primary";
+    this.colorsauvola = "primary";
+    this.colorgpp = "primary";
+    for(let i = 0; i < this.ImageFiles.length; i++){
+      this.ImageFiles[i].url = this.ImageFiles[i].originUrl;
+    }
+    
   }
 
 
