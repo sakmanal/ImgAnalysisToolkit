@@ -1,5 +1,5 @@
 import { Component, ViewChild} from '@angular/core';
-import { BinarizationComponent } from '../binarization/binarization.component';
+//import { BinarizationComponent } from '../binarization/binarization.component';
 import { ImageInfoComponent } from '../image-info/image-info.component';
 import { WordsSegmentComponent } from '../words-segment/words-segment.component';
 import { MatTabChangeEvent } from '@angular/material/tabs';
@@ -12,7 +12,7 @@ import { MatTabChangeEvent } from '@angular/material/tabs';
 })
 export class TabsComponent{
 
-  @ViewChild(BinarizationComponent) Binarization;
+  //@ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
   @ViewChild(WordsSegmentComponent) WordsSegment;
 

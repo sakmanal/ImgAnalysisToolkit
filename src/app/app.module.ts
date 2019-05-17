@@ -16,6 +16,7 @@ import { MouseWheelDirective } from './mousewheel.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { WordsSegmentComponent } from './words-segment/words-segment.component';
 import { WordSnackBarComponent } from './word-snack-bar/word-snack-bar.component';
+import { TestComponent } from './test/test.component';
 
 @NgModule({
   declarations: [
@@ -27,7 +28,8 @@ import { WordSnackBarComponent } from './word-snack-bar/word-snack-bar.component
     ImageInfoComponent,
     MouseWheelDirective,
     WordsSegmentComponent,
-    WordSnackBarComponent
+    WordSnackBarComponent, 
+    TestComponent
  
   ],
   imports: [
