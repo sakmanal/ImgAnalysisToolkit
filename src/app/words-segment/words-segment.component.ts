@@ -10,7 +10,7 @@ import { IsBinary } from '../Segmentation/IsBinary';
 import evaluation from '../SegmentsEvaluation/evaluation';
 import { MatSnackBar } from '@angular/material';
 import { WordSnackBarComponent } from '../word-snack-bar/word-snack-bar.component';
-import * as GTSegments from '../SegmentsEvaluation/GTsegments.json';
+
 
 interface blobObject{
   Array:boolean[][];
@@ -31,6 +31,7 @@ interface TextSegments{
   height:number;
   word:string;
 }
+
 
 declare const fabric: any;
 
@@ -75,6 +76,10 @@ export class WordsSegmentComponent {
   words:string[] = [];
   id:number;
   MyArlsaRects:blobObject[];
+  Recall:number;
+  Precision:number;
+  jsonFile:any;
+  JsonFileName:string;
 
   //gpp parameters
   dw:number = 10;
@@ -107,6 +112,8 @@ export class WordsSegmentComponent {
         this.removeAllObjects();
         this.words = [];
         this.changeImage();
+        this.Precision = 0;
+        this.Recall = 0;
         this.ImageChange = false;
       }
       
@@ -1022,18 +1029,40 @@ export class WordsSegmentComponent {
     this.ARLSA_c = 0.7;
     this.ARLSA_Th = 3.5;
   }
-
+  
   evaluation(){
-    const GroundTruthRects = (<any>GTSegments).words;
+    const GroundTruthRects = this.jsonFile.words;
     const SegmentsEvaluation = new evaluation();
     SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects);
-    const Recall = SegmentsEvaluation.getRecall();
-    const Precision = SegmentsEvaluation.getPrecision();
-    console.log("Recall:" +Recall.toFixed(2), "Precision:" +Precision.toFixed(2));
+    //const Recall = SegmentsEvaluation.getRecall();
+    //const Precision = SegmentsEvaluation.getPrecision();
+    //console.log("Recall:" +Recall.toFixed(2), "Precision:" +Precision.toFixed(2));
+    this.Recall = SegmentsEvaluation.getRecall();
+    this.Precision = SegmentsEvaluation.getPrecision();
+    if (this.Recall==0){this.Recall = 0.001}
+    if (this.Precision==0){this.Precision = 0.001}
   }
 
-  loadGT(){
+  
+ 
+  loadGT(event:any):void{
+
+    const file = event.target.files[0];
+    if (file == undefined) return;
+    if (!file.type.match('\.json')) return;
+
+    this.JsonFileName = event.target.files[0].name;
+    //console.log(name);
+
+    const reader = new FileReader();
+    reader.onload = (event:any) =>{
+      
+      this.jsonFile = JSON.parse(event.target.result);
+      //console.log(this.jsonFile);
+      
+      
+    };
+    reader.readAsText(event.target.files[0]);
     
   }
-
 }

@@ -102,6 +102,10 @@ mouseWheelDownFunc() {
 }
 
 onSelectFile(event:any):void { // called each time file input changes
+  const file = event.target.files[0];
+  if (file == undefined) return;
+  if (!file.type.match('image')) return;
+
   const reader = new FileReader();
   
   reader.onload = (event:any) =>{

@@ -88,9 +88,16 @@
                         <button  mat-raised-button color="warn" style="margin: 3px;" (click)="evaluation()">
                              Precision Recall Evaluation
                         </button>
-                        <button  mat-raised-button color="primary" style="margin: 3px;" (click)="loadGT()">
+                        <button  mat-raised-button color="primary" style="margin: 3px;" (click)="fileInput.click()">
                                 <mat-icon>cloud_upload</mat-icon> Load Ground Truth
                         </button>
+
+                        <input  style="display: none" type='file' (change)="loadGT($event)" #fileInput accept=".json">
+
+                        
+
+                        <strong *ngIf="Recall" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Recall</span> = {{Recall.toFixed(3)}}</strong>
+                        <strong *ngIf="Precision" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Precision</span> = {{Precision.toFixed(3)}}</strong>
 
             
              
@@ -113,7 +120,10 @@
                                 </div>
                             
                         </div>   
-                        <p><strong><span style="color:#ffc400;font-size:15px; margin:3px"> Document: </span> {{imageName}}</strong></p> 
+                        <p>
+                            <strong><span style="color:#ffc400;font-size:15px; margin:3px"> Document: </span> {{imageName}}</strong>
+                            <strong *ngIf="JsonFileName" style="margin: 3px; margin-left: 10px;"> {{JsonFileName}}</strong>
+                        </p> 
                     </div>
                     
                     
