@@ -3,12 +3,30 @@ import { otsu } from '../binarization/otsu.worker';
 import { Sauvola } from '../binarization/Sauvola.worker';
 import { GPP } from '../binarization/gpp.worker';
 import { WebworkerService } from '../worker/webworker.service';
+import evaluation from '../SegmentsEvaluation/evaluation';
+import { GetSegments } from '../Segmentation/MyARLSA.worker';
+import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { counter } from '@fortawesome/fontawesome-svg-core';
 
 interface imageObject{
    name:string;
    url:string;
    originUrl:string;
    spin:boolean;
+   blobs:blobObject;
+   IsBinary:boolean;
+}
+
+interface blobObject{
+  Array:boolean[][];
+  x:number;
+  y:number;
+  height:number;
+  width:number;
+  Right:number;
+  Bottom:number;
+  Density:number;
+  Elongation:number;
 }
 
 @Component({
@@ -24,6 +42,9 @@ export class TestComponent  {
   colorotsu:string = "primary";
   colorsauvola:string = "primary";
   colorgpp:string = "primary";
+
+  enableView:boolean = false;
+  Totalimages:number = 0;
 
   constructor(private workerService: WebworkerService){}
   
@@ -42,13 +63,15 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:null, IsBinary:false};
        this.ImageFiles.push(imageFile);
+       this.Totalimages++;
        
         
       };   
       picReader.readAsDataURL(file);
     }
+    if (files.length != 0){ this.enableView = true; }
   }
 
   binarization_otsu(){
@@ -97,11 +120,13 @@ export class TestComponent  {
 
           this.workerService.run(otsu, {imageData:imageData})
               .then( (result:any) => {
-                      this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;  
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
+                      this.ImageFiles[id].IsBinary = true;
+
                         
                 }
               ).catch(console.error);
@@ -138,11 +163,12 @@ export class TestComponent  {
 
           this.workerService.run(GPP, {imageData:imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
               .then( (result:any) => {
-                      this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;  
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
+                      this.ImageFiles[id].IsBinary = true;
                         
                 }
               ).catch(console.error);
@@ -176,11 +202,12 @@ export class TestComponent  {
 
           this.workerService.run(Sauvola, {imageData:imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
               .then( (result:any) => {
-                      this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;  
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
+                      this.ImageFiles[id].IsBinary = true;
                         
                 }
               ).catch(console.error);
@@ -197,8 +224,72 @@ export class TestComponent  {
     this.colorgpp = "primary";
     for(let i = 0; i < this.ImageFiles.length; i++){
       this.ImageFiles[i].url = this.ImageFiles[i].originUrl;
+      this.ImageFiles[i].IsBinary = false;
     }
     
+  }
+
+
+  //ARLSA parameters
+  ARLSA_a:number = 1;
+  ARLSA_c:number = 0.7;
+  ARLSA_Th:number = 3.5;
+  RemovePunctuationMarks:boolean = true;
+
+  faSpinner = faSpinner;
+  Segmloader:boolean  = false;
+  WordsSegment(){
+    this.Segmloader = true;
+    for(let i = 0; i < this.ImageFiles.length; i++){
+      const imageDataUrl = this.ImageFiles[i].url;
+
+      const canvas = document.createElement('canvas') as HTMLCanvasElement;
+      const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+      const img = new Image;
+
+      img.onload = () =>{
+        const width = img.width;
+        const height = img.height;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0);
+        const imagedata = ctx.getImageData(0, 0, width, height);
+        
+        if (this.ImageFiles[i].IsBinary == true){
+             this.Segmentation(imagedata, i);
+        }else{
+          this.workerService.run(GPP, {imageData:imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
+              .then( (result:any) => {      
+                  this.Segmentation(result, i);
+                }
+              ).catch(console.error);
+        }
+        
+
+      }
+      img.src = imageDataUrl;  
+      
+    }
+  }
+
+
+ 
+ 
+  counter:number = 0;
+  Segmentation(imageData:ImageData, id:number){
+ 
+     this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks})
+          .then( (objects:any) => {
+   
+            this.ImageFiles[id].blobs = objects; 
+            this.counter++;
+            if (this.counter == this.Totalimages) { 
+              this.Segmloader = false; 
+              this.counter = 0;
+            }
+            
+          }
+        ).catch(console.error);
   }
 
 

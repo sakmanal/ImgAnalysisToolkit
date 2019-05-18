@@ -51,7 +51,7 @@
    display: grid;
    /* autoprefixer: off */
    grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
-   grid-gap: 5rem;
+   grid-gap: 2rem;
  }
 
 
