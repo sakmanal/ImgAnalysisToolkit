@@ -2,9 +2,7 @@
 
 <mat-tab-group (selectedTabChange)="tabSelectionChanged($event)">  
   
-    <mat-tab label="test">
-        <app-test></app-test>
-    </mat-tab>
+   
 
     <mat-tab label="Binarization"> 
      <app-binarization
@@ -18,6 +16,10 @@
       </app-words-segment>
     </mat-tab>
 
+    <mat-tab label="multiple Processing">
+        <app-test></app-test>
+    </mat-tab>
+    
     <mat-tab label="Saved Text Documents">
       <app-image-info></app-image-info>
     </mat-tab>

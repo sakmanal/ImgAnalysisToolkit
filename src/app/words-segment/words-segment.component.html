@@ -49,7 +49,7 @@
                 <div style="margin: 5px">
 
                         <button  mat-raised-button color="warn" style="margin: 3px;" (click)="WordsSegment()">
-                            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> Segmentation
+                            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> RLSA Word Segmentation
                         </button>
                 
                         <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
@@ -87,6 +87,9 @@
 
                         <button  mat-raised-button color="warn" style="margin: 3px;" (click)="evaluation()">
                              Precision Recall Evaluation
+                        </button>
+                        <button  mat-raised-button color="primary" style="margin: 3px;" (click)="loadGT()">
+                                <mat-icon>cloud_upload</mat-icon> Load Ground Truth
                         </button>
 
             

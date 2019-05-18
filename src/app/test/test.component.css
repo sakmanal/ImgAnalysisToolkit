@@ -59,6 +59,12 @@
    max-width: 300px;
  }
 
+/*  img:hover, img:target {
+   border: 3px solid green;
+   margin: 0;
+ } */
+
+
 
 
  .mat-form-field{

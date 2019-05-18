@@ -6,7 +6,7 @@ import { WebworkerService } from '../worker/webworker.service';
 import evaluation from '../SegmentsEvaluation/evaluation';
 import { GetSegments } from '../Segmentation/MyARLSA.worker';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import { counter } from '@fortawesome/fontawesome-svg-core';
+
 
 interface imageObject{
    name:string;

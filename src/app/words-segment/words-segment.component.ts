@@ -1032,4 +1032,8 @@ export class WordsSegmentComponent {
     console.log("Recall:" +Recall.toFixed(2), "Precision:" +Precision.toFixed(2));
   }
 
+  loadGT(){
+    
+  }
+
 }
