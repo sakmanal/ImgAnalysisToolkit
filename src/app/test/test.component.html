@@ -1,14 +1,18 @@
 
-<div style="margin: 10px">
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;  font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Text Documents</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorotsu" (click)="binarization_otsu()">Otsu</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
-    <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;" (click)="restore()"><mat-icon>undo</mat-icon> undo</button>
+<div style="margin: 5px">
+    <button mat-raised-button style="margin-right: 3px; margin-left: 5px; margin-top: 5px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Text Documents</button>
+    <button mat-raised-button style="margin-right: 5px; margin-top: 5px; font-size: 17px" color="accent" (click)="selectGT.click()"><mat-icon>add circle</mat-icon> Load Ground Truth</button>
+    <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorotsu" (click)="binarization_otsu()">Otsu</button>
+    <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
+    <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
+    <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="restore()"><mat-icon>undo</mat-icon> undo</button>
     
     <input  style="display: none" type='file' multiple="multiple" (change)="selectFiles($event)" #fileInput accept="image/*">
-    
+    <input  style="display: none" type='file' multiple="multiple" (change)="selectGT($event)" #selectGT accept="image/*">
 
+</div>
+    
+      
     <!-- <div *ngFor="let image of ImageFiles">
         <div style="margin: 10px; width: 300px" class="container">
             <div *ngIf="image.name" style="margin: 2px">{{image.name}}</div>
@@ -16,8 +20,90 @@
             <div *ngIf="image.spin" class="spinner"></div>
         </div>   
     </div> -->
-</div>
 
+
+<div class="row">
+
+    <div class="side">
+            <mat-expansion-panel>
+      
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        sauvola parameters
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                   
+                    <mat-form-field color="warn">
+                      <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="stathera" placeholder="k" step="0.1" min="0">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="rstathera" placeholder="R">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="n" placeholder="n">
+                    </mat-form-field>
+                   
+                  </mat-expansion-panel>
+    </div>
+
+    <div class="main">
+            <mat-expansion-panel>
+
+                    <mat-expansion-panel-header>
+                      <mat-panel-title>
+                        gpp parameters
+                      </mat-panel-title>
+                    </mat-expansion-panel-header>
+                   
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="1">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="k" placeholder="k" min="0.1" step="0.1">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="R" placeholder="R" min="10" step="10">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="q" placeholder="q" step="0.1">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="p1" placeholder="p1" step="0.1">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="p2" placeholder="p2" step="0.1">
+                    </mat-form-field>
+                    <mat-form-field color="warn">
+                      <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="1">
+                    </mat-form-field>
+                      <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox>
+                   
+                  </mat-expansion-panel>
+    </div>
+
+</div>   
+
+
+<div style="margin-left: 5px;">
+        <button  mat-raised-button color="warn" style="margin: 5px;" (click)="WordsSegment()">
+            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> RLSA Words Segmentation
+        </button>
+
+        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+            <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
+        </mat-form-field>
+        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+            <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c" step="0.1">
+        </mat-form-field>
+        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+            <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th" step="0.1">
+        </mat-form-field>
+
+        <button  mat-raised-button color="primary" style="margin-left:3px;" (click)="evaluate()">Precision Recall evaluation</button>
+</div>  
 
 <ul class="auto-grid">
         <span *ngFor="let image of ImageFiles">
