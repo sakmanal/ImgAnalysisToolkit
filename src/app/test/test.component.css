@@ -51,12 +51,12 @@
    display: grid;
    /* autoprefixer: off */
    grid-template-columns: repeat(auto-fill, minmax(var(--auto-grid-min-size), 1fr));
-   grid-gap: 2rem;
+   grid-gap: 1rem;
  }
 
 
  .image{
-   max-width: 300px;
+   max-width: 280px;
  }
 
 /*  img:hover, img:target {
@@ -66,8 +66,8 @@
 
  .del{
    position: absolute;
-   left: 100%;
-   top: 10px;
+   left: 90%;
+   top: 5px;
  }
 
 
