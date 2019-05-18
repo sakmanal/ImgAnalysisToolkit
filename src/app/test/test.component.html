@@ -109,13 +109,15 @@
 </span>
 
 <ul class="auto-grid">
-        <span *ngFor="let image of ImageFiles">
+        <span *ngFor="let image of ImageFiles; let i = index" [attr.data-index]="i">
                 <div style="width: 300px" class="container">
                     <div *ngIf="image.name" style="margin: 2px">{{image.name.substr(0, 40)}}</div>
                     <img class="image" src={{image.url}} />
                     <div *ngIf="image.spin" class="spinner"></div>
-                    <!-- <button mat-raised-button color="warn">open Segmentation tab</button>
-                    <button mat-raised-button color="warn" style="margin-top: 2px">open Binarization tab</button> -->
+                    <button (click)="remove(i)" class="del" mat-icon-button color="warn">
+                        <mat-icon aria-label="Example icon-button with a heart icon">clear</mat-icon>
+                    </button>
+                    
                 </div>   
         </span>
 </ul>

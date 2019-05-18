@@ -10,7 +10,7 @@ export const otsu = (d:any) => {
     greyscale(); 
     const histogram = hist();
     const threshold = otsu(histogram, w*h);
-    console.log(threshold);
+    //console.log(threshold);
     binarize(threshold);
     postMessage(imageData);
 

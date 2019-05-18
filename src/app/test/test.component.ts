@@ -292,7 +292,14 @@ export class TestComponent  {
         ).catch(console.error);
   }
 
+  
+  remove(id:number){
+    //console.log(id);
 
+    if (id > -1) {
+      this.ImageFiles.splice(id, 1);
+    }
+  }
 
 
   
