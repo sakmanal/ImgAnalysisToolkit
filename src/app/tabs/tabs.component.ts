@@ -15,6 +15,7 @@ export class TabsComponent{
   //@ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
   @ViewChild(WordsSegmentComponent) WordsSegment;
+  tabIndex:number = 0;
 
   updateTable(event:MessageEvent){
     this.ImageInfo.showImageInfo();
@@ -31,7 +32,17 @@ export class TabsComponent{
     if (event.index == 1 && this.WordsSegment.imageUrl){
       this.WordsSegment.handleComponentView();
     }
+  }
 
+  editImage(event){
+    this.WordsSegment.imageUrl = event.dataURL;
+    this.WordsSegment.imageName = event.name;
+    this.WordsSegment.ImageChange = true;
+    if (this.WordsSegment.imageUrl){
+      this.WordsSegment.handleComponentView();
+    }
+    this.tabIndex = 1;
+    
   }
 
 }

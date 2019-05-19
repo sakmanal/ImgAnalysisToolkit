@@ -70,6 +70,12 @@
    top: 5px;
  }
 
+ .proc{
+  position: absolute;
+  left: 90%;
+  top: 30px;
+ }
+
 
  .mat-form-field{
 

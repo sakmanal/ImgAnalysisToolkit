@@ -1,6 +1,7 @@
 
 
-<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)">  
+<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)" 
+                                            [(selectedIndex)]="tabIndex">  
   
    
 
@@ -17,7 +18,9 @@
     </mat-tab>
 
     <mat-tab label="multiple Processing">
-        <app-test></app-test>
+        <app-test 
+           (updateImageEvent)="editImage($event)">
+        </app-test>
     </mat-tab>
     
     <mat-tab label="Saved Text Documents">

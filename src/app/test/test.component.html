@@ -116,8 +116,11 @@
                     <div *ngIf="image.name" style="margin: 2px">{{image.name.substr(0, 40)}}</div>
                     <img class="image" src={{image.url}} />
                     <div *ngIf="image.spin" class="spinner"></div>
-                    <button (click)="remove(i)" class="del" mat-icon-button color="warn">
-                        <mat-icon color="primary" aria-label="Example icon-button with a heart icon">clear</mat-icon>
+                    <button (click)="remove(i)" class="del" mat-icon-button>
+                        <mat-icon color="primary">clear</mat-icon>
+                    </button>
+                    <button (click)="edit(i)" class="proc" mat-icon-button>
+                        <mat-icon color="primary">add</mat-icon>
                     </button>
                     
                 </div>   

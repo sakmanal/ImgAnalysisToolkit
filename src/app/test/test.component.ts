@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { otsu } from '../binarization/otsu.worker';
 import { Sauvola } from '../binarization/Sauvola.worker';
 import { GPP } from '../binarization/gpp.worker';
@@ -299,6 +299,7 @@ export class TestComponent  {
 
     if (id > -1) {
       this.ImageFiles.splice(id, 1);
+      this.Totalimages = this.ImageFiles.length;
     }
 
     if (this.ImageFiles.length == 0) { this.enableView = false }
@@ -308,7 +309,13 @@ export class TestComponent  {
 
   removeAll(){
     this.ImageFiles = [];
+    this.Totalimages = 0;
     this.enableView = false;
+  }
+
+  @Output() updateImageEvent = new EventEmitter<object>();
+  edit(id:number){
+    this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name});
   }
 
 
