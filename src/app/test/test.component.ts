@@ -66,12 +66,13 @@ export class TestComponent  {
        const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:null, IsBinary:false};
        this.ImageFiles.push(imageFile);
        this.Totalimages++;
-       
         
       };   
       picReader.readAsDataURL(file);
     }
     if (files.length != 0){ this.enableView = true; }
+
+    event.target.value = '';  //enable opening the same file
   }
 
   binarization_otsu(){
@@ -299,6 +300,15 @@ export class TestComponent  {
     if (id > -1) {
       this.ImageFiles.splice(id, 1);
     }
+
+    if (this.ImageFiles.length == 0) { this.enableView = false }
+
+    
+  }
+
+  removeAll(){
+    this.ImageFiles = [];
+    this.enableView = false;
   }
 
 
