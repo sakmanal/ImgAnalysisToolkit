@@ -44,7 +44,7 @@ export class TestComponent  {
   colorgpp:string = "primary";
 
   enableView:boolean = false;
-  Totalimages:number = 0;
+  //Totalimages:number = 0;
 
   constructor(private workerService: WebworkerService){}
   
@@ -65,7 +65,7 @@ export class TestComponent  {
        const picFile = event.target.result;
        const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:null, IsBinary:false};
        this.ImageFiles.push(imageFile);
-       this.Totalimages++;
+       //this.Totalimages++;
         
       };   
       picReader.readAsDataURL(file);
@@ -284,7 +284,8 @@ export class TestComponent  {
    
             this.ImageFiles[id].blobs = objects; 
             this.counter++;
-            if (this.counter == this.Totalimages) { 
+            //if (this.counter == this.Totalimages) { 
+            if (this.counter == this.ImageFiles.length) {
               this.Segmloader = false; 
               this.counter = 0;
             }
@@ -299,7 +300,7 @@ export class TestComponent  {
 
     if (id > -1) {
       this.ImageFiles.splice(id, 1);
-      this.Totalimages = this.ImageFiles.length;
+      //this.Totalimages = this.ImageFiles.length;
     }
 
     if (this.ImageFiles.length == 0) { this.enableView = false }
@@ -309,7 +310,7 @@ export class TestComponent  {
 
   removeAll(){
     this.ImageFiles = [];
-    this.Totalimages = 0;
+    //this.Totalimages = 0;
     this.enableView = false;
   }
 
