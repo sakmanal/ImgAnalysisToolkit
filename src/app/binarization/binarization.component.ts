@@ -1,13 +1,13 @@
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-
 import InvertColours from './invertColor';
 import binarize from './binarize';
-
+import { Chart } from 'chart.js';
 import { WebworkerService } from '../worker/webworker.service';
 import { Sauvola } from './Sauvola.worker';
 import { GPP } from './gpp.worker';
 import { otsu } from './otsu.worker';
+import { histog } from './histogram.worker';
 
 
 @Component({
@@ -154,6 +154,9 @@ view():void{
       canvas.height = h;
       ctx.drawImage(this.img, 0, 0);
       this.imageData = ctx.getImageData(0, 0, w, h);
+      
+      this.HistGraph(this.imageData);
+      
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
       this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
@@ -275,6 +278,56 @@ save(){
   a.download = 'image.png';
 
   a.click()
+}
+
+
+HistGraph(imageData:ImageData){
+  this.workerService.run(histog, {imageData:imageData})
+  .then( (histArray:any) => {
+         this.drawHistGraph(histArray);
+    }
+  ).catch(console.error);
+}
+
+
+myChart:any;
+drawHistGraph(histArray:number[]){
+
+  if(this.myChart) this.myChart.destroy();
+
+  const c = []
+  for (let i = 0; i < 256; i ++) {
+      c.push(i);
+  }
+
+  const ctx = document.getElementById("myChart");
+  this.myChart = new Chart(ctx, {
+    type: 'bar',
+    scaleSteps:9,
+    data: {
+      labels: c,
+      datasets: [{
+        label: 'Grey-scale Histogram',
+        data: histArray,
+        backgroundColor: 'rgba(255, 99, 132, 1)',
+      }]
+    },
+    options: {
+      scales: {
+        xAxes: [{
+          display: false,
+          barPercentage: 1,
+        }, {
+          display: true,
+        }],
+        yAxes: [{
+          ticks: {
+            beginAtZero:true
+          }
+        }]
+      }
+    }
+  });
 }
 
 
