@@ -75,6 +75,10 @@ export class TestComponent  {
     event.target.value = '';  //enable opening the same file
   }
 
+  selectGT(event:any):void{
+    alert("not ready yet"+"😅😅")
+  }
+
   binarization_otsu(){
     this.colorotsu = "warn";
     this.colorsauvola = "primary";
@@ -303,7 +307,12 @@ export class TestComponent  {
       //this.Totalimages = this.ImageFiles.length;
     }
 
-    if (this.ImageFiles.length == 0) { this.enableView = false }
+    if (this.ImageFiles.length == 0){ 
+      this.enableView = false;
+      this.colorotsu = "primary";
+      this.colorsauvola = "primary";
+      this.colorgpp = "primary";
+    }
 
     
   }
@@ -312,6 +321,9 @@ export class TestComponent  {
     this.ImageFiles = [];
     //this.Totalimages = 0;
     this.enableView = false;
+    this.colorotsu = "primary";
+    this.colorsauvola = "primary";
+    this.colorgpp = "primary";
   }
 
   @Output() updateImageEvent = new EventEmitter<object>();
