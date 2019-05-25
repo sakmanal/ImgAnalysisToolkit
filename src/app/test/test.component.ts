@@ -6,6 +6,7 @@ import { WebworkerService } from '../worker/webworker.service';
 import evaluation from '../SegmentsEvaluation/evaluation';
 import { GetSegments } from '../Segmentation/MyARLSA.worker';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
+import { SavejsonService } from '../savejson.service';
 
 
 interface imageObject{
@@ -29,6 +30,14 @@ interface blobObject{
   Elongation:number;
 }
 
+interface TextSegments{
+  x:number;
+  y:number;
+  width:number;
+  height:number;
+  word:string;
+}
+
 @Component({
   selector: 'app-test',
   templateUrl: './test.component.html',
@@ -46,7 +55,9 @@ export class TestComponent  {
   enableView:boolean = false;
   //Totalimages:number = 0;
 
-  constructor(private workerService: WebworkerService){}
+  @Output() updateEvent = new EventEmitter<boolean>();
+
+  constructor(private workerService: WebworkerService, private savejsonService: SavejsonService){}
   
     
 
@@ -63,7 +74,7 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:null, IsBinary:false};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false};
        this.ImageFiles.push(imageFile);
        //this.Totalimages++;
         
@@ -328,7 +339,28 @@ export class TestComponent  {
 
   @Output() updateImageEvent = new EventEmitter<object>();
   edit(id:number){
-    this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name});
+    this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name, blobs:this.ImageFiles[id].blobs});
+  }
+
+  evaluate(){
+    alert("not ready yet"+"😅😅");
+  }
+
+  saveSegments(){
+    for(let i = 0; i < this.ImageFiles.length; i++){
+      const Segments:TextSegments[] = [];
+      const name = this.ImageFiles[i].name;
+      for(const j in this.ImageFiles[i].blobs){
+        const x = this.ImageFiles[i].blobs[j].x;
+        const y = this.ImageFiles[i].blobs[j].y;
+        const w = this.ImageFiles[i].blobs[j].width;
+        const h = this.ImageFiles[i].blobs[j].height;
+        const segment:TextSegments = {"x":x, "y":y, "width":w, "height":h, "word":""};
+        Segments.push(segment);
+      }
+      this.savejsonService.saveTextSegments(name, Segments);
+    }
+    this.updateEvent.emit(true);
   }
 
 

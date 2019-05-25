@@ -204,6 +204,12 @@ export class WordsSegmentComponent {
   }
 
   loadblobs(){
+    if (this.MyArlsaRects.length > 0){
+      //console.log('2ooooooo', this.MyArlsaRects.length);
+      this.DrawRects(this.MyArlsaRects);
+      return;
+    }
+    //console.log('1ooooooo');
     const ImageJson:any = this.getjsonService.getJson(this.imageName);
     if (ImageJson){
       //this.blobId = 0;
@@ -1031,7 +1037,12 @@ export class WordsSegmentComponent {
   }
   
   evaluation(){
+    if (this.jsonFile == undefined){
+      alert("load Ground Truth Segments to evaluate");
+      return;
+   }
     const GroundTruthRects = this.jsonFile.words;
+    
     const SegmentsEvaluation = new evaluation();
     SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects);
     //const Recall = SegmentsEvaluation.getRecall();

@@ -25,6 +25,7 @@ export class TabsComponent{
     //console.log(event)
     this.WordsSegment.imageUrl = event.dataURL;
     this.WordsSegment.imageName = event.name;
+    this.WordsSegment.MyArlsaRects = [];
     this.WordsSegment.ImageChange = true;  
   }
 
@@ -37,6 +38,13 @@ export class TabsComponent{
   editImage(event){
     this.WordsSegment.imageUrl = event.dataURL;
     this.WordsSegment.imageName = event.name;
+
+    if (event.blobs == undefined){
+      this.WordsSegment.MyArlsaRects = [];
+    }else{
+      this.WordsSegment.MyArlsaRects = event.blobs;
+    }
+    
     this.WordsSegment.ImageChange = true;
     if (this.WordsSegment.imageUrl){
       this.WordsSegment.handleComponentView();
