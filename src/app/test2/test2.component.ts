@@ -35,7 +35,7 @@ export class Test2Component implements OnInit {
   view(){
     const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
 
       this.img.onload = () => {
         var w = this.img.width;
@@ -80,11 +80,10 @@ export class Test2Component implements OnInit {
   readjson(){
     const main = this.jsonFile.Page.TextRegion;
     //console.log(main.length);
-
-    for(let i=0; i<main.length; i++){
-      const TextLine = main[i].TextLine;
-      //console.log(TextLine)
-      for(let j=0; j<TextLine.length; j++){
+    if (main.length == undefined){
+       const TextLine = main.TextLine;
+       //console.log(TextLine)
+       for(let j=0; j<TextLine.length; j++){
         const words = TextLine[j].Word
         //console.log(words)
         if (words.length == undefined){
@@ -98,8 +97,27 @@ export class Test2Component implements OnInit {
           this.pointsArray.push(coords)
         }
       }
-    }
-    
+    }else{
+
+        for(let i=0; i<main.length; i++){
+          const TextLine = main[i].TextLine;
+          //console.log(TextLine)
+          for(let j=0; j<TextLine.length; j++){
+            const words = TextLine[j].Word
+            //console.log(words)
+            if (words.length == undefined){
+              this.pointsArray.push(words.Coords);
+              continue;
+            }
+            for(let k=0; k<words.length; k++){
+              const coords = words[k].Coords;
+              //console.log(coords.points)
+              //const points = coords.points;
+              this.pointsArray.push(coords)
+            }
+          }
+        }
+  }
     this.makeGTrects();
     //console.log(this.pointsArray)
   }
@@ -150,14 +168,34 @@ export class Test2Component implements OnInit {
     const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     
-    ctx.lineWidth = 6;
-    ctx.strokeStyle = "red";
+    
+    
+    
 
-    for(let i=0; i<this.RectsArray.length; i++){
-      const rect = this.RectsArray[i];
-      ctx.rect(rect.x, rect.y, rect.w, rect.h);
-    }
-    ctx.stroke();
+      this.img.onload = () => {
+        
+        const w = this.img.width;
+        const h = this.img.height;
+        canvas.width = w;
+        canvas.height = h;
+        ctx.clearRect(0, 0, w, h);
+        
+        ctx.drawImage(this.img, 0, 0);
+
+        ctx.lineWidth = 6;
+        ctx.strokeStyle = "red";
+        for(let i=0; i<this.RectsArray.length; i++){
+          const rect = this.RectsArray[i];
+          ctx.beginPath();
+          ctx.rect(rect.x, rect.y, rect.w, rect.h);
+          ctx.stroke();
+        }
+        
+      
+      };
+      this.img.src = this.url;
+
+    
   }
 
 }
