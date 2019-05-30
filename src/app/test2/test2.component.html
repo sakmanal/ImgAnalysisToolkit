@@ -1,0 +1,21 @@
+<p>
+  test2 works!
+</p>
+
+
+
+<button  mat-raised-button color="primary" style="margin: 3px;" (click)="fileInput.click()">
+  <mat-icon>cloud_upload</mat-icon> Load Ground Truth
+</button>
+
+<input  style="display: none" type='file' (change)="loadGT($event)" #fileInput accept=".json">
+
+
+
+<input  type='file' (change)="onSelectFile($event)" accept="image/*">
+<br>
+<canvas #viewport style="max-width:100%">
+
+
+
+</canvas>
