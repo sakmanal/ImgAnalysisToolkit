@@ -107,7 +107,7 @@ onSelectFile(event:any):void { // called each time file input changes
   if (!file.type.match('image')) return;
 
   const reader = new FileReader();
-  
+   this.showSpinner = true;
   reader.onload = (event:any) =>{
     
     this.url = event.target.result;
@@ -160,7 +160,7 @@ view():void{
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
       this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-      
+      this.showSpinner = false;
   };
   this.img.src = this.url;
  
