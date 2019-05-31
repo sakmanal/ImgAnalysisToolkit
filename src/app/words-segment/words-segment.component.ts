@@ -1069,6 +1069,8 @@ export class WordsSegmentComponent {
       
       this.jsonFile = JSON.parse(event.target.result);
       //console.log(this.jsonFile);
+      this.pointsArray = [];
+      this.RectsArray = [];
       this.readjson();
       
     };
