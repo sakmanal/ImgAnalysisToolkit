@@ -112,7 +112,9 @@ onSelectFile(event:any):void { // called each time file input changes
   reader.onload = (event:any) =>{
     
     this.url = event.target.result;
+    this.ImgUrl = this.url;
     this.disableImageFilter = false;
+    
     this.view();
 
   };
@@ -127,16 +129,14 @@ restore(){
   this.colorsauvola = "primary";
   this.colornegative = "primary";
   this.colorgpp = "primary";
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
-  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-  ctx.putImageData(this.imageData, 0, 0);
-  this.ImgUrl = canvas.toDataURL("image/png", 1);
+  
+  this.ImgUrl = this.url;
   this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 }
 
 view():void{
    
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   
   
@@ -161,17 +161,17 @@ view():void{
       this.HistGraph(this.imageData);
       
 
-      this.ImgUrl = canvas.toDataURL("image/png", 1);
+      //this.ImgUrl = canvas.toDataURL("image/png", 1);
       this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 
       this.load = false;
-  
+      
   };
   this.img.src = this.url;
  
 }
 
-InvertColoursFilter(){
+/* InvertColoursFilter(){
 
   
   const precolor = this.colornegative;
@@ -184,28 +184,44 @@ InvertColoursFilter(){
   this.ImgUrl = canvas.toDataURL("image/png", 1);
   this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 }
+ */
 
 otsuBinarization(){
   this.colorotsu = "warn";
   this.colorsauvola = "primary";
   this.colornegative = "primary";
   this.colorgpp = "primary"; 
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  const img = new Image;
   this.showSpinner = true;
   this.OtsuSpinner = true;
 
-      this.workerService.run(otsu, {imageData:this.imageData})
-      .then( (result:any) => {
-        
-          ctx.putImageData(result, 0, 0);
-          this.OtsuSpinner = false;
-          this.showSpinner = false;
-          this.ImgUrl = canvas.toDataURL("image/png", 1);
-          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});         
-        }
-      ).catch(console.error);
+  img.onload = () =>{
+    const width = img.width;
+    const height = img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, width, height);
 
+    this.workerService.run(otsu, {imageData:imageData})
+        .then( (result:any) => {
+                
+                ctx.putImageData(result, 0, 0);
+                this.ImgUrl = canvas.toDataURL("image/png", 1);
+                this.showSpinner = false;
+                this.OtsuSpinner = false;
+                this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
+              
+                
+                  
+          }
+        ).catch(console.error);
+
+
+}
+img.src = this.url;
 
 }
 
@@ -215,20 +231,34 @@ sauvolaBinarization(){
   this.colorsauvola = "warn";
   this.colornegative = "primary";
   this.colorgpp = "primary"; 
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
   this.SauvolaSpinner = true;
-  
-      this.workerService.run(Sauvola, {imageData:this.imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
-      .then( (result:any) => {
+  const img = new Image;
+
+  img.onload = () =>{
+    const width = img.width;
+    const height = img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, width, height);
+
+    this.workerService.run(Sauvola, {imageData:imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
+        .then( (result:any) => {
           ctx.putImageData(result, 0, 0);
+          this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.showSpinner = false;
           this.SauvolaSpinner = false;
-          this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-        }
-      ).catch(console.error);
+                  
+          }
+        ).catch(console.error);
+
+
+}
+img.src = this.url;
       
   }    
 
@@ -237,19 +267,22 @@ manualThresholdBinarization(){
   this.colorsauvola = "primary";
   this.colornegative = "primary";
   this.colorgpp = "primary"; 
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  const img = new Image;
   
-  
-  this.img.onload = () =>{
-     
+  img.onload = () =>{
+      const width = img.width;
+      const height = img.height;
+      canvas.width = width;
+      canvas.height = height;
       ctx.drawImage(this.img, 0, 0);
 
       binarize(this.value, ctx, this.img.width, this.img.height);
       this.ImgUrl = canvas.toDataURL("image/png", 1);
       this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
     };
-    this.img.src = this.url;
+    img.src = this.url;
 
 }
 
@@ -258,21 +291,34 @@ gppdBinarization(){
   this.colorsauvola = "primary";
   this.colornegative = "primary";
   this.colorgpp = "warn"; 
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
   this.GppSpinner = true;
+  const img = new Image;
 
-   
-      this.workerService.run(GPP, {imageData:this.imageData,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
-      .then( (result:any) => {
+  img.onload = () =>{
+    const width = img.width;
+    const height = img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, width, height);
+
+    this.workerService.run(GPP, {imageData:imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
+        .then( (result:any) => {
           ctx.putImageData(result, 0, 0);
+          this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.showSpinner = false;
           this.GppSpinner = false;
-          this.ImgUrl = canvas.toDataURL("image/png", 1);
-          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-        }
-      ).catch(console.error);
+          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});  
+                  
+          }
+        ).catch(console.error);
+
+
+}
+img.src = this.url;
 
 }
 
