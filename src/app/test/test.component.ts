@@ -95,30 +95,30 @@ export class TestComponent  {
     this.colorotsu = "warn";
     this.colorsauvola = "primary";
     this.colorgpp = "primary"; 
-    for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].originUrl;
-        this.otsu(imageDataUrl, i);
-    }
+  
+    const imageDataUrl = this.ImageFiles[0].originUrl;
+    this.otsu(imageDataUrl, 0);
+    
   }
 
   binarization_sauvola(){
     this.colorotsu = "primary";
     this.colorsauvola = "warn";
     this.colorgpp = "primary";
-    for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].originUrl;
-        this.sauvola(imageDataUrl, i);
-    }
+    
+    const imageDataUrl = this.ImageFiles[0].originUrl;
+    this.sauvola(imageDataUrl, 0);
+    
   }
 
   binarization_gpp(){
     this.colorotsu = "primary";
     this.colorsauvola = "primary";
     this.colorgpp = "warn"; 
-    for(let i = 0; i < this.ImageFiles.length; i++){
-        const imageDataUrl = this.ImageFiles[i].originUrl;
-        this.gpp(imageDataUrl, i);
-    }
+   
+    const imageDataUrl = this.ImageFiles[0].originUrl;
+    this.gpp(imageDataUrl, 0);
+    
   }
 
   otsu(imageDataUrl:string, id:number){
@@ -143,7 +143,10 @@ export class TestComponent  {
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
                       this.ImageFiles[id].IsBinary = true;
-
+                      if (id+1 < this.ImageFiles.length){
+                        this.otsu(this.ImageFiles[id+1].originUrl, id+1);
+                      }
+                      
                         
                 }
               ).catch(console.error);
@@ -186,6 +189,9 @@ export class TestComponent  {
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
                       this.ImageFiles[id].IsBinary = true;
+                      if (id+1 < this.ImageFiles.length){
+                        this.gpp(this.ImageFiles[id+1].originUrl, id+1);
+                      }
                         
                 }
               ).catch(console.error);
@@ -225,6 +231,9 @@ export class TestComponent  {
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
                       this.ImageFiles[id].spin = false;
                       this.ImageFiles[id].IsBinary = true;
+                      if (id+1 < this.ImageFiles.length){
+                        this.sauvola(this.ImageFiles[id+1].originUrl, id+1);
+                      }
                         
                 }
               ).catch(console.error);
@@ -255,9 +264,9 @@ export class TestComponent  {
 
   faSpinner = faSpinner;
   Segmloader:boolean  = false;
-  WordsSegment(){
-    this.Segmloader = true;
-    for(let i = 0; i < this.ImageFiles.length; i++){
+  WordsSegment(i = 0){
+      this.Segmloader = true;
+  
       const imageDataUrl = this.ImageFiles[i].url;
 
       const canvas = document.createElement('canvas') as HTMLCanvasElement;
@@ -287,7 +296,6 @@ export class TestComponent  {
       }
       img.src = imageDataUrl;  
       
-    }
   }
 
 
@@ -307,6 +315,10 @@ export class TestComponent  {
               this.Segmloader = false; 
               this.counter = 0;
             }
+            if (id+1 < this.ImageFiles.length){
+              this.WordsSegment(id+1);
+            }
+
             
           }
         ).catch(console.error);
