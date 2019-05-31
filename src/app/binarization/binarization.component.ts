@@ -37,12 +37,13 @@ ImageName:string;
 showSpinner:boolean = false;
 SauvolaSpinner:boolean = false;
 GppSpinner:boolean = false;
+OtsuSpinner:boolean = false;
 colorotsu:string = "primary";
 colorsauvola:string = "primary";
 colornegative:string = "primary";
 colorgpp:string = "primary";
 @Output() updateImageEvent = new EventEmitter<object>();
-
+load:boolean = false;
 
 //sauvola parameters
 masksize:number = 8;
@@ -107,13 +108,13 @@ onSelectFile(event:any):void { // called each time file input changes
   if (!file.type.match('image')) return;
 
   const reader = new FileReader();
-   this.showSpinner = true;
+  this.load = true;
   reader.onload = (event:any) =>{
     
     this.url = event.target.result;
     this.disableImageFilter = false;
     this.view();
-    
+
   };
   
   reader.readAsDataURL(event.target.files[0]);
@@ -134,15 +135,17 @@ restore(){
 }
 
 view():void{
-  this.colorotsu = "primary";
-  this.colorsauvola = "primary";
-  this.colornegative = "primary";
-  this.colorgpp = "primary"; 
+   
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   
   
   this.img.onload = () =>{
+
+      this.colorotsu = "primary";
+      this.colorsauvola = "primary";
+      this.colornegative = "primary";
+      this.colorgpp = "primary";
    
       this.width = this.img.width;
       this.height = this.img.height;
@@ -160,7 +163,9 @@ view():void{
 
       this.ImgUrl = canvas.toDataURL("image/png", 1);
       this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-      this.showSpinner = false;
+
+      this.load = false;
+  
   };
   this.img.src = this.url;
  
@@ -188,10 +193,13 @@ otsuBinarization(){
   const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   this.showSpinner = true;
+  this.OtsuSpinner = true;
 
       this.workerService.run(otsu, {imageData:this.imageData})
       .then( (result:any) => {
+        
           ctx.putImageData(result, 0, 0);
+          this.OtsuSpinner = false;
           this.showSpinner = false;
           this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});         
@@ -300,10 +308,11 @@ drawHistGraph(histArray:number[]){
       c.push(i);
   }
 
-  const ctx = document.getElementById("myChart");
+  
+  const canv = <HTMLCanvasElement> document.getElementById("myChart");
+  const ctx = canv.getContext("2d");
   this.myChart = new Chart(ctx, {
     type: 'bar',
-    scaleSteps:9,
     data: {
       labels: c,
       datasets: [{

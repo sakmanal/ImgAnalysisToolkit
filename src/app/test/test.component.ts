@@ -16,6 +16,7 @@ interface imageObject{
    spin:boolean;
    blobs:blobObject;
    IsBinary:boolean;
+   pbar:boolean;
 }
 
 interface blobObject{
@@ -74,7 +75,7 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false};
        this.ImageFiles.push(imageFile);
        //this.Totalimages++;
         
@@ -262,6 +263,7 @@ export class TestComponent  {
       const canvas = document.createElement('canvas') as HTMLCanvasElement;
       const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
       const img = new Image;
+      this.ImageFiles[i].pbar = true;
 
       img.onload = () =>{
         const width = img.width;
@@ -299,6 +301,7 @@ export class TestComponent  {
    
             this.ImageFiles[id].blobs = objects; 
             this.counter++;
+            this.ImageFiles[id].pbar = false;
             //if (this.counter == this.Totalimages) { 
             if (this.counter == this.ImageFiles.length) {
               this.Segmloader = false; 

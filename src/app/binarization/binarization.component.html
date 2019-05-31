@@ -7,9 +7,9 @@
   <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;  font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
 
 
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorotsu" (click)="otsuBinarization()" [disabled]="disableImageFilter">otsu</button>
+  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorotsu" (click)="otsuBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="OtsuSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> otsu</button>
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="SauvolaSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colornegative" (click)="InvertColoursFilter()" [disabled]="disableImageFilter">invert Colours</button>
+  <!-- <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colornegative" (click)="InvertColoursFilter()" [disabled]="disableImageFilter">invert Colours</button> -->
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="GppSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> gpp</button>
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="restore()" [disabled]="disableImageFilter">restore Image</button>
 
@@ -30,7 +30,7 @@
 
 </div>
 
-
+<mat-progress-bar *ngIf="load" mode="buffer"></mat-progress-bar>
  
 
 

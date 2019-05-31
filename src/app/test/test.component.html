@@ -114,6 +114,7 @@
 <ul class="auto-grid">
         <span *ngFor="let image of ImageFiles; let i = index" [attr.data-index]="i">
                 <div style="width: 300px" class="container">
+                    <mat-progress-bar *ngIf="image.pbar" mode="buffer"></mat-progress-bar>
                     <div *ngIf="image.name" style="margin: 2px">{{image.name.substr(0, 40)}}</div>
                     <img class="image" src={{image.url}} />
                     <div *ngIf="image.spin" class="spinner"></div>
