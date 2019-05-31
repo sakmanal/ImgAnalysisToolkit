@@ -92,6 +92,10 @@
                                 <mat-icon>cloud_upload</mat-icon> Load Ground Truth
                         </button>
 
+                        <button *ngIf="RectsArray.length" mat-raised-button style="margin: 3px;" (click)="drawGRrects()">
+                             Draw GT Rects
+                        </button>
+
                         <input  style="display: none" type='file' (change)="loadGT($event)" #fileInput accept=".json">
 
                         

@@ -10,6 +10,7 @@ import { IsBinary } from '../Segmentation/IsBinary';
 import evaluation from '../SegmentsEvaluation/evaluation';
 import { MatSnackBar } from '@angular/material';
 import { WordSnackBarComponent } from '../word-snack-bar/word-snack-bar.component';
+import { Rect } from 'fabric/fabric-impl';
 
 
 interface blobObject{
@@ -1041,13 +1042,11 @@ export class WordsSegmentComponent {
       alert("load Ground Truth Segments to evaluate");
       return;
    }
-    const GroundTruthRects = this.jsonFile.words;
+    const GroundTruthRects = this.RectsArray;
     
     const SegmentsEvaluation = new evaluation();
     SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects);
-    //const Recall = SegmentsEvaluation.getRecall();
-    //const Precision = SegmentsEvaluation.getPrecision();
-    //console.log("Recall:" +Recall.toFixed(2), "Precision:" +Precision.toFixed(2));
+   
     this.Recall = SegmentsEvaluation.getRecall();
     this.Precision = SegmentsEvaluation.getPrecision();
     if (this.Recall==0){this.Recall = 0.001}
@@ -1070,10 +1069,105 @@ export class WordsSegmentComponent {
       
       this.jsonFile = JSON.parse(event.target.result);
       //console.log(this.jsonFile);
-      
+      this.readjson();
       
     };
     reader.readAsText(event.target.files[0]);
     
+  }
+
+  pointsArray = []
+  readjson(){
+    const main = this.jsonFile.Page.TextRegion;
+    //console.log(main.length);
+    if (main.length == undefined){
+       const TextLine = main.TextLine;
+       //console.log(TextLine)
+       for(let j=0; j<TextLine.length; j++){
+        const words = TextLine[j].Word
+        //console.log(words)
+        if (words.length == undefined){
+          this.pointsArray.push(words.Coords);
+          continue;
+        }
+        for(let k=0; k<words.length; k++){
+          const coords = words[k].Coords;
+          //console.log(coords.points)
+          //const points = coords.points;
+          this.pointsArray.push(coords)
+        }
+      }
+    }else{
+
+        for(let i=0; i<main.length; i++){
+          const TextLine = main[i].TextLine;
+          //console.log(TextLine)
+          for(let j=0; j<TextLine.length; j++){
+            const words = TextLine[j].Word
+            //console.log(words)
+            if (words.length == undefined){
+              this.pointsArray.push(words.Coords);
+              continue;
+            }
+            for(let k=0; k<words.length; k++){
+              const coords = words[k].Coords;
+              //console.log(coords.points)
+              //const points = coords.points;
+              this.pointsArray.push(coords)
+            }
+          }
+        }
+    }
+    //console.log(this.pointsArray)
+    this.makeGTrects();
+  }
+
+  RectsArray = [];
+  makeGTrects(){
+     for(let i=0; i<this.pointsArray.length; i++){
+       const points = this.pointsArray[i].points;
+
+       const d = points.split(" ");
+       const r = []
+
+        for (let i=0; i<d.length; i++){
+          const c = d[i];
+          const v = c.split(",")
+          //console.log(v)
+          const x = Number(v[0]) 
+          const y = Number(v[1])
+          //console.log(x,y)
+          const point = {x:x, y:y}; 
+          r.push(point);
+
+        }
+
+        //console.log(r)
+
+        const xArray = r.map(s => s.x)
+
+        const yArray = r.map(s => s.y)
+
+        const maxX = Math.max(...xArray)
+        const minX = Math.min(...xArray)
+
+        const maxY = Math.max(...yArray)
+        const minY = Math.min(...yArray)
+
+        const rect = {x:minX, y:minY, width:maxX-minX, height:maxY-minY}
+
+        this.RectsArray.push(rect);
+       
+     }
+
+    //console.log(this.RectsArray)
+  }
+
+
+  drawGRrects(){
+    this.cancel();
+    this.removeAllObjects();
+    this.words = [];
+    this.DrawRects(this.RectsArray);
   }
 }
