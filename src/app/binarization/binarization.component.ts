@@ -45,7 +45,7 @@ colornegative:string = "primary";
 colorgpp:string = "primary";
 @Output() updateImageEvent = new EventEmitter<object>();
 load:boolean = false;
-sbut:boolean = true;
+
 
 //sauvola parameters
 masksize:number = 8;
@@ -68,9 +68,9 @@ constructor(private workerService: WebworkerService){}
 
 
 ngOnInit(){
-  if (navigator.userAgent.indexOf("Firefox") != -1){
-    this.sbut = false;
-  }
+  /* if (navigator.userAgent.indexOf("Firefox") != -1){
+        //..
+  } */
 }
 
 
@@ -327,22 +327,14 @@ img.src = this.url;
 
 
 save(){
-  const canvas = document.createElement('canvas') as HTMLCanvasElement;
-  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-  const img = new Image;
-  img.onload = () =>{
-    const width = img.width;
-    const height = img.height;
-    canvas.width = width;
-    canvas.height = height;
-    ctx.drawImage(img, 0, 0);
-    const data = canvas.toDataURL('image/png');
-    const a  = document.createElement('a');
-    a.href = data;
-    a.download = 'image.png';
-    a.click()
-  }
-    img.src = this.ImgUrl;
+  
+    const data = this.ImgUrl;
+    const link  = document.createElement('a');
+    link.href = data;
+    link.download = this.ImageName;
+    document.body.appendChild(link);
+    link.click();
+    link.remove();
 }
 
 

@@ -13,7 +13,7 @@
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="GppSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> gpp</button>
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="restore()" [disabled]="disableImageFilter">restore Image</button>
 
-  <button *ngIf="sbut" mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
+  <button mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
     <mat-icon>save</mat-icon> Save Image
   </button>
 
@@ -122,7 +122,7 @@
         <div class="main" id="main">
             <div class="container">
                 <!-- <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter id="myCanvas"></canvas> -->
-                <img src={{ImgUrl}}  mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }" />
+                <img src={{ImgUrl}} id="Img"  mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }" />
                 <div *ngIf="showSpinner" class="spinner"></div>
             </div>
                
