@@ -124,9 +124,6 @@ onSelectFile(event:any):void { // called each time file input changes
   reader.onload = (event:any) =>{
     this.url = event.target.result;
     
-    
-    
-    this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
     this.view();
   }
   
@@ -134,6 +131,7 @@ onSelectFile(event:any):void { // called each time file input changes
   this.ImageName = event.target.files[0].name;
   //console.log(this.ImageName);
 }
+
 
 restore(){
   this.colorotsu = "primary";
@@ -160,6 +158,7 @@ view(){
     this.ImgUrl = this.url;
     this.load = false;
     this.HistGraph(imageData);
+    this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
     };
   this.img.src = this.url;
  
