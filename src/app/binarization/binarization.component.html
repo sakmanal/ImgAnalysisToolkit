@@ -13,7 +13,7 @@
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="GppSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> gpp</button>
   <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="restore()" [disabled]="disableImageFilter">restore Image</button>
 
-  <button mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
+  <button *ngIf="sbut" mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
     <mat-icon>save</mat-icon> Save Image
   </button>
 

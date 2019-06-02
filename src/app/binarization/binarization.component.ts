@@ -1,7 +1,7 @@
-import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
+import { Component, ViewChild, Output, EventEmitter, OnInit } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 //import InvertColours from './invertColor';
-import binarize from './binarize';
+import { binarize} from './manualThres.worker';
 import { Chart } from 'chart.js';
 import { WebworkerService } from '../worker/webworker.service';
 import { Sauvola } from './Sauvola.worker';
@@ -16,7 +16,7 @@ import { histog } from './histogram.worker';
   templateUrl: './binarization.component.html',
   styleUrls: ['./binarization.component.css']
 })
-export class BinarizationComponent  {
+export class BinarizationComponent implements OnInit {
 
 
 
@@ -32,7 +32,7 @@ step = 1;
 disableImageFilter:boolean = true;
 img: HTMLImageElement = new Image;
 height:number;
-width:number = 200;
+width:number = 300;
 //maxwidth:number = window.innerWidth;
 ImageName:string;
 showSpinner:boolean = false;
@@ -45,12 +45,13 @@ colornegative:string = "primary";
 colorgpp:string = "primary";
 @Output() updateImageEvent = new EventEmitter<object>();
 load:boolean = false;
+sbut:boolean = true;
 
 //sauvola parameters
 masksize:number = 8;
 stathera:number = 0.5; 
 rstathera:number = 128; 
-n:number = 1;
+n:number = 4;
 
 //gpp parameters
 dw:number = 10;
@@ -64,6 +65,13 @@ dw1:number = 20;
 
 
 constructor(private workerService: WebworkerService){}
+
+
+ngOnInit(){
+  if (navigator.userAgent.indexOf("Firefox") != -1){
+    this.sbut = false;
+  }
+}
 
 
 /* fillscreen(){
@@ -256,19 +264,28 @@ manualThresholdBinarization(){
   const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
   const img = new Image;
-  
-  img.onload = () =>{
-      const width = img.width;
-      const height = img.height;
-      canvas.width = width;
-      canvas.height = height;
-      ctx.drawImage(this.img, 0, 0);
+  this.showSpinner = true;
 
-      binarize(this.value, ctx, this.img.width, this.img.height);
-      this.ImgUrl = canvas.toDataURL("image/png", 1);
-      this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-    };
-    img.src = this.url;
+      img.onload = () =>{
+        const width = img.width;
+        const height = img.height;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img, 0, 0);
+        const imageData = ctx.getImageData(0, 0, width, height);
+    
+        this.workerService.run(binarize, {imageData:imageData, threshold:this.value})
+            .then( (result:any) => {
+              ctx.putImageData(result, 0, 0);
+              this.ImgUrl = canvas.toDataURL("image/png", 1);
+              this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName}); 
+              this.showSpinner = false; 
+                      
+              }
+            ).catch(console.error);
+      
+        };
+        img.src = this.url;
 
 }
 
