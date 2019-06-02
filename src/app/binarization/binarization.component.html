@@ -18,26 +18,29 @@
   </button>
 
  
-  <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
+  <!-- <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
     <mat-button-toggle (click)="fillscreen()" matTooltip="fill screen">
       <mat-icon>fullscreen</mat-icon>
     </mat-button-toggle>
     <mat-button-toggle (click)="fitscreen()" matTooltip="fit screen">
       <mat-icon>fullscreen_exit</mat-icon>
     </mat-button-toggle>
-  </mat-button-toggle-group>
+  </mat-button-toggle-group> -->
+ 
+  <div *ngIf="load" class="over"></div>
 
 
 </div>
 
-<mat-progress-bar *ngIf="load" mode="buffer"></mat-progress-bar>
+
+
  
 
 
 
 <div class="row">
         <div class="side">
-                <div *ngIf="img.src">
+                <div *ngIf="ImgUrl">
 
                     <strong><span style="color:#ffc400;font-size:15px"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
                     <p>

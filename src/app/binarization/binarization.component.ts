@@ -1,6 +1,6 @@
 import { Component, ViewChild, Output, EventEmitter } from '@angular/core';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
-import InvertColours from './invertColor';
+//import InvertColours from './invertColor';
 import binarize from './binarize';
 import { Chart } from 'chart.js';
 import { WebworkerService } from '../worker/webworker.service';
@@ -8,6 +8,7 @@ import { Sauvola } from './Sauvola.worker';
 import { GPP } from './gpp.worker';
 import { otsu } from './otsu.worker';
 import { histog } from './histogram.worker';
+
 
 
 @Component({
@@ -22,7 +23,7 @@ export class BinarizationComponent  {
 faSpinner = faSpinner;
 url:string;
 ImgUrl:string;
-imageData:ImageData;
+//imageData:ImageData;
 value = 138;
 max = 255;
 min = 0;
@@ -31,8 +32,8 @@ step = 1;
 disableImageFilter:boolean = true;
 img: HTMLImageElement = new Image;
 height:number;
-width:number;
-maxwidth:number = window.innerWidth;
+width:number = 200;
+//maxwidth:number = window.innerWidth;
 ImageName:string;
 showSpinner:boolean = false;
 SauvolaSpinner:boolean = false;
@@ -47,8 +48,6 @@ load:boolean = false;
 
 //sauvola parameters
 masksize:number = 8;
-//stathera:number = 25; 
-//rstathera:number = 512; 
 stathera:number = 0.5; 
 rstathera:number = 128; 
 n:number = 1;
@@ -67,14 +66,14 @@ dw1:number = 20;
 constructor(private workerService: WebworkerService){}
 
 
-fillscreen(){
+/* fillscreen(){
   const width = document.getElementById('main').offsetWidth;
   this.width = width;
 } 
+ */
 
 
-
-fitscreen(){
+/* fitscreen(){
   const width = document.getElementById('main').offsetWidth;
    const r = this.img.width / this.img.height;
    const w  = window.innerWidth / (window.innerHeight-190);
@@ -86,7 +85,7 @@ fitscreen(){
    {   
        this.width = width;
    }
-}
+} */
 
 
 mouseWheelUpFunc() {
@@ -103,21 +102,25 @@ mouseWheelDownFunc() {
 }
 
 onSelectFile(event:any):void { // called each time file input changes
+  this.colorotsu = "primary";
+  this.colorsauvola = "primary";
+  this.colornegative = "primary";
+  this.colorgpp = "primary";
   const file = event.target.files[0];
   if (file == undefined) return;
   if (!file.type.match('image')) return;
 
   const reader = new FileReader();
   this.load = true;
-  reader.onload = (event:any) =>{
-    
-    this.url = event.target.result;
-    this.ImgUrl = this.url;
-    this.disableImageFilter = false;
-    
-    this.view();
 
-  };
+  reader.onload = (event:any) =>{
+    this.url = event.target.result;
+    
+    
+    
+    this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
+    this.view();
+  }
   
   reader.readAsDataURL(event.target.files[0]);
   this.ImageName = event.target.files[0].name;
@@ -134,39 +137,22 @@ restore(){
   this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
 }
 
-view():void{
-   
+view(){
   const canvas = document.createElement('canvas') as HTMLCanvasElement;
   const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-  
-  
-  this.img.onload = () =>{
-
-      this.colorotsu = "primary";
-      this.colorsauvola = "primary";
-      this.colornegative = "primary";
-      this.colorgpp = "primary";
-   
-      this.width = this.img.width;
-      this.height = this.img.height;
-      this.fitscreen();
     
-      const w = this.img.width;
-      const h = this.img.height;
-      canvas.width = w;
-      canvas.height = h;
-      ctx.drawImage(this.img, 0, 0);
-      this.imageData = ctx.getImageData(0, 0, w, h);
-      
-      this.HistGraph(this.imageData);
-      
-
-      //this.ImgUrl = canvas.toDataURL("image/png", 1);
-      this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-
-      this.load = false;
-      
-  };
+  this.img.onload = () =>{
+    const width = this.img.width;
+    const height = this.img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(this.img, 0, 0);
+    const imageData = ctx.getImageData(0, 0, width, height);
+    this.disableImageFilter = false;
+    this.ImgUrl = this.url;
+    this.load = false;
+    this.HistGraph(imageData);
+    };
   this.img.src = this.url;
  
 }
@@ -324,14 +310,22 @@ img.src = this.url;
 
 
 save(){
-  const canvas:HTMLCanvasElement = this.fcanvas.nativeElement;
-  const data = canvas.toDataURL('image/png');
-  
-  const a  = document.createElement('a');
-  a.href = data;
-  a.download = 'image.png';
-
-  a.click()
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
+  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  const img = new Image;
+  img.onload = () =>{
+    const width = img.width;
+    const height = img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(img, 0, 0);
+    const data = canvas.toDataURL('image/png');
+    const a  = document.createElement('a');
+    a.href = data;
+    a.download = 'image.png';
+    a.click()
+  }
+    img.src = this.ImgUrl;
 }
 
 
