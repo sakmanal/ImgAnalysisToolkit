@@ -129,17 +129,19 @@ export const GetSegments = (d:any) => {
             //const blobs:blobObject[] = blobCounter.GetObjectsWithArray(ApplyInvert(res));
             const blobs:blobObject[] = blobCounter.GetObjectsWithArray(res);
 
-            let FinalBlobs:blobObject[] = [];
-            let Rejblobs:blobObject[] = [];
-            myFilter.FinalFiltering(blobs, FinalBlobs, Rejblobs);
+            //let FinalBlobs:blobObject[] = [];
+            let FinalBlobs:blobObject[] = blobs;
+            //let Rejblobs:blobObject[] = [];
+            //myFilter.FinalFiltering(blobs, FinalBlobs, Rejblobs);
 
-            this.RemoveBlobs(Rejblobs, this.myimage);
+            //this.RemoveBlobs(Rejblobs, this.myimage);
             this.FillblobArray(FinalBlobs, this.myimage);
 
-            const res2:ImageData = this.ExtractBlobs(FinalBlobs, this.myimage.width, this.myimage.height);   
+            //const res2:ImageData = this.ExtractBlobs(FinalBlobs, this.myimage.width, this.myimage.height);   
+            const res2:ImageData = this.myimage;
             //ctx.putImageData(res2,0,0);                                                   //<---------------------------------display img to canvas
     
-            const res3 = copy(res2);
+            //const res3 = copy(res2);
             
             const tmpFinalBlobs:blobObject[] = [];
             for(const b in FinalBlobs){
@@ -150,7 +152,7 @@ export const GetSegments = (d:any) => {
             }
             FinalBlobs = tmpFinalBlobs;
         
-            this.WordDetection(FinalBlobs, minblobwidth, 3, res2, res);
+            /* this.WordDetection(FinalBlobs, minblobwidth, 3, res2, res);
 
             let FinalBlobs2:blobObject[] = blobCounter.GetObjectsWithArray(res2);
             const tmpFinalBlobs2:blobObject[] = [];
@@ -159,13 +161,13 @@ export const GetSegments = (d:any) => {
                 tmpFinalBlobs2.push(FinalBlobs2[b]);
                 }
             }
-            FinalBlobs2 = tmpFinalBlobs2;
+            FinalBlobs2 = tmpFinalBlobs2; */
 
-            this.FillblobArray(FinalBlobs2, res3);
+            //this.FillblobArray(FinalBlobs2, res3);
 
 
-            return FinalBlobs2; 
-            //return FinalBlobs;
+            //return FinalBlobs2; 
+            return FinalBlobs;
         }
         
         private FillblobArray(Fblobs:blobObject[], timg:ImageData):void{
