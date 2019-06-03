@@ -10,7 +10,7 @@ import { IsBinary } from '../Segmentation/IsBinary';
 import evaluation from '../SegmentsEvaluation/evaluation';
 import { MatSnackBar } from '@angular/material';
 import { WordSnackBarComponent } from '../word-snack-bar/word-snack-bar.component';
-import { Rect } from 'fabric/fabric-impl';
+
 
 
 interface blobObject{
@@ -81,13 +81,13 @@ export class WordsSegmentComponent {
   Precision:number;
   jsonFile:any;
   JsonFileName:string;
-  Xrlsa:boolean = true; 
+   
 
   //gpp parameters
   dw:number = 10;
   k:number = 0.2;
-  R:number = 128;
-  q:number = 0.6;
+  R:number = 20;
+  q:number = 0.5;
   p1:number = 0.5;
   p2:number = 0.7;
   upsampling:boolean = true;
@@ -98,6 +98,7 @@ export class WordsSegmentComponent {
   ARLSA_c:number = 0.7;
   ARLSA_Th:number = 3.5;
   RemovePunctuationMarks:boolean = true;
+  Xrlsa:boolean = true;
 
  
 
