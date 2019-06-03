@@ -77,7 +77,7 @@ export const GetSegments = (d:any) => {
                 this.ARLSA_Th = ARLSA_Th;
         }
 
-        public run(BinaryImage:ImageData, PunctuationMarks:boolean = true):blobObject[]{
+        public run(BinaryImage:ImageData, PunctuationMarks:boolean = true, Xrlsa:boolean = true):blobObject[]{
             
             this.myimage = copy(BinaryImage);
 
@@ -151,8 +151,12 @@ export const GetSegments = (d:any) => {
                 }
             }
             FinalBlobs = tmpFinalBlobs;
+
+            if (!Xrlsa){
+                return FinalBlobs;
+            }
         
-            /* this.WordDetection(FinalBlobs, minblobwidth, 3, res2, res);
+            this.WordDetection(FinalBlobs, minblobwidth, 3, res2, res);
 
             let FinalBlobs2:blobObject[] = blobCounter.GetObjectsWithArray(res2);
             const tmpFinalBlobs2:blobObject[] = [];
@@ -161,13 +165,13 @@ export const GetSegments = (d:any) => {
                 tmpFinalBlobs2.push(FinalBlobs2[b]);
                 }
             }
-            FinalBlobs2 = tmpFinalBlobs2; */
+            FinalBlobs2 = tmpFinalBlobs2;
 
             //this.FillblobArray(FinalBlobs2, res3);
 
 
-            //return FinalBlobs2; 
-            return FinalBlobs;
+            return FinalBlobs2; 
+            //return FinalBlobs;
         }
         
         private FillblobArray(Fblobs:blobObject[], timg:ImageData):void{
@@ -1410,7 +1414,7 @@ export const GetSegments = (d:any) => {
 
 
     const arlsa = new MyARLSA(d.ARLSA_a, d.ARLSA_c, d.ARLSA_Th);
-    const objects:blobObject[] = arlsa.run(d.imageData, d.RemovePunctuationMarks);
+    const objects:blobObject[] = arlsa.run(d.imageData, d.RemovePunctuationMarks, d.Xrlsa);
 
     postMessage(objects);
 

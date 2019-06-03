@@ -12,7 +12,7 @@
                                     [step]="0.1"
                                     [(ngModel)]="ARLSA_a"
                                     [max]="8"
-                                    [min]="0.1"
+                                    [min]="0"
                                     (change)="WordsSegment()">
                                 </mat-slider>{{ARLSA_a}}
                     </div>
@@ -23,8 +23,8 @@
                                     [thumbLabel]= "true"
                                     [step]="0.1"
                                     [(ngModel)]="ARLSA_c"
-                                    [max]="8"
-                                    [min]="0.1" 
+                                    [max]="1"
+                                    [min]="0" 
                                     (change)="WordsSegment()">
                                 </mat-slider>{{ARLSA_c}}
                     </div>
@@ -63,6 +63,7 @@
                         </mat-form-field>
 
                         <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
+                        <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
                 
                         <button mat-raised-button style="margin:3px" (click)="restore()"> restore default values</button>
                 
@@ -92,7 +93,7 @@
                                 <mat-icon>cloud_upload</mat-icon> Load Ground Truth
                         </button>
 
-                        <button *ngIf="RectsArray.length" mat-raised-button style="margin: 3px;" (click)="drawGRrects()">
+                        <button *ngIf="RectsArray.length" mat-raised-button style="margin: 3px;" (click)="drawGTrects()">
                              Draw GT Rects
                         </button>
 

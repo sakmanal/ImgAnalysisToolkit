@@ -81,6 +81,7 @@ export class WordsSegmentComponent {
   Precision:number;
   jsonFile:any;
   JsonFileName:string;
+  Xrlsa:boolean = true; 
 
   //gpp parameters
   dw:number = 10;
@@ -989,7 +990,7 @@ export class WordsSegmentComponent {
   
   Segmentation(imageData:ImageData){
 
-    this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks})
+    this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks, Xrlsa:this.Xrlsa})
           .then( (objects:any) => {
   
             //console.log(objects)
@@ -1166,10 +1167,12 @@ export class WordsSegmentComponent {
   }
 
 
-  drawGRrects(){
+  drawGTrects(){
     this.cancel();
     this.removeAllObjects();
     this.words = [];
     this.DrawRects(this.RectsArray);
+    this.MyArlsaRects = this.RectsArray;
+
   }
 }
