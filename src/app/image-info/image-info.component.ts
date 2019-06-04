@@ -95,7 +95,9 @@ export class ImageInfoComponent implements OnInit {
       const a = document.createElement('a');
       a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(text));
       a.setAttribute('download', filename);
-      a.click()
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
   }
 
  downloadJson(){
