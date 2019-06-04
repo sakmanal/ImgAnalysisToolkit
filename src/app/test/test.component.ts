@@ -17,6 +17,9 @@ interface imageObject{
    blobs:blobObject;
    IsBinary:boolean;
    pbar:boolean;
+   gt:any[];
+   recall:number;
+   precision:number;
 }
 
 interface blobObject{
@@ -75,7 +78,7 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false, gt:undefined, recall:0, precision:0};
        this.ImageFiles.push(imageFile);
        //this.Totalimages++;
         
@@ -87,9 +90,115 @@ export class TestComponent  {
     event.target.value = '';  //enable opening the same file
   }
 
+
   selectGT(event:any):void{
-    alert("not ready yet"+"😅😅")
+    const files = event.target.files;
+    
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const filename = file.name;
+      //only json
+      if (file == undefined) return;
+      if (!file.type.match('\.json')) return;
+
+      const jsonreader = new FileReader();
+      jsonreader.onload = (event:any) =>{ 
+          
+        const jsonfile = JSON.parse(event.target.result);
+        this.readjson(jsonfile, filename);
+
+      };
+      jsonreader.readAsText(file)
+  
+    }
+
   }
+
+  readjson(jsonfile, filename){
+      let pointsArray = [];
+      const main = jsonfile.Page.TextRegion;
+     
+      if (main.length == undefined){
+         const TextLine = main.TextLine;       
+         for(let j=0; j<TextLine.length; j++){
+          const words = TextLine[j].Word
+          if (words.length == undefined){
+            pointsArray.push(words.Coords);
+            continue;      
+           }
+          for(let k=0; k<words.length; k++){
+            const coords = words[k].Coords;   
+            pointsArray.push(coords)
+          }
+        }
+      }else{
+  
+          for(let i=0; i<main.length; i++){
+            const TextLine = main[i].TextLine;        
+            for(let j=0; j<TextLine.length; j++){
+              const words = TextLine[j].Word       
+              if (words.length == undefined){
+                pointsArray.push(words.Coords);
+                continue;
+              }
+              for(let k=0; k<words.length; k++){
+                const coords = words[k].Coords;
+                pointsArray.push(coords)
+              }
+            }
+          }
+      }
+      
+      this.makeGTrects(pointsArray, filename);
+  }
+
+  makeGTrects(pointsArray, filename){
+    let RectsArray = [];
+    for(let i=0; i<pointsArray.length; i++){
+      const points = pointsArray[i].points;
+
+      const d = points.split(" ");
+      const r = []
+
+       for (let i=0; i<d.length; i++){
+         const c = d[i];
+         const v = c.split(",")
+         const x = Number(v[0]) 
+         const y = Number(v[1])
+         const point = {x:x, y:y}; 
+         r.push(point);
+
+       }
+
+
+       const xArray = r.map(s => s.x)
+
+       const yArray = r.map(s => s.y)
+
+       const maxX = Math.max(...xArray)
+       const minX = Math.min(...xArray)
+
+       const maxY = Math.max(...yArray)
+       const minY = Math.min(...yArray)
+
+       const rect = {x:minX, y:minY, width:maxX-minX, height:maxY-minY}
+
+       RectsArray.push(rect);
+      
+    }
+
+   const JsonNameOnly = filename.replace(/\.[^/.]+$/, "");
+
+   for(let i = 0; i < this.ImageFiles.length; i++){
+      const ImgNameOnly = this.ImageFiles[i].name.replace(/\.[^/.]+$/, "");
+      if (ImgNameOnly == JsonNameOnly){
+        this.ImageFiles[i].gt = RectsArray;
+      }
+   }
+    
+
+ }
+  
 
   binarization_otsu(){
     this.colorotsu = "warn";
@@ -261,6 +370,7 @@ export class TestComponent  {
   ARLSA_c:number = 0.7;
   ARLSA_Th:number = 3.5;
   RemovePunctuationMarks:boolean = true;
+  Xrlsa:boolean = true;
 
   faSpinner = faSpinner;
   Segmloader:boolean  = false;
@@ -304,10 +414,11 @@ export class TestComponent  {
   counter:number = 0;
   Segmentation(imageData:ImageData, id:number){
  
-     this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks})
+     this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks, Xrlsa:this.Xrlsa})
           .then( (objects:any) => {
    
             this.ImageFiles[id].blobs = objects; 
+            this.evaluation(id);
             this.counter++;
             this.ImageFiles[id].pbar = false;
             //if (this.counter == this.Totalimages) { 
@@ -354,11 +465,33 @@ export class TestComponent  {
 
   @Output() updateImageEvent = new EventEmitter<object>();
   edit(id:number){
-    this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name, blobs:this.ImageFiles[id].blobs});
+    this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name, blobs:this.ImageFiles[id].blobs, gt:this.ImageFiles[id].gt});
+  }
+
+  evaluation(id:number){
+    
+    const GroundTruthRects = this.ImageFiles[id].gt;
+    const MyArlsaRects:any = this.ImageFiles[id].blobs;
+    if (this.ImageFiles[id].blobs == undefined || this.ImageFiles[id].gt == undefined){
+            return;
+    }
+    const SegmentsEvaluation = new evaluation();
+    SegmentsEvaluation.run(GroundTruthRects, MyArlsaRects);
+   
+    this.ImageFiles[id].recall = SegmentsEvaluation.getRecall();
+    this.ImageFiles[id].precision = SegmentsEvaluation.getPrecision();
+    
   }
 
   evaluate(){
-    alert("not ready yet"+"😅😅");
+    for(let i = 0; i < this.ImageFiles.length; i++){
+        if (this.ImageFiles[i].blobs == undefined || this.ImageFiles[i].gt == undefined){
+             continue;
+        }else{
+          this.evaluation(i);
+        }
+        
+    }
   }
 
   saveSegments(){

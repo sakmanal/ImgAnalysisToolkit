@@ -44,6 +44,15 @@ export class TabsComponent{
     }else{
       this.WordsSegment.MyArlsaRects = event.blobs;
     }
+
+    if (event.gt == undefined){
+      this.WordsSegment.RectsArray = [];
+      this.WordsSegment.JsonFileName = "";
+    }else{
+      this.WordsSegment.jsonFile = 1;
+      this.WordsSegment.JsonFileName = event.name.replace(/\.[^/.]+$/, ".json");
+      this.WordsSegment.RectsArray = event.gt;
+    }
     
     this.WordsSegment.ImageChange = true;
     if (this.WordsSegment.imageUrl){

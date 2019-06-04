@@ -244,7 +244,7 @@ export class Test2Component implements OnInit {
   binarize(imagedata){
     console.log('gpp started');
     
-    this.workerService.run(GPP, {imageData:imagedata,  dw:10, k:0.2, R:60, q:0.4, p1:0.5, p2:0.7, upsampling:true, dw1:20})
+    this.workerService.run(GPP, {imageData:imagedata,  dw:10, k:0.2, R:20, q:0.4, p1:0.5, p2:0.7, upsampling:true, dw1:10})
     .then( (result:any) => {
          console.log('gpp finished');
          
@@ -260,8 +260,8 @@ export class Test2Component implements OnInit {
 
   //ARLSA parameters
   ARLSA_a:number = 0.1;
-  ARLSA_c:number = 0.6;
-  ARLSA_Th:number = 4;
+  ARLSA_c:number = 0.1;
+  ARLSA_Th:number = 1;
   RemovePunctuationMarks:boolean = true;
   Xrlsa:boolean = true;
   MyArlsaRects = [];
@@ -274,12 +274,12 @@ export class Test2Component implements OnInit {
                 this.MyArlsaRects = objects;
                 this.evaluate();
                 
-                  this.ARLSA_Th +=2;
-                  //if (this.ARLSA_Th > 9){
-                   // console.log('THE END');
-                   //return
-                  //}
-                  //this.Segmentation(imageData);
+                  this.ARLSA_c +=0.2;
+                  if (this.ARLSA_c > 1){
+                    console.log('THE END');
+                    return
+                  }
+                  this.Segmentation(imageData);
                 
           }
         ).catch(console.error);
@@ -294,7 +294,7 @@ export class Test2Component implements OnInit {
    
     const Recall = SegmentsEvaluation.getRecall();
     const Precision = SegmentsEvaluation.getPrecision();
-    console.log('evaluation:'+" recall = "+Recall+" precision = "+Precision+" Th="+this.ARLSA_Th);
+    console.log('evaluation:'+" recall = "+Recall+" precision = "+Precision+" Th="+this.ARLSA_c);
     
   }
   

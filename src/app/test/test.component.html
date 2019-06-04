@@ -7,6 +7,10 @@
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="restore()"><mat-icon>undo</mat-icon> undo</button>
+        <button  mat-raised-button color="warn" style="margin-right: 5px; margin-top: 5px;" (click)="WordsSegment()">
+            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> ARLSA Words Segmentation
+        </button>
+        <button  mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="saveSegments()"><mat-icon>save</mat-icon> Save Segments</button>
     </span>
     <input  style="display: none" type='file' multiple="multiple" (change)="selectFiles($event)" #fileInput accept="image/*">
     <input  style="display: none" type='file' multiple="multiple" (change)="selectGT($event)" #GTinput accept=".json">
@@ -14,13 +18,7 @@
 </div>
     
       
-    <!-- <div *ngFor="let image of ImageFiles">
-        <div style="margin: 10px; width: 300px" class="container">
-            <div *ngIf="image.name" style="margin: 2px">{{image.name}}</div>
-            <img width="300px" src={{image.url}} />
-            <div *ngIf="image.spin" class="spinner"></div>
-        </div>   
-    </div> -->
+   
 
 <span *ngIf = "enableView">
     <div class="row">
@@ -89,9 +87,7 @@
 
 
     <div style="margin-left: 5px;">
-            <button  mat-raised-button color="warn" style="margin: 5px;" (click)="WordsSegment()">
-                <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> ARLSA Words Segmentation
-            </button>
+            
 
             <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
                 <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
@@ -102,12 +98,14 @@
             <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
                 <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th" step="0.1">
             </mat-form-field>
+            <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
+            <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
 
             <button  mat-raised-button color="primary" style="margin-left:3px;" (click)="evaluate()">Precision Recall evaluation</button>
             <strong style="margin-left:10px;">{{ImageFiles.length}} Text Documents selected</strong>
 
             <button  mat-raised-button style="margin-left:10px;" (click)="removeAll()"><mat-icon>delete</mat-icon> Clear All</button>
-            <button  mat-raised-button style="margin-left:3px;" (click)="saveSegments()"><mat-icon>save</mat-icon> Save Segments</button>
+            
     </div>  
 </span>
 
@@ -124,6 +122,8 @@
                     <button (click)="edit(i)" class="proc" mat-icon-button>
                         <mat-icon color="primary">add</mat-icon>
                     </button>
+                    <div *ngIf="image.recall"> Recall = {{image.recall.toFixed(3)}}</div>
+                    <div *ngIf="image.precision"> Precision = {{image.precision.toFixed(3)}}</div>
                     
                 </div>   
         </span>
