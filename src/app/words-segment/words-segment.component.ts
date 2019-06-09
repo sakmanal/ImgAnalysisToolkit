@@ -1002,7 +1002,7 @@ export class WordsSegmentComponent {
         ).catch(console.error);
   }
   
-  DrawRects(rects:blobObject[]){
+  DrawRects(rects:blobObject[], color="#00b300"){
       const ratio = this.canvasWidth / this.image.width;
       for(const i in rects){  
         const x1 = /* Math.floor */(rects[i].x * ratio);
@@ -1019,11 +1019,11 @@ export class WordsSegmentComponent {
           opacity: 1,
           width: x2,
           height: y2,
-          borderColor: '#00b300',
-          cornerColor: '#004d00',
+          borderColor: color,
+          cornerColor: color,
           hasRotatingPoint:false,
           objectCaching: false,
-          stroke: '#00b300',
+          stroke: color,
           strokeWidth: 1,
           transparentCorners: false,
           cornerSize: 6,
@@ -1170,9 +1170,9 @@ export class WordsSegmentComponent {
 
   drawGTrects(){
     this.cancel();
-    this.removeAllObjects();
+    //this.removeAllObjects();
     this.words = [];
-    this.DrawRects(this.RectsArray);
+    this.DrawRects(this.RectsArray, '#ff3333');
     this.MyArlsaRects = this.RectsArray;
 
   }

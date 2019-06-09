@@ -47,14 +47,14 @@ export default class evaluation{
 
                     const Threshold = interSection / union;
 
-                    if (Threshold >= 0.5){
+                    if (Threshold >= 0.3){
                          overlaps++;
                     }
                 }
 
             }
         }
-
+        
         this.Recall = overlaps / GroundTruthRects.length;
         this.Precision = overlaps / MyArlsaRects.length;
     }
