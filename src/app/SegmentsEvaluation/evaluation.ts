@@ -18,7 +18,7 @@ export default class evaluation{
         return this.Precision;
     }
 
-    public run(GroundTruthRects:Rectangles[], MyArlsaRects:Rectangles[]){
+    public run(GroundTruthRects:Rectangles[], MyArlsaRects:Rectangles[], Tinter = 0.5){
         
         let overlaps = 0;
 
@@ -47,7 +47,7 @@ export default class evaluation{
 
                     const Threshold = interSection / union;
 
-                    if (Threshold >= 0.3){
+                    if (Threshold >= Tinter){
                          overlaps++;
                     }
                 }

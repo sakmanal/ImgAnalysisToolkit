@@ -102,7 +102,7 @@ export class ImageInfoComponent implements OnInit {
 
  downloadJson(){
    if (this.ImageJson){
-     this.saveJson( JSON.stringify(this.ImageJson), this.selectedImage +".json" );
+     this.saveJson( JSON.stringify(this.ImageJson), this.selectedImage.replace(/\.[^/.]+$/, ".json") );
    }
   
  }

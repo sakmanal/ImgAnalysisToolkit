@@ -81,7 +81,7 @@ ngOnInit(){
  */
 
 
-/* fitscreen(){
+fitscreen(){
   const width = document.getElementById('main').offsetWidth;
    const r = this.img.width / this.img.height;
    const w  = window.innerWidth / (window.innerHeight-190);
@@ -93,7 +93,7 @@ ngOnInit(){
    {   
        this.width = width;
    }
-} */
+}
 
 
 mouseWheelUpFunc() {
@@ -156,6 +156,7 @@ view(){
     const imageData = ctx.getImageData(0, 0, width, height);
     this.disableImageFilter = false;
     this.ImgUrl = this.url;
+    this.fitscreen();
     this.load = false;
     this.HistGraph(imageData);
     this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});

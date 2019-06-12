@@ -81,12 +81,14 @@ export class WordsSegmentComponent {
   Precision:number;
   jsonFile:any;
   JsonFileName:string;
+  Tinter:number = 0.5;
+  GTdraw:boolean = false;
    
 
   //gpp parameters
   dw:number = 10;
   k:number = 0.2;
-  R:number = 20;
+  R:number = 120;
   q:number = 0.5;
   p1:number = 0.5;
   p2:number = 0.7;
@@ -1002,7 +1004,7 @@ export class WordsSegmentComponent {
         ).catch(console.error);
   }
   
-  DrawRects(rects:blobObject[], color="#00b300"){
+  DrawRects(rects:blobObject[], color="#00b300", type="arlsaRect"){
       const ratio = this.canvasWidth / this.image.width;
       for(const i in rects){  
         const x1 = /* Math.floor */(rects[i].x * ratio);
@@ -1027,6 +1029,7 @@ export class WordsSegmentComponent {
           strokeWidth: 1,
           transparentCorners: false,
           cornerSize: 6,
+          rectType: type,
           id: this.blobId++
         });
         this.canvas.add(rectangle);     
@@ -1047,7 +1050,7 @@ export class WordsSegmentComponent {
     const GroundTruthRects = this.RectsArray;
     
     const SegmentsEvaluation = new evaluation();
-    SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects);
+    SegmentsEvaluation.run(GroundTruthRects, this.MyArlsaRects, this.Tinter);
    
     this.Recall = SegmentsEvaluation.getRecall();
     this.Precision = SegmentsEvaluation.getPrecision();
@@ -1082,6 +1085,10 @@ export class WordsSegmentComponent {
 
   pointsArray = []
   readjson(){
+    if (this.jsonFile.words){
+      this.RectsArray = this.jsonFile.words;
+      return;
+    }
     const main = this.jsonFile.Page.TextRegion;
     //console.log(main.length);
     if (main.length == undefined){
@@ -1169,11 +1176,17 @@ export class WordsSegmentComponent {
 
 
   drawGTrects(){
-    this.cancel();
-    //this.removeAllObjects();
-    this.words = [];
-    this.DrawRects(this.RectsArray, '#ff3333');
-    this.MyArlsaRects = this.RectsArray;
+    this.GTdraw = !this.GTdraw;
+
+    if (this.GTdraw){
+      this.cancel();
+      this.DrawRects(this.RectsArray, '#1aa3ff', "gtRect");
+    }else{
+      const objects = this.canvas.getObjects().filter(obj => obj.rectType == 'gtRect');;
+      for (const i in objects) {
+       this.canvas.remove(objects[i]);
+      }
+    }
 
   }
 }
