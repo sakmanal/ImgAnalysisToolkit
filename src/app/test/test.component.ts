@@ -115,6 +115,12 @@ export class TestComponent  {
   }
 
   readjson(jsonfile, filename){
+     
+      if (jsonfile.words){
+        this.putRects(filename, jsonfile.words)
+        return;
+      }
+
       let pointsArray = [];
       const main = jsonfile.Page.TextRegion;
      
@@ -187,16 +193,20 @@ export class TestComponent  {
       
     }
 
-   const JsonNameOnly = filename.replace(/\.[^/.]+$/, "");
-
-   for(let i = 0; i < this.ImageFiles.length; i++){
-      const ImgNameOnly = this.ImageFiles[i].name.replace(/\.[^/.]+$/, "");
-      if (ImgNameOnly == JsonNameOnly){
-        this.ImageFiles[i].gt = RectsArray;
-      }
-   }
+    this.putRects(filename, RectsArray);
     
 
+ }
+
+ putRects(filename, RectsArray){
+  const JsonNameOnly = filename.replace(/\.[^/.]+$/, "");
+
+  for(let i = 0; i < this.ImageFiles.length; i++){
+     const ImgNameOnly = this.ImageFiles[i].name.replace(/\.[^/.]+$/, "");
+     if (ImgNameOnly == JsonNameOnly){
+       this.ImageFiles[i].gt = RectsArray;
+     }
+  }
  }
   
 
@@ -467,7 +477,8 @@ export class TestComponent  {
   edit(id:number){
     this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name, blobs:this.ImageFiles[id].blobs, gt:this.ImageFiles[id].gt});
   }
-
+  
+  Tinter:number = 0.5;
   evaluation(id:number){
     
     const GroundTruthRects = this.ImageFiles[id].gt;
@@ -476,7 +487,7 @@ export class TestComponent  {
             return;
     }
     const SegmentsEvaluation = new evaluation();
-    SegmentsEvaluation.run(GroundTruthRects, MyArlsaRects);
+    SegmentsEvaluation.run(GroundTruthRects, MyArlsaRects, this.Tinter);
    
     this.ImageFiles[id].recall = SegmentsEvaluation.getRecall();
     this.ImageFiles[id].precision = SegmentsEvaluation.getPrecision();
