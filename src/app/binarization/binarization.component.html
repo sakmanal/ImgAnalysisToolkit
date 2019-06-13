@@ -16,8 +16,21 @@
   <button mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
     <mat-icon>save</mat-icon> Save Image
   </button>
+  
+  <input  style="display: none" type='file' (change)="onSelectGT($event)" #gtInput accept="image/*">
+  <button *ngIf="ImgUrl" mat-raised-button color="warn" (click)="gtInput.click()" style="margin-right: 5px; margin-bottom: 5px;">
+      <mat-icon *ngIf="loadgtIcon">done</mat-icon> Load GT image
+  </button>
 
- 
+  <button *ngIf="ImgUrl" mat-raised-button color="warn" (click)="gtBinEval()" style="margin-right: 5px; margin-bottom: 5px;"  [disabled]="!readyEval">
+    evaluate
+ </button>
+
+  <div *ngIf="recall" style="margin-left: 15px">
+    <span style="color:#ffc400"> Recall: </span>{{recall | percent }}
+    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> Precision: </span>{{precision | percent}}
+    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> F-Mesure: </span>{{Fmesure | percent}}
+  </div>
   <!-- <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
     <mat-button-toggle (click)="fillscreen()" matTooltip="fill screen">
       <mat-icon>fullscreen</mat-icon>
@@ -40,9 +53,12 @@
 
 <div class="row">
         <div class="side">
-                <div *ngIf="ImgUrl">
-
-                    <strong><span style="color:#ffc400;font-size:15px"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
+            <div *ngIf="ImgUrl">
+                  <div style="margin-bottom: 5px">
+                    <span style="color:#ffc400"> Img: </span>{{ImageName}}
+                    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:15px;"> GT: </span>{{GTbinName}}
+                  </div>
+                    <strong><span style="color:#ffc400;font-size:15px;"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
                     <p>
                     Threshold:
                     <mat-slider 

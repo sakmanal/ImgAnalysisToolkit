@@ -8,6 +8,7 @@ import { Sauvola } from './Sauvola.worker';
 import { GPP } from './gpp.worker';
 import { otsu } from './otsu.worker';
 import { histog } from './histogram.worker';
+import binEvaluation from '../binEvaluation/binEvaluation';
 
 
 
@@ -45,6 +46,14 @@ colornegative:string = "primary";
 colorgpp:string = "primary";
 @Output() updateImageEvent = new EventEmitter<object>();
 load:boolean = false;
+GTbinName:string;
+GTbinPixels:ImageData;
+MybinPixels:ImageData;
+precision:number;
+recall:number;
+Fmesure:number;
+loadgtIcon:boolean = false;
+readyEval:boolean = false;
 
 
 //sauvola parameters
@@ -123,13 +132,28 @@ onSelectFile(event:any):void { // called each time file input changes
 
   reader.onload = (event:any) =>{
     this.url = event.target.result;
-    
+    this.loadgtIcon = false;
+    this.readyEval = false;
     this.view();
   }
   
   reader.readAsDataURL(event.target.files[0]);
   this.ImageName = event.target.files[0].name;
   //console.log(this.ImageName);
+}
+
+onSelectGT(event:any){
+  const file = event.target.files[0];
+  if (file == undefined) return;
+  if (!file.type.match('image')) return;
+  
+  const reader = new FileReader();
+  reader.onload = (event:any) =>{
+    const GTbinUrl = event.target.result;
+    this.takeGTpixels(GTbinUrl);
+  }
+  reader.readAsDataURL(event.target.files[0]);
+  this.GTbinName = event.target.files[0].name;
 }
 
 
@@ -141,6 +165,7 @@ restore(){
   
   this.ImgUrl = this.url;
   this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
+  this.readyEval = false;
 }
 
 view(){
@@ -201,13 +226,13 @@ otsuBinarization(){
 
     this.workerService.run(otsu, {imageData:imageData})
         .then( (result:any) => {
-                
+                this.MybinPixels = result;
                 ctx.putImageData(result, 0, 0);
                 this.ImgUrl = canvas.toDataURL("image/png", 1);
                 this.showSpinner = false;
                 this.OtsuSpinner = false;
                 this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
-              
+                this.readyEval = true;
                 
                   
           }
@@ -241,11 +266,13 @@ sauvolaBinarization(){
 
     this.workerService.run(Sauvola, {imageData:imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
         .then( (result:any) => {
+          this.MybinPixels = result;
           ctx.putImageData(result, 0, 0);
           this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.showSpinner = false;
           this.SauvolaSpinner = false;
           this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
+          this.readyEval = true;
                   
           }
         ).catch(console.error);
@@ -276,10 +303,12 @@ manualThresholdBinarization(){
     
         this.workerService.run(binarize, {imageData:imageData, threshold:this.value})
             .then( (result:any) => {
+              this.MybinPixels = result;
               ctx.putImageData(result, 0, 0);
               this.ImgUrl = canvas.toDataURL("image/png", 1);
               this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName}); 
               this.showSpinner = false; 
+              this.readyEval = true;
                       
               }
             ).catch(console.error);
@@ -310,11 +339,13 @@ gppdBinarization(){
 
     this.workerService.run(GPP, {imageData:imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
         .then( (result:any) => {
+          this.MybinPixels = result;
           ctx.putImageData(result, 0, 0);
           this.ImgUrl = canvas.toDataURL("image/png", 1);
           this.showSpinner = false;
           this.GppSpinner = false;
-          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});  
+          this.updateImageEvent.emit({dataURL:this.ImgUrl, name:this.ImageName});
+          this.readyEval = true;  
                   
           }
         ).catch(console.error);
@@ -386,6 +417,32 @@ drawHistGraph(histArray:number[]){
       }
     }
   });
+}
+
+takeGTpixels(GTbinUrl){
+  const canvas = document.createElement('canvas') as HTMLCanvasElement;
+  const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+  const img = new Image;
+
+  img.onload = () =>{
+    const width = img.width;
+    const height = img.height;
+    canvas.width = width;
+    canvas.height = height;
+    ctx.drawImage(img, 0, 0);
+    this.GTbinPixels = ctx.getImageData(0, 0, width, height);  
+    this.loadgtIcon = true;
+  }
+  img.src = GTbinUrl;
+}
+
+gtBinEval(){
+  const Evaluation = new binEvaluation();
+  Evaluation.run(this.MybinPixels, this.GTbinPixels);
+  this.recall = Evaluation.getRecall();
+  this.precision = Evaluation.getPrecision();
+  this.Fmesure = Evaluation.getFmesure();
+  //console.log(this.recall, this.precision, this.Fmesure);
 }
 
 
