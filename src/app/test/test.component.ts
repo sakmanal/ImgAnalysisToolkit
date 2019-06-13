@@ -7,6 +7,7 @@ import evaluation from '../SegmentsEvaluation/evaluation';
 import { GetSegments } from '../Segmentation/MyARLSA.worker';
 import { faSpinner } from '@fortawesome/free-solid-svg-icons';
 import { SavejsonService } from '../savejson.service';
+import binEvaluation from '../binEvaluation/binEvaluation';
 
 
 interface imageObject{
@@ -18,6 +19,7 @@ interface imageObject{
    IsBinary:boolean;
    pbar:boolean;
    gt:any[];
+   gtUrl:string;
    recall:number;
    precision:number;
 }
@@ -78,7 +80,7 @@ export class TestComponent  {
       picReader.onload = (event:any) =>{
     
        const picFile = event.target.result;
-       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false, gt:undefined, recall:0, precision:0};
+       const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false, gt:undefined,gtUrl:undefined, recall:0, precision:0};
        this.ImageFiles.push(imageFile);
        //this.Totalimages++;
         
@@ -110,6 +112,28 @@ export class TestComponent  {
       };
       jsonreader.readAsText(file)
   
+    }
+
+  }
+
+  selectGTimg(event:any){
+    const files = event.target.files;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const filename = file.name;
+      //Only pics
+      if (!file.type.match('image')) continue;
+
+      const picReader = new FileReader();
+      picReader.onload = (event:any) =>{
+    
+       const picGTFile = event.target.result;
+      this.putGTImgUrl(picGTFile, filename);
+       
+        
+      };   
+      picReader.readAsDataURL(file);
     }
 
   }
@@ -206,6 +230,18 @@ export class TestComponent  {
      if (ImgNameOnly == JsonNameOnly){
        this.ImageFiles[i].gt = RectsArray;
      }
+  }
+ }
+
+ putGTImgUrl(picGTFile, filename){
+  const JsonNameOnly = filename.replace(/\.[^/.]+$/, "");
+
+  for(let i = 0; i < this.ImageFiles.length; i++){
+    const ImgNameOnly = this.ImageFiles[i].name.replace(/\.[^/.]+$/, "");
+    if (ImgNameOnly == JsonNameOnly){
+      this.ImageFiles[i].gtUrl = picGTFile;
+      console.log("done", ImgNameOnly)
+    }
   }
  }
   
@@ -503,6 +539,49 @@ export class TestComponent  {
         }
         
     }
+  }
+  
+ 
+  binEvaluate(id = 0){
+    
+    const canvas = document.createElement('canvas') as HTMLCanvasElement;
+    const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
+    
+    //load 1st image
+    const img1 = new Image;
+    img1.onload = () =>{
+      const width = img1.width;
+      const height = img1.height;
+      canvas.width = width;
+      canvas.height = height;
+      ctx.drawImage(img1, 0, 0);
+      const MybinPixels = ctx.getImageData(0, 0, width, height);
+
+      //load 2nd image
+      const img2 = new Image;
+      img2.onload = () =>{
+        const width = img1.width;
+        const height = img1.height;
+        canvas.width = width;
+        canvas.height = height;
+        ctx.drawImage(img2, 0, 0);
+        const GTbinPixels = ctx.getImageData(0, 0, width, height);
+
+        //run evaluation
+        const Evaluation = new binEvaluation();
+        Evaluation.run(MybinPixels, GTbinPixels);
+        this.ImageFiles[id].recall = Evaluation.getRecall();
+        this.ImageFiles[id].precision = Evaluation.getPrecision();
+
+        //next image
+        if (id+1 < this.ImageFiles.length){
+          this.binEvaluate(id+1);
+        }
+      }
+      img2.src = this.ImageFiles[id].gtUrl; 
+    }
+    img1.src = this.ImageFiles[id].url; 
+
   }
 
   saveSegments(){
