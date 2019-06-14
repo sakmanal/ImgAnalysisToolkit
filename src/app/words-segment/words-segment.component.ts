@@ -975,6 +975,7 @@ export class WordsSegmentComponent {
   WordsSegment(){
     this.cancel();
     this.removeAllObjects();
+    this.GTdraw = false;
     this.words = [];
       this.Segmloader = true;
       if (this.Binary){
