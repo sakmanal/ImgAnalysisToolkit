@@ -531,6 +531,7 @@ export class TestComponent  {
   }
 
   evaluate(){
+    this.operation = "Segmentation";
     for(let i = 0; i < this.ImageFiles.length; i++){
         if (this.ImageFiles[i].blobs == undefined || this.ImageFiles[i].gt == undefined){
              continue;
@@ -543,7 +544,7 @@ export class TestComponent  {
   
  
   binEvaluate(id = 0){
-    
+    this.operation = "Binarization";
     const canvas = document.createElement('canvas') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
     
@@ -599,6 +600,28 @@ export class TestComponent  {
       this.savejsonService.saveTextSegments(name, Segments);
     }
     this.updateEvent.emit(true);
+  }
+  
+  operation:string;
+  downloadResults(){
+    if (this.operation == undefined){
+        return
+    }
+    let result:string = this.operation + " evaluation";
+    result += "\r\n";  //new txt line
+
+    for(let i = 0; i < this.ImageFiles.length; i++){
+      result += this.ImageFiles[i].name +" | "+ "Recall=" +(this.ImageFiles[i].recall).toFixed(2) +" | "+ "Precision=" +(this.ImageFiles[i].precision).toFixed(2);
+      result += "\r\n";
+    }
+    
+    const a = document.createElement('a');
+    a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(result));
+    a.setAttribute('download', 'evaluation-results');
+    document.body.appendChild(a);
+    a.click();
+    a.remove();
+    
   }
 
 

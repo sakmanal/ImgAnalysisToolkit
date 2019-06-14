@@ -65,7 +65,7 @@
                         <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
                         <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
                 
-                        <button mat-raised-button style="margin:3px" (click)="restore()"> restore default values</button>
+                        <button mat-raised-button style="margin:3px" (click)="removeAllObjects()">remove all Segments</button>
                 
                         <button  mat-raised-button color="accent" style="margin: 3px;" (click)="displayTextInput()">
                             <mat-icon>keyboard</mat-icon> enter word

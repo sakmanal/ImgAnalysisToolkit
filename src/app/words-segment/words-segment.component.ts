@@ -1037,11 +1037,11 @@ export class WordsSegmentComponent {
       }
   }
   
-  restore(){
+ /*  restore(){
     this.ARLSA_a= 1;
     this.ARLSA_c = 0.7;
     this.ARLSA_Th = 3.5;
-  }
+  } */
   
   evaluation(){
     if (this.jsonFile == undefined){
