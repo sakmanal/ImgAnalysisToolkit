@@ -422,7 +422,7 @@ export class TestComponent  {
   Segmloader:boolean  = false;
   WordsSegment(i = 0){
       this.Segmloader = true;
-  
+      this.operation = "Segmentation";
       const imageDataUrl = this.ImageFiles[i].url;
 
       const canvas = document.createElement('canvas') as HTMLCanvasElement;
