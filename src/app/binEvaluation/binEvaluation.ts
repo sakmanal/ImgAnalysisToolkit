@@ -2,7 +2,7 @@ export default class binEvaluation{
 
     private Recall:number;
     private Precision:number;
-    private Fmesure:number;
+    private Fmeasure:number;
 
     public getRecall(){
         return this.Recall;
@@ -12,8 +12,8 @@ export default class binEvaluation{
         return this.Precision;
     }
 
-    public getFmesure(){
-        return this.Fmesure;
+    public getFmeasure(){
+        return this.Fmeasure;
     }
 
     public run(MybinImg:ImageData, gtImg:ImageData){
@@ -41,6 +41,6 @@ export default class binEvaluation{
 
         this.Recall = TP/(FN + TP);
         this.Precision = TP/(FP + TP);
-        this.Fmesure = (2 * this.Recall * this.Precision)/(this.Recall + this.Precision);
+        this.Fmeasure = (2 * this.Recall * this.Precision)/(this.Recall + this.Precision);
     }
 }

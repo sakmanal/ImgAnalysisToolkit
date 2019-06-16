@@ -29,7 +29,7 @@
   <div *ngIf="recall" style="margin-left: 15px">
     <span style="color:#ffc400"> Recall: </span>{{recall | percent }}
     <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> Precision: </span>{{precision | percent}}
-    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> F-Mesure: </span>{{Fmesure | percent}}
+    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> F-Measure: </span>{{Fmeasure | percent}}
   </div>
   <!-- <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
     <mat-button-toggle (click)="fillscreen()" matTooltip="fill screen">

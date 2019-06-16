@@ -51,7 +51,7 @@ GTbinPixels:ImageData;
 MybinPixels:ImageData;
 precision:number;
 recall:number;
-Fmesure:number;
+Fmeasure:number;
 loadgtIcon:boolean = false;
 readyEval:boolean = false;
 
@@ -441,7 +441,7 @@ gtBinEval(){
   Evaluation.run(this.MybinPixels, this.GTbinPixels);
   this.recall = Evaluation.getRecall();
   this.precision = Evaluation.getPrecision();
-  this.Fmesure = Evaluation.getFmesure();
+  this.Fmeasure = Evaluation.getFmeasure();
   //console.log(this.recall, this.precision, this.Fmesure);
 }
 

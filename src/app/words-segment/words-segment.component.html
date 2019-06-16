@@ -104,8 +104,7 @@
 
                         
 
-                        <strong *ngIf="Recall" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Recall</span> = {{Recall.toFixed(3)}}</strong>
-                        <strong *ngIf="Precision" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Precision</span> = {{Precision.toFixed(3)}}</strong>
+                        
 
             
              
@@ -131,6 +130,8 @@
                         <p>
                             <strong><span style="color:#ffc400;font-size:15px; margin:3px"> Document: </span> {{imageName}}</strong>
                             <strong *ngIf="JsonFileName" style="margin: 3px; margin-left: 10px;"> {{JsonFileName}}</strong>
+                            <strong *ngIf="Recall" style="margin: 3px; margin-left: 20px;"><span style="color:#ffc400;font-size:15px"> Recall</span> = {{Recall.toFixed(3)}}</strong>
+                            <strong *ngIf="Precision" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Precision</span> = {{Precision.toFixed(3)}}</strong>
                         </p> 
                     </div>
                     

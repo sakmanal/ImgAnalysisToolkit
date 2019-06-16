@@ -88,8 +88,8 @@ export class WordsSegmentComponent {
   //gpp parameters
   dw:number = 10;
   k:number = 0.2;
-  R:number = 120;
-  q:number = 0.5;
+  R:number = 128;
+  q:number = 0.6;
   p1:number = 0.5;
   p2:number = 0.7;
   upsampling:boolean = true;
