@@ -37,7 +37,7 @@ export default class MyARLSA{
               this.ARLSA_Th = ARLSA_Th;
     }
 
-    public run(BinaryImage:ImageData):blobObject[]{
+    public run(BinaryImage:ImageData, PunctuationMarks:boolean = true):blobObject[]{
         
         this.myimage = copy(BinaryImage);
 
@@ -76,7 +76,7 @@ export default class MyARLSA{
         
         const myFilter:Filtering = new Filtering();
         myFilter.Filtering(this);
-        this.myimage = myFilter.FilterOut(new ImageData(removelines.data, removelines.width, removelines.height ));
+        this.myimage = myFilter.FilterOut(new ImageData(removelines.data, removelines.width, removelines.height ), PunctuationMarks);
 
         //const canvas = <HTMLCanvasElement> document.getElementById("myCanvas");    //<---------------------------------display img to canvas
         //const ctx: CanvasRenderingContext2D = canvas.getContext("2d");

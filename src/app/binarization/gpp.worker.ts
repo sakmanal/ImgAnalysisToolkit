@@ -49,9 +49,10 @@ export const GPP = (d:any) => {
         let dW = Math.min(Ix - 2, Math.min(_dw, Iy - 2));  
       
         let k = _k;  
-        k = k / 10;
+        //k = k / 10;
         let R = _R;
-        let q = 1 / _q;   
+        //let q = 1 / _q;
+        let q = _q;   
         let p1 = _p1;
         let p2 = _p2;  
         let upsampling = _upsampling;
@@ -142,7 +143,6 @@ export const GPP = (d:any) => {
                         I1 = IMAGE[ydW_1Ix][x];
                         IX_pix[x] = IX_pix1[x];
                         IX_gray[x] = IX_gray1[x] + I - I1;
-                        ;
                         IX_graygray[x] = IX_graygray1[x] + I * I - I1 * I1;
                         IX_pix1[x] = IX_pix[x];
                         IX_gray1[x] = IX_gray[x];

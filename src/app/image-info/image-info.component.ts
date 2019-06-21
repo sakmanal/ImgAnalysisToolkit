@@ -3,8 +3,11 @@ import {  GetjsonService } from '../getjson.service';
 import { MatPaginator, MatSort, MatTableDataSource } from '@angular/material';
 
 export interface PeriodicElement {
-  name: string;
- 
+  word: string;
+  x:number;
+  y:number;
+  width:number;
+  height:number;
 }
 
 
@@ -18,7 +21,7 @@ export interface PeriodicElement {
 
 export class ImageInfoComponent implements OnInit {
 
-  displayedColumns: string[] = ['name'];
+  displayedColumns: string[] = ['x','y','width','height','word'];
   dataSource: MatTableDataSource<any>;
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
@@ -64,7 +67,11 @@ export class ImageInfoComponent implements OnInit {
   makeTableDataSourse(){
     let ELEMENT_DATA: PeriodicElement[] = [];
      for (let i=0; i<this.ImageJson.words.length; i++){
-      const v =  { name: this.ImageJson.words[i]  }
+      const v =  {  word: this.ImageJson.words[i].word,
+                    x: this.ImageJson.words[i].x,
+                    y: this.ImageJson.words[i].y,
+                    width: this.ImageJson.words[i].width,
+                    height: this.ImageJson.words[i].height  }
        ELEMENT_DATA.push(v)
      }
      
@@ -88,12 +95,14 @@ export class ImageInfoComponent implements OnInit {
       const a = document.createElement('a');
       a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(text));
       a.setAttribute('download', filename);
-      a.click()
+      document.body.appendChild(a);
+      a.click();
+      a.remove();
   }
 
  downloadJson(){
    if (this.ImageJson){
-     this.saveJson( JSON.stringify(this.ImageJson), this.selectedImage +".json" );
+     this.saveJson( JSON.stringify(this.ImageJson), this.selectedImage.replace(/\.[^/.]+$/, ".json") );
    }
   
  }

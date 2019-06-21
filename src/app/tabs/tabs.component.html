@@ -1,31 +1,31 @@
 
 
-<mat-tab-group>  <!-- [dynamicHeight]="true" --> 
+<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)" 
+                                            [(selectedIndex)]="tabIndex">  
+  
+   
 
     <mat-tab label="Binarization"> 
-     <app-binarization></app-binarization>
+     <app-binarization
+       (updateImageEvent)="updateImage($event)">
+     </app-binarization>
     </mat-tab>
 
-    <mat-tab label="Document Words Picker Tool">
-        <ng-template matTabContent> 
-            <app-test3
-              (updateEvent)="updateTable($event)" 
-              [imageUrl]="ImgUrl"
-              [imageName]="ImgName">
-            </app-test3>
-        </ng-template>  
+    <mat-tab label="Segmentation">
+      <app-words-segment
+         (updateEvent)="updateTable($event)">
+      </app-words-segment>
     </mat-tab>
 
-    <mat-tab label="Saved Text Documents">
-      <app-image-info></app-image-info>
+    <mat-tab label="multiple Processing">
+        <app-test 
+           (updateImageEvent)="editImage($event)"
+           (updateEvent)="updateTable($event)">
+        </app-test>
     </mat-tab>
     
-    <mat-tab label="Segmentation Test">
-      <app-test2></app-test2>
-    </mat-tab>
-
-    <mat-tab label="Test">
-      <app-test2></app-test2>
+    <mat-tab label="extracted data">
+      <app-image-info></app-image-info>
     </mat-tab>
 
   </mat-tab-group>

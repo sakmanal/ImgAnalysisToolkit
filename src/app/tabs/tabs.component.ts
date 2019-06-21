@@ -1,6 +1,8 @@
-import { Component, ViewChild, AfterViewChecked} from '@angular/core';
-import { BinarizationComponent } from '../binarization/binarization.component';
-import { ImageInfoComponent } from "../image-info/image-info.component";
+import { Component, ViewChild} from '@angular/core';
+//import { BinarizationComponent } from '../binarization/binarization.component';
+import { ImageInfoComponent } from '../image-info/image-info.component';
+import { WordsSegmentComponent } from '../words-segment/words-segment.component';
+import { MatTabChangeEvent } from '@angular/material/tabs';
 
 
 @Component({
@@ -8,25 +10,56 @@ import { ImageInfoComponent } from "../image-info/image-info.component";
   templateUrl: './tabs.component.html',
   styleUrls: ['./tabs.component.css']
 })
-export class TabsComponent implements AfterViewChecked {
+export class TabsComponent{
 
-  ImgUrl:any;
-  ImgName:string;
-  
-  @ViewChild(BinarizationComponent) Binarization;
+  //@ViewChild(BinarizationComponent) Binarization;
   @ViewChild(ImageInfoComponent) ImageInfo;
-
-  
-
-  ngAfterViewChecked(){
-    this.ImgUrl = this.Binarization.ImgUrl;
-    this.ImgName = this.Binarization.ImageName;
-  }
-
+  @ViewChild(WordsSegmentComponent) WordsSegment;
+  tabIndex:number = 0;
 
   updateTable(event:MessageEvent){
     this.ImageInfo.showImageInfo();
+  }
 
+  updateImage(event){
+    //console.log(event)
+    this.WordsSegment.imageUrl = event.dataURL;
+    this.WordsSegment.imageName = event.name;
+    this.WordsSegment.MyArlsaRects = [];
+    this.WordsSegment.ImageChange = true;  
+  }
+
+  tabSelectionChanged(event:MatTabChangeEvent){
+    if (event.index == 1 && this.WordsSegment.imageUrl){
+      this.WordsSegment.handleComponentView();
+    }
+  }
+
+  editImage(event){
+    this.WordsSegment.imageUrl = event.dataURL;
+    this.WordsSegment.imageName = event.name;
+
+    if (event.blobs == undefined){
+      this.WordsSegment.MyArlsaRects = [];
+    }else{
+      this.WordsSegment.MyArlsaRects = event.blobs;
+    }
+
+    if (event.gt == undefined){
+      this.WordsSegment.RectsArray = [];
+      this.WordsSegment.JsonFileName = "";
+    }else{
+      this.WordsSegment.jsonFile = 1;
+      this.WordsSegment.JsonFileName = event.name.replace(/\.[^/.]+$/, ".json");
+      this.WordsSegment.RectsArray = event.gt;
+    }
+    
+    this.WordsSegment.ImageChange = true;
+    if (this.WordsSegment.imageUrl){
+      this.WordsSegment.handleComponentView();
+    }
+    this.tabIndex = 1;
+    
   }
 
 }

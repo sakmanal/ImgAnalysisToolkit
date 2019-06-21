@@ -1,0 +1,168 @@
+<div *ngIf=imageUrl>
+
+
+    <div class="row">
+
+        <div class="side">
+              
+                    <div>blockdistance_a:
+                                <mat-slider 
+                                    color="warn" 
+                                    [thumbLabel]= "true"
+                                    [step]="0.1"
+                                    [(ngModel)]="ARLSA_a"
+                                    [max]="8"
+                                    [min]="0"
+                                    (change)="WordsSegment()">
+                                </mat-slider>{{ARLSA_a}}
+                    </div>
+
+                    <div> overlapping_c:
+                                <mat-slider 
+                                    color="warn" 
+                                    [thumbLabel]= "true"
+                                    [step]="0.1"
+                                    [(ngModel)]="ARLSA_c"
+                                    [max]="1"
+                                    [min]="0" 
+                                    (change)="WordsSegment()">
+                                </mat-slider>{{ARLSA_c}}
+                    </div>
+
+                    <div>HeightRatio_th:
+                                <mat-slider 
+                                    color="warn" 
+                                    [thumbLabel]= "true"
+                                    [step]="0.1"
+                                    [(ngModel)]="ARLSA_Th"
+                                    [max]="8"
+                                    [min]="0.1" 
+                                    (change)="WordsSegment()">
+                                </mat-slider>{{ARLSA_Th}}
+
+                    </div>
+
+                
+        </div>
+
+        <div class="main">
+                <div style="margin: 5px">
+
+                        <button  mat-raised-button color="warn" style="margin: 3px;" (click)="WordsSegment()">
+                            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> ARLSA Word Segmentation
+                        </button>
+                
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
+                        </mat-form-field>
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c" step="0.1">
+                        </mat-form-field>
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th" step="0.1">
+                        </mat-form-field>
+
+                        <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
+                        <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
+                
+                        <button mat-raised-button style="margin:3px" (click)="removeAllObjects()">remove all Segments</button>
+                
+                        <button  mat-raised-button color="accent" style="margin: 3px;" (click)="displayTextInput()">
+                            <mat-icon>keyboard</mat-icon> enter word
+                        </button>
+                        
+                        <button  mat-raised-button color="primary" style="margin: 3px;" (click)="remove()">
+                            <mat-icon>remove_circle_outline</mat-icon> remove selection
+                        </button>
+                
+                        <!-- <button  mat-raised-button color="primary" style="margin: 3px;" (click)="mergeSelection()">
+                            <mat-icon>crop_16_9</mat-icon> fit in selection
+                        </button> -->
+
+                        <!-- <button  mat-raised-button color="accent" style="margin: 3px;" (click)="save()">
+                            <mat-icon>save</mat-icon> Save Document Words
+                        </button> -->
+                        <button  mat-raised-button color="accent" style="margin: 3px;" (click)="saveSegments()">
+                            <mat-icon>save</mat-icon> Save Document Segments
+                        </button>
+
+                        <button  mat-raised-button color="warn" style="margin: 3px;" (click)="evaluation()">
+                             Precision Recall Evaluation
+                        </button>
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="Tinter" placeholder="intersection threshold" step="0.1" min="0.1" max="1">
+                        </mat-form-field>
+                        <button  mat-raised-button color="primary" style="margin: 3px;" (click)="fileInput.click()">
+                                <mat-icon>cloud_upload</mat-icon> Load Ground Truth
+                        </button>
+
+                        <button *ngIf="RectsArray.length" mat-raised-button style="margin: 3px;" (click)="drawGTrects()">
+                             Draw GT Rects
+                        </button>
+
+                        <input  style="display: none" type='file' (change)="loadGT($event)" #fileInput accept=".json">
+
+                        
+
+                        
+
+            
+             
+                        <div>
+                            <span class="alternative">
+                                    <mat-slide-toggle color="accent" [(ngModel)]="RectTool" (change)="selectRect()" style="margin: 3px;">Draw Word</mat-slide-toggle>
+                                    <mat-slide-toggle color="accent" [(ngModel)]="LineTool" (change)="selectLine()" style="margin: 3px;">Draw Line</mat-slide-toggle>
+                                    <mat-slide-toggle color="warn" [(ngModel)]="expandFullScreen" (change)="expandCanvas()" style="margin: 3px;">full Sreen</mat-slide-toggle>
+                            </span>
+
+                            <div class="tooltip" style="margin: 3px;">
+                                    <fa-icon [icon]="faInfoCircle"  size="lg"></fa-icon>
+                                    <span class="tooltiptext">
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">mouse wheel:</span> zoom image</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ALT + mouse drag:</span> drag image around</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + BACKSPACE:</span> remove selection</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">CRTL + SPACE:</span> open text input</div>
+                                        <div><span style="color:#ffc400;font-weight: bold; font-size: 13px;">ENTER:</span> add word and select the next one</div>
+                                    </span>        
+                                </div>
+                            
+                        </div>   
+                        <p>
+                            <strong><span style="color:#ffc400;font-size:15px; margin:3px"> Document: </span> {{imageName}}</strong>
+                            <strong *ngIf="JsonFileName" style="margin: 3px; margin-left: 10px;"> {{JsonFileName}}</strong>
+                            <strong *ngIf="Recall" style="margin: 3px; margin-left: 20px;"><span style="color:#ffc400;font-size:15px"> Recall</span> = {{Recall.toFixed(3)}}</strong>
+                            <strong *ngIf="Precision" style="margin: 3px;"><span style="color:#ffc400;font-size:15px"> Precision</span> = {{Precision.toFixed(3)}}</strong>
+                        </p> 
+                    </div>
+                    
+                    
+                
+        </div>
+
+
+
+    </div>
+
+
+
+    <div *ngIf=showTextInput class="st">
+        <button  mat-mini-fab  (click)="writeWord()" color="warn"><mat-icon>add</mat-icon></button>
+        <p><button  mat-mini-fab  (click)="cancel()" color="warn"><mat-icon>close</mat-icon></button></p>
+    </div>
+
+
+
+
+
+                <div class="centerimg">
+                    <div  style="cursor: crosshair;" class="responsive" id="wr">
+                    <canvas class="canvas" id="canvas"></canvas> 
+                      <div *ngIf=showTextInput class="InputBox" [ngStyle]="{'left.px': left, 'top.px': top, 'width.px': width  }">
+                                    
+                                          <input matInput type="text" style="border:1px solid #ff0000" [(ngModel)]="words[id]" #inputField (keydown.enter)=writeWord()/>
+                                  
+                      </div>
+                    </div>
+                </div>
+                
+</div> 

@@ -11,13 +11,14 @@ import { ToolbarSidenavComponent } from './toolbar-sidenav/toolbar-sidenav.compo
 import { TabsComponent } from './tabs/tabs.component';
 import { BinarizationComponent } from './binarization/binarization.component';
 import { AboutComponent } from './about/about.component';
-import { TextSelectPopUpComponent } from './text-select-pop-up/text-select-pop-up.component';
 import { ImageInfoComponent } from './image-info/image-info.component';
-import { Test2Component } from './test2/test2.component';
 import { MouseWheelDirective } from './mousewheel.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { WindowScrollDirective } from './window-scroll.directive';
-import { Test3Component } from './test3/test3.component';
+import { WordsSegmentComponent } from './words-segment/words-segment.component';
+import { WordSnackBarComponent } from './word-snack-bar/word-snack-bar.component';
+import { TestComponent } from './test/test.component';
+import { Test2Component } from './test2/test2.component';
+
 
 @NgModule({
   declarations: [
@@ -26,12 +27,12 @@ import { Test3Component } from './test3/test3.component';
     TabsComponent,
     BinarizationComponent,
     AboutComponent,
-    TextSelectPopUpComponent,
     ImageInfoComponent,
-    Test2Component,
     MouseWheelDirective,
-    WindowScrollDirective,
-    Test3Component
+    WordsSegmentComponent,
+    WordSnackBarComponent, 
+    TestComponent, 
+    Test2Component
  
   ],
   imports: [
@@ -45,7 +46,7 @@ import { Test3Component } from './test3/test3.component';
     FlexLayoutModule
   ],
   entryComponents: [
-    TextSelectPopUpComponent
+    WordSnackBarComponent
   ],
   providers: [],
   bootstrap: [AppComponent]

@@ -1,24 +1,29 @@
+<p>
+ grid search
+</p>
 
-<input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
-<button mat-raised-button style="margin: 10px;   font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Image</button>
-<!-- <button mat-raised-button  (click)="sauvolaBinarization()"><fa-icon *ngIf="SauvolaImage.sauvolaloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button> -->
-<!-- <button mat-raised-button (click)="GppBinarization()">GPP</button> -->
-<!-- <button mat-raised-button color="primary"  (click)="ConnectedComponents()"> My Connected Components</button> -->
-<button mat-raised-button color="warn"  (click)="ConnectedComponents2()">Draw Connected Components</button>
-<button mat-raised-button color="primary"  (click)="test()"><fa-icon *ngIf="testloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> test Segmentation</button>
-<button mat-raised-button  (click)="view()"><mat-icon>undo</mat-icon> undo</button>
 
-<mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-    <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a">
-  </mat-form-field>
-  <mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-    <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c">
-  </mat-form-field>
-  <mat-form-field color="warn" style="margin:5px; width: 100px; font-size: 12px">
-    <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th">
-  </mat-form-field>
 
-<button mat-raised-button  (click)="restore()"> restore default values</button>
+<!-- <button  mat-raised-button color="primary" style="margin: 3px;" (click)="fileInput.click()">
+  <mat-icon>cloud_upload</mat-icon> Load Ground Truth
+</button>
 
+<input  style="display: none" type='file' (change)="loadGT($event)" #fileInput accept=".json">
+
+
+
+<input  type='file' (change)="onSelectFile($event)" accept="image/*">
 <br>
-<canvas class="responsive"  #canvasfilter  id="myCanvas"></canvas>
+<canvas #viewport style="max-width:100%">
+
+
+
+</canvas> -->
+
+
+<input type='file' (change)="loadGT($event)" #fileInput accept=".json">
+
+<input  type='file' (change)="onSelectFile($event)" accept="image/*">
+
+
+<button (click)="gridsearch()">start</button>

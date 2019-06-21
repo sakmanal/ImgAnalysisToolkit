@@ -101,3 +101,22 @@
     from {transform: rotate(0deg);}
     to {transform: rotate(359deg);}
  }
+
+ .over {
+   position: fixed;
+   top: 45%;
+   left: 50%;
+   height:160px;
+   width:160px;
+   z-index:99;
+   margin: -50px 0px 0px -50px;
+    -webkit-animation: rotation .6s infinite linear;
+    -moz-animation: rotation .6s infinite linear;
+    -o-animation: rotation .6s infinite linear;
+    animation: rotation .6s infinite linear;
+    border-left:6px solid rgba(0,174,239,.15);
+    border-right:6px solid rgba(0,174,239,.15);
+    border-bottom:6px solid rgba(0,174,239,.15);
+    border-top:6px solid rgba(0,174,239,.8);
+    border-radius:100%;
+}

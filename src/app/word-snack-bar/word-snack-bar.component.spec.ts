@@ -1,20 +1,20 @@
 import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TextSelectPopUpComponent } from './text-select-pop-up.component';
+import { WordSnackBarComponent } from './word-snack-bar.component';
 
-describe('TextSelectPopUpComponent', () => {
-  let component: TextSelectPopUpComponent;
-  let fixture: ComponentFixture<TextSelectPopUpComponent>;
+describe('WordSnackBarComponent', () => {
+  let component: WordSnackBarComponent;
+  let fixture: ComponentFixture<WordSnackBarComponent>;
 
   beforeEach(async(() => {
     TestBed.configureTestingModule({
-      declarations: [ TextSelectPopUpComponent ]
+      declarations: [ WordSnackBarComponent ]
     })
     .compileComponents();
   }));
 
   beforeEach(() => {
-    fixture = TestBed.createComponent(TextSelectPopUpComponent);
+    fixture = TestBed.createComponent(WordSnackBarComponent);
     component = fixture.componentInstance;
     fixture.detectChanges();
   });

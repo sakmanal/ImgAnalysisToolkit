@@ -1,0 +1,174 @@
+
+<div style="margin: 5px">
+    <button mat-raised-button style="margin-right: 3px; margin-left: 5px; margin-top: 5px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Text Documents</button>
+    <span *ngIf = "enableView">
+        
+        <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorotsu" (click)="binarization_otsu()">Otsu</button>
+        <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
+        <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
+        <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="restore()"><mat-icon>undo</mat-icon> undo</button>
+        <button  mat-raised-button color="warn" style="margin-right: 5px; margin-top: 5px;" (click)="WordsSegment()">
+            <fa-icon *ngIf="Segmloader" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> ARLSA Words Segmentation
+        </button>
+        <button  mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="saveSegments()"><mat-icon>save</mat-icon> Save Segments</button>
+        <button  mat-raised-button style="margin-right: 5px; margin-top: 5px;" (click)="removeAll()"><mat-icon>delete</mat-icon> Clear All</button>
+        <button (click)="downloadResults()" mat-mini-fab style="margin-right: 5px; margin-top: 5px;" color="warn">
+           <mat-icon>file_download</mat-icon>
+        </button>
+    </span>
+    <input  style="display: none" type='file' multiple="multiple" (change)="selectFiles($event)" #fileInput accept="image/*">
+    
+
+</div>
+    
+      
+   
+
+<span *ngIf = "enableView">
+    <div class="row">
+
+        <div class="side">
+                    <mat-expansion-panel>
+        
+                        <mat-expansion-panel-header>
+                        <mat-panel-title>
+                            sauvola parameters
+                        </mat-panel-title>
+                        </mat-expansion-panel-header>
+                    
+                        <mat-form-field color="warn">
+                        <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize">
+                        </mat-form-field>
+                        <mat-form-field color="warn">
+                        <input matInput type="number" [(ngModel)]="stathera" placeholder="k" step="0.1" min="0">
+                        </mat-form-field>
+                        <mat-form-field color="warn">
+                        <input matInput type="number" [(ngModel)]="rstathera" placeholder="R">
+                        </mat-form-field>
+                        <mat-form-field color="warn">
+                        <input matInput type="number" [(ngModel)]="n" placeholder="n">
+                        </mat-form-field>
+                    
+                    </mat-expansion-panel>
+                    
+                    <mat-expansion-panel>
+
+                            <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                gpp parameters
+                            </mat-panel-title>
+                            </mat-expansion-panel-header>
+                        
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="1">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="k" placeholder="k" min="0.1" step="0.1">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="R" placeholder="R" min="10" step="10">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="q" placeholder="q" step="0.1">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="p1" placeholder="p1" step="0.1">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="p2" placeholder="p2" step="0.1">
+                            </mat-form-field>
+                            <mat-form-field color="warn">
+                            <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="1">
+                            </mat-form-field>
+                            <!-- <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox> -->
+                        
+                        </mat-expansion-panel>
+                       
+        </div>
+
+        <div class="main">
+                
+
+                    <mat-expansion-panel>
+
+                            <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                ARLSA parameters
+                            </mat-panel-title>
+                            </mat-expansion-panel-header>
+                     
+                    
+                         <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
+                        </mat-form-field>
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_c" placeholder="overlapping_c" step="0.1">
+                        </mat-form-field>
+                        <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
+                            <input matInput type="number" [(ngModel)]="ARLSA_Th" placeholder="HeightRatio_th" step="0.1">
+                        </mat-form-field>
+                        <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
+                        <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
+
+                    </mat-expansion-panel>   
+                    
+                    <mat-expansion-panel>
+
+                            <mat-expansion-panel-header>
+                            <mat-panel-title>
+                                evaluation
+                            </mat-panel-title>
+                            
+                            </mat-expansion-panel-header>
+
+                            <div>GT segments and binary files must have the same file-name as document images</div>
+                            
+                            <div>
+                                    <input  style="display: none" type='file' multiple="multiple" (change)="selectGT($event)" #GTinput accept=".json">
+                                    <button mat-raised-button color="accent" style="margin-right:3px;" (click)="GTinput.click()"><mat-icon>add circle</mat-icon> Load Ground Truth Segments</button>
+                                    <button  mat-raised-button color="primary" style="margin-right:3px;" (click)="evaluate()">evaluate Segmentation</button>
+                                    <mat-form-field color="warn" style="margin-right:3px; width: 100px; font-size: 12px">
+                                            <input matInput type="number" [(ngModel)]="Tinter" placeholder="intersection threshold" step="0.1" min="0.1" max="1">
+                                    </mat-form-field>
+                                    
+                            </div>
+                            
+                            <div>
+                                    <input  style="display: none" type='file' multiple="multiple" (change)="selectGTimg($event)" #GTIMGinput accept="image/*">
+                                    <button mat-raised-button color="accent" style="margin-right:3px;" (click)="GTIMGinput.click()"><mat-icon>add circle</mat-icon> Load Ground Truth Images</button>
+                                    <button  mat-raised-button color="primary"  (click)="binEvaluate()">evaluate Binarization</button>
+                            </div>
+
+                    </mat-expansion-panel>         
+        </div>
+
+
+        
+
+    </div>   
+
+
+    <div style="margin: 5px;">  
+            <strong style="margin-left:10px;">{{ImageFiles.length}} Text Documents selected</strong>
+    </div>  
+</span>
+
+<ul class="auto-grid">
+        <span *ngFor="let image of ImageFiles; let i = index" [attr.data-index]="i">
+                <div style="width: 300px" class="container">
+                    <mat-progress-bar *ngIf="image.pbar" mode="buffer"></mat-progress-bar>
+                    <div *ngIf="image.name" style="margin: 2px">{{image.name.substr(0, 40)}}</div>
+                    <img class="image" src={{image.url}} />
+                    <div *ngIf="image.spin" class="spinner"></div>
+                    <button (click)="remove(i)" class="del" mat-icon-button>
+                        <mat-icon color="primary">clear</mat-icon>
+                    </button>
+                    <button (click)="edit(i)" class="proc" mat-icon-button>
+                        <mat-icon color="primary">add</mat-icon>
+                    </button>
+                    <div *ngIf="image.recall"> Recall = {{image.recall.toFixed(3)}}</div>
+                    <div *ngIf="image.precision"> Precision = {{image.precision.toFixed(3)}}</div>
+                    
+                </div>   
+        </span>
+</ul>
