@@ -1,5 +1,92 @@
-<div class="imgbox">
-    <p><img src="assets/logo.png" class="center-fit"></p>
-    <p>version: 0.1 | 2019 - Athanasios Manalikadis</p>
-</div>
-    
+
+<header>
+     <img mat-card-image style="max-width: 500px" src="src\assets\undraw_firmware_mf69.svg"/>
+     <p>Image Analysis Toolkit for text document Binarization & Segmentation written in TypeScript</p>
+     <p><button mat-raised-button color="warn" routerLink="/ImgAnalysisToolkit">Start</button></p>
+</header>
+
+<!-- The content of your page would go here. -->
+<div class="wrap">
+      
+             
+   <div class="wrapper">
+   
+           <ul class="auto-grid">
+            <mat-card>
+                   <mat-card-header>
+                           <mat-card-title>Binarization</mat-card-title>
+                   </mat-card-header>
+                
+                   <img mat-card-image src="../../assets/bin.jpg"/>
+       
+                   <mat-card-content>
+                       <p>
+                          3 state of the art Binarization methods for modern/degraded documents.
+                       </p>
+                   </mat-card-content>
+                 
+                   <mat-card-actions>
+                           <a mat-button target="_blank" href="https://ieeexplore.ieee.org/document/4310076">Otsu</a>
+                           <a mat-button target="_blank" href="https://www.sciencedirect.com/science/article/abs/pii/S0031320399000552">Sauvola</a>
+                           <a mat-button target="_blank" href="https://www.sciencedirect.com/science/article/abs/pii/S0031320305003821">GPP</a>
+                   </mat-card-actions>
+       
+            </mat-card>
+            <mat-card>
+                   <mat-card-header>
+                           <mat-card-title>Text Segmentation</mat-card-title>
+                   </mat-card-header>
+                   <img mat-card-image src="../../assets/seg.jpg"/>
+                   <mat-card-content>
+                           <p>
+                              1 Text Segmentation method for historical machine-printed documents.
+                           </p>
+                   </mat-card-content>
+                   <mat-card-actions>
+                           <a mat-button target="_blank" href="https://www.sciencedirect.com/science/article/pii/S0262885609002005">ARLSA</a>
+                   </mat-card-actions>
+       
+            </mat-card>
+            <mat-card>
+                   <mat-card-header>
+                           <mat-card-title>Evaluation</mat-card-title>
+                   </mat-card-header>
+                   <img mat-card-image src="../../assets/eval.jpg"/>
+                   <mat-card-content>
+                           <p>
+                               Precision Recall Evaluation by providing the Groung-Truth Images/Segments.
+                           </p>
+                   </mat-card-content>
+                   <mat-card-actions>
+                           <a mat-button target="_blank" href="https://en.wikipedia.org/wiki/Precision_and_recall">Precision & Recall</a>
+                   </mat-card-actions>
+            </mat-card>
+           </ul>
+         </div>
+   </div>
+
+<footer class="footer-distributed">
+
+        <div class="footer-right">
+
+                <a target="_blank" href="https://www.ee.duth.gr/">  <fa-icon [icon]="faUniversity" size="lg"></fa-icon></a>
+                <a target="_blank" href="http://vc.ee.duth.gr/#!">  <fa-icon [icon]="faAtom" size="lg"></fa-icon></a>
+                <a target="_blank" href="https://github.com/sakmanal">  <fa-icon [icon]="faGithub" size="lg"></fa-icon></a>
+                              
+
+        </div>
+
+        <div class="footer-left">
+
+                <p class="footer-links">
+                        <a target="_blank" href="https://www.ee.duth.gr/">Δ.Π.Θ</a>
+                        ·
+                        <a target="_blank" href="http://vc.ee.duth.gr/#!">Visual Computing Group</a>
+                        
+                      
+                </p>
+
+                <p>Developed by Athanasios Manalikadis &#10070; 2019</p>
+        </div>
+
+</footer>     

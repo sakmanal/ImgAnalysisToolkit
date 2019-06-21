@@ -113,7 +113,7 @@ export class TestComponent  {
       jsonreader.readAsText(file)
   
     }
-
+    event.target.value = '';  //enable opening the same file
   }
 
   selectGTimg(event:any){
@@ -135,7 +135,7 @@ export class TestComponent  {
       };   
       picReader.readAsDataURL(file);
     }
-
+    event.target.value = '';  //enable opening the same file
   }
 
   readjson(jsonfile, filename){
@@ -557,7 +557,8 @@ export class TestComponent  {
       canvas.height = height;
       ctx.drawImage(img1, 0, 0);
       const MybinPixels = ctx.getImageData(0, 0, width, height);
-
+      console.log('1st image loaded');
+      
       //load 2nd image
       const img2 = new Image;
       img2.onload = () =>{
@@ -567,13 +568,15 @@ export class TestComponent  {
         canvas.height = height;
         ctx.drawImage(img2, 0, 0);
         const GTbinPixels = ctx.getImageData(0, 0, width, height);
+        console.log('2st image loaded');
 
         //run evaluation
         const Evaluation = new binEvaluation();
         Evaluation.run(MybinPixels, GTbinPixels);
         this.ImageFiles[id].recall = Evaluation.getRecall();
         this.ImageFiles[id].precision = Evaluation.getPrecision();
-
+        console.log(this.ImageFiles[id].recall, this.ImageFiles[id].precision);
+        
         //next image
         if (id+1 < this.ImageFiles.length){
           this.binEvaluate(id+1);

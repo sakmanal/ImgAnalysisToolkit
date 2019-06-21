@@ -19,6 +19,7 @@ import { WordSnackBarComponent } from './word-snack-bar/word-snack-bar.component
 import { TestComponent } from './test/test.component';
 import { Test2Component } from './test2/test2.component';
 
+
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,7 +31,8 @@ import { Test2Component } from './test2/test2.component';
     MouseWheelDirective,
     WordsSegmentComponent,
     WordSnackBarComponent, 
-    TestComponent, Test2Component
+    TestComponent, 
+    Test2Component
  
   ],
   imports: [

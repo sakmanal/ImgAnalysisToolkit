@@ -33,7 +33,8 @@ export default class binEvaluation{
               else if (MybinData[i] == 0 && gtImg[i] != 0)
               {
                 FP++;
-              }else if (MybinData[i] != 0 && gtData[i] == 0)
+              }
+              else if (MybinData[i] != 0 && gtData[i] == 0)
               {
                 FN++;
               }     

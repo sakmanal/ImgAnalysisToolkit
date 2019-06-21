@@ -120,6 +120,7 @@ export class WordsSegmentComponent {
         this.Precision = 0;
         this.Recall = 0;
         this.ImageChange = false;
+        this.GTdraw = false;
       }
       
     }

@@ -140,6 +140,7 @@ onSelectFile(event:any):void { // called each time file input changes
   reader.readAsDataURL(event.target.files[0]);
   this.ImageName = event.target.files[0].name;
   //console.log(this.ImageName);
+  event.target.value = '';  //enable opening the same file
 }
 
 onSelectGT(event:any){
@@ -154,6 +155,7 @@ onSelectGT(event:any){
   }
   reader.readAsDataURL(event.target.files[0]);
   this.GTbinName = event.target.files[0].name;
+  event.target.value = '';  //enable opening the same file
 }
 
 

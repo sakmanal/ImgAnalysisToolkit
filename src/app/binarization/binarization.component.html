@@ -85,16 +85,16 @@
                         </mat-expansion-panel-header>
                        
                         <mat-form-field color="warn">
-                          <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize">
+                          <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize" min="2">
                         </mat-form-field>
                         <mat-form-field color="warn">
                           <input matInput type="number" [(ngModel)]="stathera" placeholder="k" step="0.1" min="0">
                         </mat-form-field>
                         <mat-form-field color="warn">
-                          <input matInput type="number" [(ngModel)]="rstathera" placeholder="R">
+                          <input matInput type="number" [(ngModel)]="rstathera" placeholder="R" min="10" step="10">
                         </mat-form-field>
                         <mat-form-field color="warn">
-                          <input matInput type="number" [(ngModel)]="n" placeholder="n">
+                          <input matInput type="number" [(ngModel)]="n" placeholder="n" min="1">
                         </mat-form-field>
                        
                       </mat-expansion-panel>
@@ -108,7 +108,7 @@
                           </mat-expansion-panel-header>
                          
                           <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="1">
+                            <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="2">
                           </mat-form-field>
                           <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="k" placeholder="k" min="0.1" step="0.1">
@@ -126,7 +126,7 @@
                             <input matInput type="number" [(ngModel)]="p2" placeholder="p2" step="0.1">
                           </mat-form-field>
                           <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="1">
+                            <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="2">
                           </mat-form-field>
                             <!-- <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox> -->
                          
