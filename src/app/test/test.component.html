@@ -1,8 +1,8 @@
 
 <div style="margin: 5px">
-    <button mat-raised-button style="margin-right: 3px; margin-left: 5px; margin-top: 5px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add circle</mat-icon> Select Text Documents</button>
+    <button mat-raised-button style="margin-right: 3px; margin-left: 5px; margin-top: 5px; font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add</mat-icon> Select Text Documents</button>
     <span *ngIf = "enableView">
-        
+
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorotsu" (click)="binarization_otsu()">Otsu</button>
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorsauvola" (click)="binarization_sauvola()">Sauvola</button>
         <button mat-raised-button style="margin-right: 5px; margin-top: 5px;" [color]="colorgpp" (click)="binarization_gpp()">GPP</button>
@@ -17,25 +17,25 @@
         </button>
     </span>
     <input  style="display: none" type='file' multiple="multiple" (change)="selectFiles($event)" #fileInput accept="image/*">
-    
+
 
 </div>
-    
-      
-   
+
+
+
 
 <span *ngIf = "enableView">
     <div class="row">
 
         <div class="side">
                     <mat-expansion-panel>
-        
+
                         <mat-expansion-panel-header>
                         <mat-panel-title>
                             sauvola parameters
                         </mat-panel-title>
                         </mat-expansion-panel-header>
-                    
+
                         <mat-form-field color="warn">
                         <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize">
                         </mat-form-field>
@@ -48,9 +48,9 @@
                         <mat-form-field color="warn">
                         <input matInput type="number" [(ngModel)]="n" placeholder="n">
                         </mat-form-field>
-                    
+
                     </mat-expansion-panel>
-                    
+
                     <mat-expansion-panel>
 
                             <mat-expansion-panel-header>
@@ -58,7 +58,7 @@
                                 gpp parameters
                             </mat-panel-title>
                             </mat-expansion-panel-header>
-                        
+
                             <mat-form-field color="warn">
                             <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="1">
                             </mat-form-field>
@@ -81,13 +81,13 @@
                             <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="1">
                             </mat-form-field>
                             <!-- <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox> -->
-                        
+
                         </mat-expansion-panel>
-                       
+
         </div>
 
         <div class="main">
-                
+
 
                     <mat-expansion-panel>
 
@@ -96,8 +96,8 @@
                                 ARLSA parameters
                             </mat-panel-title>
                             </mat-expansion-panel-header>
-                     
-                    
+
+
                          <mat-form-field color="warn" style="margin:3px; width: 100px; font-size: 12px">
                             <input matInput type="number" [(ngModel)]="ARLSA_a" placeholder="blockdistance_a" step="0.1">
                         </mat-form-field>
@@ -110,19 +110,19 @@
                         <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="RemovePunctuationMarks">Remove Punctuation Marks</mat-checkbox>
                         <mat-checkbox color="warn" style="margin:3px" [(ngModel)]="Xrlsa">xRLSA</mat-checkbox>
 
-                    </mat-expansion-panel>   
-                    
+                    </mat-expansion-panel>
+
                     <mat-expansion-panel>
 
                             <mat-expansion-panel-header>
                             <mat-panel-title>
                                 evaluation
                             </mat-panel-title>
-                            
+
                             </mat-expansion-panel-header>
 
                             <div>GT segments and binary files must have the same file-name as document images</div>
-                            
+
                             <div>
                                     <input  style="display: none" type='file' multiple="multiple" (change)="selectGT($event)" #GTinput accept=".json">
                                     <button mat-raised-button color="accent" style="margin-right:3px;" (click)="GTinput.click()"><mat-icon>add circle</mat-icon> Load Ground Truth Segments</button>
@@ -130,27 +130,27 @@
                                     <mat-form-field color="warn" style="margin-right:3px; width: 100px; font-size: 12px">
                                             <input matInput type="number" [(ngModel)]="Tinter" placeholder="intersection threshold" step="0.1" min="0.1" max="1">
                                     </mat-form-field>
-                                    
+
                             </div>
-                            
+
                             <div>
                                     <input  style="display: none" type='file' multiple="multiple" (change)="selectGTimg($event)" #GTIMGinput accept="image/*">
                                     <button mat-raised-button color="accent" style="margin-right:3px;" (click)="GTIMGinput.click()"><mat-icon>add circle</mat-icon> Load Ground Truth Images</button>
                                     <button  mat-raised-button color="primary"  (click)="binEvaluate()">evaluate Binarization</button>
                             </div>
 
-                    </mat-expansion-panel>         
+                    </mat-expansion-panel>
         </div>
 
 
-        
-
-    </div>   
 
 
-    <div style="margin: 5px;">  
+    </div>
+
+
+    <div style="margin: 5px;">
             <strong style="margin-left:10px;">{{ImageFiles.length}} Text Documents selected</strong>
-    </div>  
+    </div>
 </span>
 
 <ul class="auto-grid">
@@ -168,7 +168,7 @@
                     </button>
                     <div *ngIf="image.recall"> Recall = {{image.recall.toFixed(3)}}</div>
                     <div *ngIf="image.precision"> Precision = {{image.precision.toFixed(3)}}</div>
-                    
-                </div>   
+
+                </div>
         </span>
 </ul>
