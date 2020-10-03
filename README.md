@@ -1,27 +1,21 @@
 # ImgAnalysisToolkit
 
-This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 6.2.4.
+This project is a client side Image Analysis Toolkit for text document Binarization & Segmentation written in TypeScript. 
 
-## Development server
+### Binarization
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+Implements Otsu [1], Sauvola [2] and GPP [3] Binarization methods for modern/degraded documents.
 
-## Code scaffolding
+### Segmentation
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+Implements Text Segmentation method for modern/historical machine-printed documents based on ARLSA [4]. 
 
-## Build
+### Reference
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+1. N. Otsu, "A threshold selection method from gray-level histograms," IEEE Trans. Systems, Man, and Cybernetics, vol. 9, pp. 62-66,           1979.
 
-## Running unit tests
+2. J. Sauvola and M. Pietikainen, "Adaptive document image binarization," Pattern Recognition, vol. 33, no. 2, pp. 225-236, February           2000.
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+3. B. Gatos, I. Pratikakis and S. J. Perantonis, "Adaptive degraded document image binarization," Pattern Recognition, vol. 39, no. 3,         pp. 317-327, March 2006.
 
-## Running end-to-end tests
-
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
-
-## Further help
-
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+4. N. Nikolaou, M. Makridis, B. Gatos, N. Stamatopoulos and N. Papamarkos, "Segmentation of historical machine-printed documents using         Adaptive Run Length Smoothing and skeleton segmentation paths," Image and Vision Computing, vol. 28, no. 4, pp. 590-604, April 2010.
