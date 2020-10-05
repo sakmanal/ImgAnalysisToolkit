@@ -10,7 +10,6 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ToolbarSidenavComponent } from './toolbar-sidenav/toolbar-sidenav.component';
 import { TabsComponent } from './tabs/tabs.component';
 import { BinarizationComponent } from './binarization/binarization.component';
-import { AboutComponent } from './about/about.component';
 import { ImageInfoComponent } from './image-info/image-info.component';
 import { MouseWheelDirective } from './mousewheel.directive';
 import { FlexLayoutModule } from '@angular/flex-layout';
@@ -26,14 +25,13 @@ import { Test2Component } from './test2/test2.component';
     ToolbarSidenavComponent,
     TabsComponent,
     BinarizationComponent,
-    AboutComponent,
     ImageInfoComponent,
     MouseWheelDirective,
     WordsSegmentComponent,
-    WordSnackBarComponent, 
-    TestComponent, 
+    WordSnackBarComponent,
+    TestComponent,
     Test2Component
- 
+
   ],
   imports: [
     BrowserModule,
