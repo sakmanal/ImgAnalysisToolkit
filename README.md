@@ -2,6 +2,8 @@
 
 This project is a client side Image Analysis Toolkit for text document Binarization & Segmentation written in TypeScript. 
 
+Demo: (https://athanasios.netlify.app)
+
 ### Binarization
 
 Implements Otsu [1], Sauvola [2] and GPP [3] Binarization methods for modern/degraded documents.
