@@ -1,85 +1,82 @@
-
-.centerimg{
-	display: flex;
-	justify-content: center; 
-	padding-bottom: 50px;
+.centerimg {
+  display: flex;
+  justify-content: center;
+  padding-bottom: 50px;
 }
 
 .centerimg .responsive canvas {
-	max-width: 100%;
+  max-width: 100%;
 }
 
-.st{
-	position: fixed;
-	bottom: 2%;
-	right: 2%;
-	z-index: 99 !important;
+.st {
+  position: fixed;
+  bottom: 2%;
+  right: 2%;
+  z-index: 99 !important;
 }
 
-.InputBox{
-	position:absolute;
-	background: #ece6e6;
-	height: 18px;
-	color:rgb(15, 10, 10);
+.InputBox {
+  position: absolute;
+  background: #ece6e6;
+  height: 18px;
+  color: rgb(15, 10, 10);
 }
 
 .tooltip {
-	position: relative;
-	display: inline-block;
+  position: relative;
+  display: inline-block;
 }
 
 .tooltip .tooltiptext {
-	visibility: hidden;
-	width: 320px;
-	height: 100px;
-	background-color: #424242;
-	color: #fff;
-	text-align: left;
-	border-radius: 6px;
-	padding: 5px 5px;
-	position: absolute;
-	z-index: 1;
-	top: 150%;
-	left: 50%;
-	margin-left: -160px;
+  visibility: hidden;
+  width: 320px;
+  height: 100px;
+  background-color: #424242;
+  color: #fff;
+  text-align: left;
+  border-radius: 6px;
+  padding: 5px 5px;
+  position: absolute;
+  z-index: 1;
+  top: 150%;
+  left: 50%;
+  margin-left: -160px;
 }
 
 .tooltip .tooltiptext::after {
-	content: "";
-	position: absolute;
-	bottom: 100%;
-	left: 50%;
-	margin-left: -5px;
-	border-width: 5px;
-	border-style: solid;
-	border-color: transparent transparent #424242 transparent;
+  content: "";
+  position: absolute;
+  bottom: 100%;
+  left: 50%;
+  margin-left: -5px;
+  border-width: 5px;
+  border-style: solid;
+  border-color: transparent transparent #424242 transparent;
 }
 
 .tooltip:hover .tooltiptext {
-	visibility: visible;
+  visibility: visible;
 }
 
 * {
-	box-sizing: border-box;
- }
- 
- 
-.row {  
-	display: flex;
-	flex-wrap: wrap;
+  box-sizing: border-box;
+}
+
+.row {
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .side {
-	flex: 360px;
-	padding-top: 18px;
-	padding-left: 10px;
+  flex: 360px;
+  padding-top: 18px;
+  padding-left: 10px;
 }
 
 .main {
-	flex: 70%;
+  flex: 70%;
 }
 
 .mat-slider-horizontal {
-	min-width: 200px;
+  min-width: 200px;
 }
-

@@ -1,35 +1,56 @@
 <div class="example-container">
-
-  <mat-toolbar color="primary" class="example-toolbar"  style="z-index: 10" class="mat-elevation-z4">
-
-    <div fxShow="true" fxHide.gt-sm="true"><button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button></div>
-     <a routerLink="/" (click)="snav.close()"><h1 class="example-app-name">Digital Image Analysis Toolkit</h1></a>
-     <span class="example-spacer"></span>
-     <div fxShow="true" fxHide.lt-md="true">
-     <button mat-button routerLink="/about">About</button>
-     <a target="_blank" href="http://www.ee.duth.gr"><button mat-button>Δ.Π.Θ</button></a>
-     </div>
+  <mat-toolbar
+    color="primary"
+    class="example-toolbar"
+    style="z-index: 10"
+    class="mat-elevation-z4"
+  >
+    <div fxShow="true" fxHide.gt-sm="true">
+      <button mat-icon-button (click)="snav.toggle()">
+        <mat-icon>menu</mat-icon>
+      </button>
+    </div>
+    <a routerLink="/" (click)="snav.close()"
+      ><h1 class="example-app-name">Digital Image Analysis Toolkit</h1></a
+    >
+    <span class="example-spacer"></span>
+    <div fxShow="true" fxHide.lt-md="true">
+      <button mat-button routerLink="/about">About</button>
+      <a target="_blank" href="http://www.ee.duth.gr"
+        ><button mat-button>Δ.Π.Θ</button></a
+      >
+    </div>
   </mat-toolbar>
 
-  <mat-sidenav-container fxFlexFill  class="example-sidenav-container">
-    
-    <mat-sidenav #snav  fxLayout="column" mode="over"  opened="false" fxHide.gt-sm="true">
-              
-              
-                
-                  <button mat-button style="height:70px" routerLink="/about" (click)="snav.close()"><span style="font-size:20px">About</span> </button>
-                  <a target="_blank" href="http://www.ee.duth.gr"><button mat-button style="width: 200px; height:70px" (click)="snav.close()"><span style="font-size:20px"> Δ.Π.Θ</span></button></a>
-  
-              
-                
-               
+  <mat-sidenav-container fxFlexFill class="example-sidenav-container">
+    <mat-sidenav
+      #snav
+      fxLayout="column"
+      mode="over"
+      opened="false"
+      fxHide.gt-sm="true"
+    >
+      <button
+        mat-button
+        style="height: 70px"
+        routerLink="/about"
+        (click)="snav.close()"
+      >
+        <span style="font-size: 20px">About</span>
+      </button>
+      <a target="_blank" href="http://www.ee.duth.gr"
+        ><button
+          mat-button
+          style="width: 200px; height: 70px"
+          (click)="snav.close()"
+        >
+          <span style="font-size: 20px"> Δ.Π.Θ</span>
+        </button></a
+      >
     </mat-sidenav>
 
     <mat-sidenav-content>
-         <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </mat-sidenav-content>
-
   </mat-sidenav-container>
 </div>
-
-

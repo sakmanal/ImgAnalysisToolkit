@@ -1,150 +1,290 @@
-
-<input  style="display: none" type='file' (change)="onSelectFile($event)" #fileInput accept="image/*">
-
-
+<input
+  style="display: none"
+  type="file"
+  (change)="onSelectFile($event)"
+  #fileInput
+  accept="image/*"
+/>
 
 <div class="top-buttons">
-  <button mat-raised-button style="margin-right: 10px; margin-bottom: 5px;  font-size: 17px" color="accent" (click)="fileInput.click()"><mat-icon>add</mat-icon> Select Image</button>
+  <button
+    mat-raised-button
+    style="margin-right: 10px; margin-bottom: 5px; font-size: 17px"
+    color="accent"
+    (click)="fileInput.click()"
+  >
+    <mat-icon>add</mat-icon> Select Image
+  </button>
 
+  <button
+    mat-raised-button
+    style="margin-right: 5px; margin-bottom: 5px"
+    [color]="colorotsu"
+    (click)="otsuBinarization()"
+    [disabled]="disableImageFilter"
+  >
+    <fa-icon
+      *ngIf="OtsuSpinner"
+      [icon]="faSpinner"
+      size="lg"
+      [spin]="true"
+    ></fa-icon>
+    otsu
+  </button>
+  <button
+    mat-raised-button
+    style="margin-right: 5px; margin-bottom: 5px"
+    [color]="colorsauvola"
+    (click)="sauvolaBinarization()"
+    [disabled]="disableImageFilter"
+  >
+    <fa-icon
+      *ngIf="SauvolaSpinner"
+      [icon]="faSpinner"
+      size="lg"
+      [spin]="true"
+    ></fa-icon>
+    sauvola
+  </button>
+  <button
+    mat-raised-button
+    style="margin-right: 5px; margin-bottom: 5px"
+    [color]="colorgpp"
+    (click)="gppdBinarization()"
+    [disabled]="disableImageFilter"
+  >
+    <fa-icon
+      *ngIf="GppSpinner"
+      [icon]="faSpinner"
+      size="lg"
+      [spin]="true"
+    ></fa-icon>
+    gpp
+  </button>
+  <button
+    mat-raised-button
+    style="margin-right: 5px; margin-bottom: 5px"
+    (click)="restore()"
+    [disabled]="disableImageFilter"
+  >
+    restore Image
+  </button>
 
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorotsu" (click)="otsuBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="OtsuSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> otsu</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorsauvola" (click)="sauvolaBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="SauvolaSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> sauvola</button>
-  <!-- <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colornegative" (click)="InvertColoursFilter()" [disabled]="disableImageFilter">invert Colours</button> -->
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;" [color]="colorgpp" (click)="gppdBinarization()" [disabled]="disableImageFilter"><fa-icon *ngIf="GppSpinner" [icon]="faSpinner" size="lg" [spin]="true"></fa-icon> gpp</button>
-  <button mat-raised-button style="margin-right: 5px; margin-bottom: 5px;"  (click)="restore()" [disabled]="disableImageFilter">restore Image</button>
-
-  <button mat-raised-button color="accent" (click)="save()" style="margin-right: 5px; margin-bottom: 5px;"   [disabled]="disableImageFilter">
+  <button
+    mat-raised-button
+    color="accent"
+    (click)="save()"
+    style="margin-right: 5px; margin-bottom: 5px"
+    [disabled]="disableImageFilter"
+  >
     <mat-icon>save</mat-icon> Save Image
   </button>
-  
-  <input  style="display: none" type='file' (change)="onSelectGT($event)" #gtInput accept="image/*">
-  <button *ngIf="ImgUrl" mat-raised-button color="warn" (click)="gtInput.click()" style="margin-right: 5px; margin-bottom: 5px;">
-      <mat-icon *ngIf="loadgtIcon">done</mat-icon> Load GT image
+
+  <input
+    style="display: none"
+    type="file"
+    (change)="onSelectGT($event)"
+    #gtInput
+    accept="image/*"
+  />
+  <button
+    *ngIf="ImgUrl"
+    mat-raised-button
+    color="warn"
+    (click)="gtInput.click()"
+    style="margin-right: 5px; margin-bottom: 5px"
+  >
+    <mat-icon *ngIf="loadgtIcon">done</mat-icon> Load GT image
   </button>
 
-  <button *ngIf="ImgUrl" mat-raised-button color="warn" (click)="gtBinEval()" style="margin-right: 5px; margin-bottom: 5px;"  [disabled]="!readyEval">
+  <button
+    *ngIf="ImgUrl"
+    mat-raised-button
+    color="warn"
+    (click)="gtBinEval()"
+    style="margin-right: 5px; margin-bottom: 5px"
+    [disabled]="!readyEval"
+  >
     evaluate
- </button>
+  </button>
 
   <div *ngIf="recall" style="margin-left: 15px">
-    <span style="color:#ffc400"> Recall: </span>{{recall | percent }}
-    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> Precision: </span>{{precision | percent}}
-    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:10px;"> F-Measure: </span>{{Fmeasure | percent}}
+    <span style="color: #ffc400"> Recall: </span>{{ recall | percent }}
+    <span *ngIf="GTbinName" style="color: #ffc400; margin-left: 10px">
+      Precision: </span
+    >{{ precision | percent }}
+    <span *ngIf="GTbinName" style="color: #ffc400; margin-left: 10px">
+      F-Measure: </span
+    >{{ Fmeasure | percent }}
   </div>
-  <!-- <mat-button-toggle-group *ngIf="img.src" #group="matButtonToggleGroup">
-    <mat-button-toggle (click)="fillscreen()" matTooltip="fill screen">
-      <mat-icon>fullscreen</mat-icon>
-    </mat-button-toggle>
-    <mat-button-toggle (click)="fitscreen()" matTooltip="fit screen">
-      <mat-icon>fullscreen_exit</mat-icon>
-    </mat-button-toggle>
-  </mat-button-toggle-group> -->
- 
+
   <div *ngIf="load" class="over"></div>
-
-
 </div>
 
-
-
- 
-
-
-
 <div class="row">
-        <div class="side">
-            <div *ngIf="ImgUrl">
-                  <div style="margin-bottom: 5px">
-                    <span style="color:#ffc400"> Img: </span>{{ImageName}}
-                    <span *ngIf="GTbinName" style="color:#ffc400; margin-left:15px;"> GT: </span>{{GTbinName}}
-                  </div>
-                    <strong><span style="color:#ffc400;font-size:15px;"> Image dimensions:</span> {{img.width}} x {{img.height}} pixels</strong>
-                    <p>
-                    Threshold:
-                    <mat-slider 
-                        [disabled]="disableImageFilter"
-                        color="warn" 
-                        [thumbLabel]= "true"
-                        [step]="step"
-                        [(ngModel)]="value"
-                        [max]="max"
-                        [min]="min" (change)="manualThresholdBinarization()">
-                    </mat-slider>{{value}}
-                    </p>
-   
-                   
-                    <canvas style=" max-width: 100%; " id="myChart"></canvas>
+  <div class="side">
+    <div *ngIf="ImgUrl">
+      <div style="margin-bottom: 5px">
+        <span style="color: #ffc400"> Img: </span>{{ ImageName }}
+        <span *ngIf="GTbinName" style="color: #ffc400; margin-left: 15px">
+          GT: </span
+        >{{ GTbinName }}
+      </div>
+      <strong
+        ><span style="color: #ffc400; font-size: 15px"> Image dimensions:</span>
+        {{ img.width }} x {{ img.height }} pixels</strong
+      >
+      <p>
+        Threshold:
+        <mat-slider
+          [disabled]="disableImageFilter"
+          color="warn"
+          [thumbLabel]="true"
+          [step]="step"
+          [(ngModel)]="value"
+          [max]="max"
+          [min]="min"
+          (change)="manualThresholdBinarization()"
+        >
+        </mat-slider
+        >{{ value }}
+      </p>
 
+      <canvas style="max-width: 100%" id="myChart"></canvas>
 
-                     <mat-expansion-panel>
-      
-                        <mat-expansion-panel-header>
-                          <mat-panel-title>
-                            sauvola parameters
-                          </mat-panel-title>
-                        </mat-expansion-panel-header>
-                       
-                        <mat-form-field color="warn">
-                          <input matInput type="number" autocomplete="off" [(ngModel)]="masksize" placeholder="masksize" min="2">
-                        </mat-form-field>
-                        <mat-form-field color="warn">
-                          <input matInput type="number" [(ngModel)]="stathera" placeholder="k" step="0.1" min="0">
-                        </mat-form-field>
-                        <mat-form-field color="warn">
-                          <input matInput type="number" [(ngModel)]="rstathera" placeholder="R" min="10" step="10">
-                        </mat-form-field>
-                        <mat-form-field color="warn">
-                          <input matInput type="number" [(ngModel)]="n" placeholder="n" min="1">
-                        </mat-form-field>
-                       
-                      </mat-expansion-panel>
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> sauvola parameters </mat-panel-title>
+        </mat-expansion-panel-header>
 
-                      <mat-expansion-panel>
-      
-                          <mat-expansion-panel-header>
-                            <mat-panel-title>
-                              gpp parameters
-                            </mat-panel-title>
-                          </mat-expansion-panel-header>
-                         
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="dw" placeholder="dW" min="2">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="k" placeholder="k" min="0.1" step="0.1">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="R" placeholder="R" min="10" step="10">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="q" placeholder="q" step="0.1">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="p1" placeholder="p1" step="0.1">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="p2" placeholder="p2" step="0.1">
-                          </mat-form-field>
-                          <mat-form-field color="warn">
-                            <input matInput type="number" [(ngModel)]="dw1" placeholder="dW1" min="2">
-                          </mat-form-field>
-                            <!-- <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox> -->
-                         
-                        </mat-expansion-panel>
-                                
-                      
-                </div>      
-        </div>
-        <div class="main" id="main">
-            <div class="container">
-                <!-- <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter id="myCanvas"></canvas> -->
-                <img src={{ImgUrl}} id="Img"  mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }" />
-                <div *ngIf="showSpinner" class="spinner"></div>
-            </div>
-               
-               
-           
-               
-        
-        </div>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            autocomplete="off"
+            [(ngModel)]="masksize"
+            placeholder="masksize"
+            min="2"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="stathera"
+            placeholder="k"
+            step="0.1"
+            min="0"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="rstathera"
+            placeholder="R"
+            min="10"
+            step="10"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="n"
+            placeholder="n"
+            min="1"
+          />
+        </mat-form-field>
+      </mat-expansion-panel>
+
+      <mat-expansion-panel>
+        <mat-expansion-panel-header>
+          <mat-panel-title> gpp parameters </mat-panel-title>
+        </mat-expansion-panel-header>
+
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="dw"
+            placeholder="dW"
+            min="2"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="k"
+            placeholder="k"
+            min="0.1"
+            step="0.1"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="R"
+            placeholder="R"
+            min="10"
+            step="10"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="q"
+            placeholder="q"
+            step="0.1"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="p1"
+            placeholder="p1"
+            step="0.1"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="p2"
+            placeholder="p2"
+            step="0.1"
+          />
+        </mat-form-field>
+        <mat-form-field color="warn">
+          <input
+            matInput
+            type="number"
+            [(ngModel)]="dw1"
+            placeholder="dW1"
+            min="2"
+          />
+        </mat-form-field>
+        <!-- <mat-checkbox color="warn" style="margin-left: 5px" [(ngModel)]="upsampling">on/off</mat-checkbox> -->
+      </mat-expansion-panel>
+    </div>
+  </div>
+  <div class="main" id="main">
+    <div class="container">
+      <!-- <canvas mouseWheel (mouseWheelUp)="mouseWheelUpFunc()" (mouseWheelDown)="mouseWheelDownFunc()" class="responsive" [ngStyle]="{'width.px': width }"  #canvasfilter id="myCanvas"></canvas> -->
+      <img
+        src="{{ ImgUrl }}"
+        id="Img"
+        mouseWheel
+        (mouseWheelUp)="mouseWheelUpFunc()"
+        (mouseWheelDown)="mouseWheelDownFunc()"
+        class="responsive"
+        [ngStyle]="{ 'width.px': width }"
+      />
+      <div *ngIf="showSpinner" class="spinner"></div>
+    </div>
+  </div>
 </div>

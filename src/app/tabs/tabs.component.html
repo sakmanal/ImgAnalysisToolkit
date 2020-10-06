@@ -1,11 +1,11 @@
 
 
-<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)" 
-                                            [(selectedIndex)]="tabIndex">  
-  
-   
+<mat-tab-group (selectedTabChange)="tabSelectionChanged($event)"
+                                            [(selectedIndex)]="tabIndex">
 
-    <mat-tab label="Binarization"> 
+
+
+    <mat-tab label="Binarization">
      <app-binarization
        (updateImageEvent)="updateImage($event)">
      </app-binarization>
@@ -18,12 +18,12 @@
     </mat-tab>
 
     <mat-tab label="multiple Processing">
-        <app-test 
+        <app-multiple-processing
            (updateImageEvent)="editImage($event)"
            (updateEvent)="updateTable($event)">
-        </app-test>
+        </app-multiple-processing>
     </mat-tab>
-    
+
     <mat-tab label="extracted data">
       <app-image-info></app-image-info>
     </mat-tab>

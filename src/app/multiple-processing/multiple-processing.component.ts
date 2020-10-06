@@ -45,13 +45,13 @@ interface TextSegments{
 }
 
 @Component({
-  selector: 'app-test',
-  templateUrl: './test.component.html',
-  styleUrls: ['./test.component.css']
+  selector: 'app-multiple-processing',
+  templateUrl: './multiple-processing.component.html',
+  styleUrls: ['./multiple-processing.component.css']
 })
 export class TestComponent  {
 
- 
+
   ImageFiles:imageObject[] = [];
 
   colorotsu:string = "primary";
@@ -64,8 +64,8 @@ export class TestComponent  {
   @Output() updateEvent = new EventEmitter<boolean>();
 
   constructor(private workerService: WebworkerService, private savejsonService: SavejsonService){}
-  
-    
+
+
 
   selectFiles(event:any):void{
     const files = event.target.files;
@@ -78,13 +78,13 @@ export class TestComponent  {
 
       const picReader = new FileReader();
       picReader.onload = (event:any) =>{
-    
+
        const picFile = event.target.result;
        const imageFile = {name:filename, url:picFile, originUrl:picFile, spin:false, blobs:undefined, IsBinary:false, pbar:false, gt:undefined,gtUrl:undefined, recall:0, precision:0};
        this.ImageFiles.push(imageFile);
        //this.Totalimages++;
-        
-      };   
+
+      };
       picReader.readAsDataURL(file);
     }
     if (files.length != 0){ this.enableView = true; }
@@ -95,7 +95,7 @@ export class TestComponent  {
 
   selectGT(event:any):void{
     const files = event.target.files;
-    
+
     for (let i = 0; i < files.length; i++) {
       const file = files[i];
       const filename = file.name;
@@ -104,14 +104,14 @@ export class TestComponent  {
       if (!file.type.match('\.json')) return;
 
       const jsonreader = new FileReader();
-      jsonreader.onload = (event:any) =>{ 
-          
+      jsonreader.onload = (event:any) =>{
+
         const jsonfile = JSON.parse(event.target.result);
         this.readjson(jsonfile, filename);
 
       };
       jsonreader.readAsText(file)
-  
+
     }
     event.target.value = '';  //enable opening the same file
   }
@@ -127,19 +127,19 @@ export class TestComponent  {
 
       const picReader = new FileReader();
       picReader.onload = (event:any) =>{
-    
+
        const picGTFile = event.target.result;
       this.putGTImgUrl(picGTFile, filename);
-       
-        
-      };   
+
+
+      };
       picReader.readAsDataURL(file);
     }
     event.target.value = '';  //enable opening the same file
   }
 
   readjson(jsonfile, filename){
-     
+
       if (jsonfile.words){
         this.putRects(filename, jsonfile.words)
         return;
@@ -147,26 +147,26 @@ export class TestComponent  {
 
       let pointsArray = [];
       const main = jsonfile.Page.TextRegion;
-     
+
       if (main.length == undefined){
-         const TextLine = main.TextLine;       
+         const TextLine = main.TextLine;
          for(let j=0; j<TextLine.length; j++){
           const words = TextLine[j].Word
           if (words.length == undefined){
             pointsArray.push(words.Coords);
-            continue;      
+            continue;
            }
           for(let k=0; k<words.length; k++){
-            const coords = words[k].Coords;   
+            const coords = words[k].Coords;
             pointsArray.push(coords)
           }
         }
       }else{
-  
+
           for(let i=0; i<main.length; i++){
-            const TextLine = main[i].TextLine;        
+            const TextLine = main[i].TextLine;
             for(let j=0; j<TextLine.length; j++){
-              const words = TextLine[j].Word       
+              const words = TextLine[j].Word
               if (words.length == undefined){
                 pointsArray.push(words.Coords);
                 continue;
@@ -178,7 +178,7 @@ export class TestComponent  {
             }
           }
       }
-      
+
       this.makeGTrects(pointsArray, filename);
   }
 
@@ -193,9 +193,9 @@ export class TestComponent  {
        for (let i=0; i<d.length; i++){
          const c = d[i];
          const v = c.split(",")
-         const x = Number(v[0]) 
+         const x = Number(v[0])
          const y = Number(v[1])
-         const point = {x:x, y:y}; 
+         const point = {x:x, y:y};
          r.push(point);
 
        }
@@ -214,11 +214,11 @@ export class TestComponent  {
        const rect = {x:minX, y:minY, width:maxX-minX, height:maxY-minY}
 
        RectsArray.push(rect);
-      
+
     }
 
     this.putRects(filename, RectsArray);
-    
+
 
  }
 
@@ -244,36 +244,36 @@ export class TestComponent  {
     }
   }
  }
-  
+
 
   binarization_otsu(){
     this.colorotsu = "warn";
     this.colorsauvola = "primary";
-    this.colorgpp = "primary"; 
-  
+    this.colorgpp = "primary";
+
     const imageDataUrl = this.ImageFiles[0].originUrl;
     this.otsu(imageDataUrl, 0);
-    
+
   }
 
   binarization_sauvola(){
     this.colorotsu = "primary";
     this.colorsauvola = "warn";
     this.colorgpp = "primary";
-    
+
     const imageDataUrl = this.ImageFiles[0].originUrl;
     this.sauvola(imageDataUrl, 0);
-    
+
   }
 
   binarization_gpp(){
     this.colorotsu = "primary";
     this.colorsauvola = "primary";
-    this.colorgpp = "warn"; 
-   
+    this.colorgpp = "warn";
+
     const imageDataUrl = this.ImageFiles[0].originUrl;
     this.gpp(imageDataUrl, 0);
-    
+
   }
 
   otsu(imageDataUrl:string, id:number){
@@ -292,7 +292,7 @@ export class TestComponent  {
 
           this.workerService.run(otsu, {imageData:imageData})
               .then( (result:any) => {
-                      //this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
@@ -301,8 +301,8 @@ export class TestComponent  {
                       if (id+1 < this.ImageFiles.length){
                         this.otsu(this.ImageFiles[id+1].originUrl, id+1);
                       }
-                      
-                        
+
+
                 }
               ).catch(console.error);
 
@@ -338,7 +338,7 @@ export class TestComponent  {
 
           this.workerService.run(GPP, {imageData:imageData, dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
               .then( (result:any) => {
-                      //this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
@@ -347,7 +347,7 @@ export class TestComponent  {
                       if (id+1 < this.ImageFiles.length){
                         this.gpp(this.ImageFiles[id+1].originUrl, id+1);
                       }
-                        
+
                 }
               ).catch(console.error);
 
@@ -355,13 +355,13 @@ export class TestComponent  {
     }
     img.src = imageDataUrl;
   }
-  
+
 
 
   //sauvola parameters
   masksize:number = 4;
-  stathera:number = 0.5; 
-  rstathera:number = 128; 
+  stathera:number = 0.5;
+  rstathera:number = 128;
   n:number = 3;
 
   sauvola(imageDataUrl:string, id:number){
@@ -380,7 +380,7 @@ export class TestComponent  {
 
           this.workerService.run(Sauvola, {imageData:imageData, masksize:this.masksize, stathera:this.stathera, rstathera:this.rstathera, n:this.n})
               .then( (result:any) => {
-                      //this.ImageFiles[id].url = result.data;  
+                      //this.ImageFiles[id].url = result.data;
                       //console.log(result.data);
                       ctx.putImageData(result, 0, 0);
                       this.ImageFiles[id].url = canvas.toDataURL("image/png", 1);
@@ -389,7 +389,7 @@ export class TestComponent  {
                       if (id+1 < this.ImageFiles.length){
                         this.sauvola(this.ImageFiles[id+1].originUrl, id+1);
                       }
-                        
+
                 }
               ).catch(console.error);
 
@@ -407,7 +407,7 @@ export class TestComponent  {
       this.ImageFiles[i].url = this.ImageFiles[i].originUrl;
       this.ImageFiles[i].IsBinary = false;
     }
-    
+
   }
 
 
@@ -437,51 +437,51 @@ export class TestComponent  {
         canvas.height = height;
         ctx.drawImage(img, 0, 0);
         const imagedata = ctx.getImageData(0, 0, width, height);
-        
+
         if (this.ImageFiles[i].IsBinary == true){
              this.Segmentation(imagedata, i);
         }else{
           this.workerService.run(GPP, {imageData:imagedata,  dw:this.dw, k:this.k, R:this.R, q:this.q, p1:this.p1, p2:this.p2, upsampling:this.upsampling, dw1:this.dw1})
-              .then( (result:any) => {      
+              .then( (result:any) => {
                   this.Segmentation(result, i);
                 }
               ).catch(console.error);
         }
-        
+
 
       }
-      img.src = imageDataUrl;  
-      
+      img.src = imageDataUrl;
+
   }
 
 
- 
- 
+
+
   counter:number = 0;
   Segmentation(imageData:ImageData, id:number){
- 
+
      this.workerService.run(GetSegments, {imageData:imageData, ARLSA_a:this.ARLSA_a, ARLSA_c:this.ARLSA_c, ARLSA_Th:this.ARLSA_Th, RemovePunctuationMarks:this.RemovePunctuationMarks, Xrlsa:this.Xrlsa})
           .then( (objects:any) => {
-   
-            this.ImageFiles[id].blobs = objects; 
+
+            this.ImageFiles[id].blobs = objects;
             this.evaluation(id);
             this.counter++;
             this.ImageFiles[id].pbar = false;
-            //if (this.counter == this.Totalimages) { 
+            //if (this.counter == this.Totalimages) {
             if (this.counter == this.ImageFiles.length) {
-              this.Segmloader = false; 
+              this.Segmloader = false;
               this.counter = 0;
             }
             if (id+1 < this.ImageFiles.length){
               this.WordsSegment(id+1);
             }
 
-            
+
           }
         ).catch(console.error);
   }
 
-  
+
   remove(id:number){
     //console.log(id);
 
@@ -490,14 +490,14 @@ export class TestComponent  {
       //this.Totalimages = this.ImageFiles.length;
     }
 
-    if (this.ImageFiles.length == 0){ 
+    if (this.ImageFiles.length == 0){
       this.enableView = false;
       this.colorotsu = "primary";
       this.colorsauvola = "primary";
       this.colorgpp = "primary";
     }
 
-    
+
   }
 
   removeAll(){
@@ -513,10 +513,10 @@ export class TestComponent  {
   edit(id:number){
     this.updateImageEvent.emit({dataURL:this.ImageFiles[id].url, name:this.ImageFiles[id].name, blobs:this.ImageFiles[id].blobs, gt:this.ImageFiles[id].gt});
   }
-  
+
   Tinter:number = 0.5;
   evaluation(id:number){
-    
+
     const GroundTruthRects = this.ImageFiles[id].gt;
     const MyArlsaRects:any = this.ImageFiles[id].blobs;
     if (this.ImageFiles[id].blobs == undefined || this.ImageFiles[id].gt == undefined){
@@ -524,10 +524,10 @@ export class TestComponent  {
     }
     const SegmentsEvaluation = new evaluation();
     SegmentsEvaluation.run(GroundTruthRects, MyArlsaRects, this.Tinter);
-   
+
     this.ImageFiles[id].recall = SegmentsEvaluation.getRecall();
     this.ImageFiles[id].precision = SegmentsEvaluation.getPrecision();
-    
+
   }
 
   evaluate(){
@@ -538,16 +538,16 @@ export class TestComponent  {
         }else{
           this.evaluation(i);
         }
-        
+
     }
   }
-  
- 
+
+
   binEvaluate(id = 0){
     this.operation = "Binarization";
     const canvas = document.createElement('canvas') as HTMLCanvasElement;
     const ctx: CanvasRenderingContext2D = canvas.getContext('2d');
-    
+
     //load 1st image
     const img1 = new Image;
     img1.onload = () =>{
@@ -558,7 +558,7 @@ export class TestComponent  {
       ctx.drawImage(img1, 0, 0);
       const MybinPixels = ctx.getImageData(0, 0, width, height);
       console.log('1st image loaded');
-      
+
       //load 2nd image
       const img2 = new Image;
       img2.onload = () =>{
@@ -576,15 +576,15 @@ export class TestComponent  {
         this.ImageFiles[id].recall = Evaluation.getRecall();
         this.ImageFiles[id].precision = Evaluation.getPrecision();
         console.log(this.ImageFiles[id].recall, this.ImageFiles[id].precision);
-        
+
         //next image
         if (id+1 < this.ImageFiles.length){
           this.binEvaluate(id+1);
         }
       }
-      img2.src = this.ImageFiles[id].gtUrl; 
+      img2.src = this.ImageFiles[id].gtUrl;
     }
-    img1.src = this.ImageFiles[id].url; 
+    img1.src = this.ImageFiles[id].url;
 
   }
 
@@ -604,7 +604,7 @@ export class TestComponent  {
     }
     this.updateEvent.emit(true);
   }
-  
+
   operation:string;
   downloadResults(){
     if (this.operation == undefined){
@@ -617,16 +617,16 @@ export class TestComponent  {
       result += this.ImageFiles[i].name +" | "+ "Recall=" +(this.ImageFiles[i].recall).toFixed(2) +" | "+ "Precision=" +(this.ImageFiles[i].precision).toFixed(2);
       result += "\r\n";
     }
-    
+
     const a = document.createElement('a');
     a.setAttribute('href', 'data:text/plain;charset=utf-u,'+encodeURIComponent(result));
     a.setAttribute('download', 'evaluation-results');
     document.body.appendChild(a);
     a.click();
     a.remove();
-    
+
   }
 
 
-  
+
 }
