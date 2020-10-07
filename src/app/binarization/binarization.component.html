@@ -80,6 +80,12 @@
     <mat-icon>save</mat-icon> Save Image
   </button>
 
+  <div *ngIf="load || !ImgUrl" class="mes">
+    <div>Please wait while loading Image from Server (bad bandwidth 😭)</div>
+    <div style="margin: 10px 135px;">or</div>
+    <div style="margin-left: 37px;">select your own Text Document</div>
+  </div>
+
   <input
     style="display: none"
     type="file"
@@ -118,7 +124,7 @@
     >{{ Fmeasure | percent }}
   </div>
 
-  <div *ngIf="load" class="over"></div>
+  <div *ngIf="load || !ImgUrl" class="over"></div>
 </div>
 
 <div class="row">

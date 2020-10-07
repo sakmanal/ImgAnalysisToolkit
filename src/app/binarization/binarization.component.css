@@ -54,6 +54,11 @@
   position: relative;
 }
 
+.mes{
+  margin: 20px;
+}
+
+
 .spinner {
   position: absolute;
   left: 53%;

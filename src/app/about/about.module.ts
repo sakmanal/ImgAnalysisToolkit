@@ -5,17 +5,10 @@ import { RouterModule, Routes } from '@angular/router';
 import { MaterialModule } from '../material.module';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
-const Routes: Routes = [
-  {
-    path: '',
-    component: AboutComponent,
-  },
-];
-
 @NgModule({
   imports: [
     CommonModule,
-    RouterModule.forChild(Routes),
+    RouterModule.forChild([{path: '', component: AboutComponent}]),
     MaterialModule,
     FontAwesomeModule,
   ],
