@@ -14,11 +14,11 @@ Implements Text Segmentation method for modern/historical machine-printed docume
 
 ___
 ## Demo Preview:
-![](https://i.ibb.co/10QbJ0H/clip3.gif)
+![clip11](https://user-images.githubusercontent.com/32598290/95339033-420db300-08bc-11eb-9237-a9d29d34597b.gif)
 
-![](https://i.ibb.co/nCSVKRV/clip3.gif)
+![clip2](https://user-images.githubusercontent.com/32598290/95340440-d75d7700-08bd-11eb-98e8-3c268c459f1a.gif)
 
-![](https://i.ibb.co/N18JS46/clip3.gif)
+![clip33](https://user-images.githubusercontent.com/32598290/95338193-5ac99900-08bb-11eb-99d8-84e1ca26afc9.gif)
 
 > ### Reference
 
