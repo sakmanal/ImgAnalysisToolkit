@@ -2,7 +2,7 @@
 
 This project is a client side Image Analysis Toolkit for text document Binarization & Segmentation written in TypeScript. 
 
-Demo: (https://athanasios.netlify.app)
+Demo: (https://imganalysis.netlify.app)
 
 > ### Binarization
 
