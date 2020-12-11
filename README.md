@@ -17,6 +17,7 @@ Implements Text Segmentation method for modern/historical machine-printed docume
 - Image histogram chart 
 - Pixel manipulation with canvas
 - Image Processing with Web Workers
+- Load and process multiple images together
 - Load Ground Truth files and evaluate the implemented processing algorithms 
 - Custom made Tool that: 
   - Displays the word segments inside the image (Selects Multiple rectangular areas of the image)
