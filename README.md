@@ -22,6 +22,8 @@ Implements Text Segmentation method for modern/historical machine-printed docume
 - Custom made Tool that: 
   - Displays the word segments inside the image (Selects Multiple rectangular areas of the image)
   - Allows to add, delete, move, resize the selections with mouse
+  - Drag and move image inside Canvas
+  - Zoom image with mouse wheel
   - Keyboard support for above operations
   - Auto-selects the word-boundaries(background pixels, works only on binary images)
   - Opens text input field above each selection for typing the retrieved word
