@@ -29,7 +29,7 @@
     "@fortawesome/free-solid-svg-icons": "^5.9.0",
     "@types/chart.js": "^2.7.53",
     "@types/fabric": "^1.5.48",
-    "chart.js": "^2.8.0",
+    "chart.js": "^2.9.4",
     "core-js": "^2.5.4",
     "fabric": "^2.4.5",
     "hammerjs": "^2.0.8",
